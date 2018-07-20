@@ -2,7 +2,8 @@ class RemoteApi {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
   }
-  postSetupRace(raceId, raceSetup) {
+
+  postRaceSetup(raceId, raceSetup) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/setup";
     const requestOptions = {
       method: "POST",
@@ -10,6 +11,12 @@ class RemoteApi {
       body: JSON.stringify(raceSetup)
     };
     return fetch(serviceUrl, requestOptions)
+    .then(response => response.status === 200 ? response.json : null);
+  }
+
+  getRaceSetup(raceId) {
+    const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/setup";
+    return fetch(serviceUrl)
     .then(response => response.status === 200 ? response.json : null);
   }
 }

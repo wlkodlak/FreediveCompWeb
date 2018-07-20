@@ -7,6 +7,7 @@ import NewRaceDynSettings from './NewRaceDynSettings';
 import NewRaceCwtSettings from './NewRaceCwtSettings';
 import Api from '../../api/Api';
 import NewRaceSetupGenerator from './NewRaceSetupGenerator';
+import { Redirect } from 'react-router-dom';
 
 class CreateRace extends React.Component {
   constructor(props) {
@@ -52,26 +53,30 @@ class CreateRace extends React.Component {
   onFormSubmit(event) {
     event.preventDefault();
     const raceId = this.props.raceId;
-    const setupRaceBody = new NewRaceSetupGenerator(raceId, this.state);
-    RemoteApi.postSetupRace(, setupRaceBody)
+    const raceSetup = new NewRaceSetupGenerator(raceId, this.state);
+    RemoteApi.postRaceSetup(raceId, raceSetup)
       .then(response => this.setState({created: true}))
       .catch(error => this.setState({error}));
   }
 
   render() {
-    return (
-      <div>
-        <h1>Create competition</h1>
-        <form onSubmit={this.onFormSubmit}>
-          <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
-          <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />
-          <NewRaceStaSettings value={this.state.staSettings} onChange={this.onStaChanged} />
-          <NewRaceDynSettings value={this.state.dynSettings} onChange={this.onDynChanged} />
-          <NewRaceCwtSettings value={this.state.cwtSettings} onChange={this.onCwtChanged} />
-          <Button type="submit" text="Create competition" />
-        </form>
-      </div>
-    );
+    if (this.state.created) {
+      return (<Redirect to={`/${this.props.raceId}/homepage`} />);
+    } else {
+      return (
+        <div>
+          <h1>Create competition</h1>
+          <form onSubmit={this.onFormSubmit}>
+            <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
+            <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />
+            <NewRaceStaSettings value={this.state.staSettings} onChange={this.onStaChanged} />
+            <NewRaceDynSettings value={this.state.dynSettings} onChange={this.onDynChanged} />
+            <NewRaceCwtSettings value={this.state.cwtSettings} onChange={this.onCwtChanged} />
+            <Button type="submit" text="Create competition" />
+          </form>
+        </div>
+      );
+    }
   }
 }
 

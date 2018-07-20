@@ -31,8 +31,8 @@ class NewRaceSetupGenerator {
 
     if (this.staSettings.lanes > 0) {
       const staDimensions = [
-        buildStaEquipmentDimension(this.staSettings),
-        buildCategoriesDimension(this.staSettings),
+        buildStaEquipmentDimension(),
+        buildCategoriesDimension(this.staSettings, true),
         buildLanesCountDimension(this.staSettings)
       ];
       buildStartingLanesFromDimensions(allLanes, staDimensions);
@@ -41,7 +41,7 @@ class NewRaceSetupGenerator {
     if (this.dynSettings.lanes > 0) {
       const dynDimensions = [
         buildDynEquipmentDimension(this.dynSettings, true),
-        buildCategoriesDimension(this.dynSettings),
+        buildCategoriesDimension(this.dynSettings, true),
         buildLanesCountDimension(this.dynSettings)
       ];
       buildStartingLanesFromDimensions(allLanes, dynDimensions);
@@ -50,7 +50,7 @@ class NewRaceSetupGenerator {
     if (this.cwtSettings.lanes > 0) {
       const cwtDimensions = [
         buildCwtEquipmentDimension(this.cwtSettings, true),
-        buildCategoriesDimension(this.cwtSettings),
+        buildCategoriesDimension(this.cwtSettings, true),
         buildLanesCountDimension(this.cwtSettings)
       ];
       buildStartingLanesFromDimensions(allLanes, cwtDimensions);
@@ -59,7 +59,7 @@ class NewRaceSetupGenerator {
     return allLanes;
   }
 
-  buildStaEquipmentDimension(settings) {
+  buildStaEquipmentDimension() {
     return ["STA"];
   }
 
@@ -83,7 +83,8 @@ class NewRaceSetupGenerator {
     return equipmentDimension;
   }
 
-  buildCategoriesDimension(settings) {
+  buildCategoriesDimension(settings, forStart) {
+    if (!forStart && settings && settings.separateCategories) return [null];
     const athleteCategories = this.athleteCategories;
     if (athleteCategories.length == 0) return [null];
     return athleteCategories;
@@ -131,8 +132,8 @@ class NewRaceSetupGenerator {
     if (this.staSettings.lanes > 0) {
       buildDisciplinesFromDimensions(
         disciplines,
-        buildStaEquipmentDimension(this.staSettings),
-        this.athleteCategories,
+        buildStaEquipmentDimension(),
+        buildCategoriesDimension(this.staSettings, false),
         buildSexDimension(),
         this.staSettings.rules);
     }
@@ -141,7 +142,7 @@ class NewRaceSetupGenerator {
       buildDisciplinesFromDimensions(
         disciplines,
         buildDynEquipmentDimension(this.dynSettings, false),
-        this.athleteCategories,
+        buildCategoriesDimension(this.dynSettings, false),
         buildSexDimension(),
         this.dynSettings.rules);
     }
@@ -150,7 +151,7 @@ class NewRaceSetupGenerator {
       buildDisciplinesFromDimensions(
         disciplines,
         buildCwtEquipmentDimension(this.cwtSettings, false),
-        this.athleteCategories,
+        buildCategoriesDimension(this.cwtSettings, false),
         buildSexDimension(),
         this.cwtSettings.rules);
     }
@@ -188,6 +189,66 @@ class NewRaceSetupGenerator {
   }
 
   buildResultLists() {
+    const resultLists = [];
+    const categories = buildCategoriesDimension(null, false);
+    const sexes = buildSexDimension();
 
+    for (const category of categories) {
+      for (const sex of sexes) {
+        const listId = buildDisciplineName("-", [category, sex]);
+        const listTitle = buildDisciplineName(" ", [category, sex]);
+        const listColumns = [];
+        buildResultListColumn(
+          listColumns, this.staSettings, "STA", category, sex,
+          buildStaEquipmentDimension());
+        buildResultListColumn(
+          listColumns, this.dynSettings, "DYN", category, sex,
+          buildDynEquipmentDimension(this.dynSettings, false));
+        buildResultListColumn(
+          listColumns, this.cwtSettings, "CWT", category, sex,
+          buildDynEquipmentDimension(this.cwtSettings, false));
+
+        if (listColumns.length > 0) {
+          buildResultListTotals(listColumns);
+
+          resultLists.push({
+            "ResultsListId": listId,
+            "Title": listTitle,
+            "Columns": listColumns
+          });
+        }
+      }
+    }
+
+    return resultLists;
   }
+
+  buildResultListColumn(listColumns, settings, title, category, sex, disciplines) {
+    if (settings.lanes == 0) return;
+    if (!settings.rules.startsWith("AIDA-")) return;
+
+    const components = disciplines.map(name => {
+      const disciplineId = buildDisciplineName("-", [name, category, sex]);
+      return { "DisciplineId": disciplineId };
+    });
+
+    listColumns.push({
+      "Title": title,
+      "IsFinal": false,
+      "Components": components
+    });
+  }
+
+  buildResultListTotals(listColumns) {
+    const components = [];
+    for (const column of listColumns) {
+      components = components.concat(column["Components"]);
+    }
+    listColumns.push({
+      "Title": "Total",
+      "IsFinal": true,
+      "Components": components
+    });
+  }
+
 }
