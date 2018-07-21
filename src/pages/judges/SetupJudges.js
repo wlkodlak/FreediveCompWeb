@@ -7,15 +7,11 @@ class SetupJudges extends React.Component {
     super(props);
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onJudgesLoaded = this.onJudgesLoaded.bind(this);
-    this.onNewJudgeNameChanged = this.onNewJudgeNameChanged.bind(this);
-    this.onConnectCodeChanged = this.onConnectCodeChanged.bind(this);
+    this.onAuthorizeDeviceRequested = this.onAuthorizeDeviceRequested.bind(this);
   }
 
   state = {
-    raceName = "",
-    judges = [],
-    newJudgeName = "",
-    connectCode = ""
+    judges = []
   }
 
   componentWillMount() {
@@ -26,7 +22,7 @@ class SetupJudges extends React.Component {
 
   onRaceSetupLoaded(raceSetup) {
     this.setState({
-      raceName:raceSetup.Race.Name
+      raceName: raceSetup.Race.Name
     });
   }
 
@@ -34,12 +30,25 @@ class SetupJudges extends React.Component {
     this.setState({judges});
   }
 
-  onNewJudgeNameChanged(newJudgeName) {
-    this.setState({newJudgeName});
+  onAuthorizeDeviceRequested(judgeId, judgeName, connectCode) {
+    const raceId = this.props.raceId;
+    const authorizeRequest = {
+      "JudgeId": judgeId,
+      "JudgeName": judgeName,
+      "ConnectCode": connectCode
+    };
+    Api.postAuthAuthorize(raceId, authorizeRequest).then(this.onAuthorizeDeviceFinished);
   }
 
-  onConnectCodeChanged(connectCode) {
-    this.setState({connectCode});
+  onAuthorizeDeviceFinished(newJudge) {
+    const judges = this.state.judges.slice(0);
+    const existingIndex = judges.findIndex(judge => judge.JudgeId = newJudge.JudgeId);
+    if (existingIndex < 0) {
+      judges.push(newJudge);
+    } else {
+      judges[existingIndex] = newJudge;
+    }
+    this.setState({judges});    
   }
 
   render() {
@@ -47,15 +56,10 @@ class SetupJudges extends React.Component {
       <div>
         <h1>Setup Judges</h1>
         <JudgesList
-          judges={this.state.judges}
-          newJudgeName={this.state.newJudgeName}
-          onNewJudgeNameChange={this.onNewJudgeNameChanged}
-          onNewJudgeClick={this.onNewJudgeClick} />
+          judges={this.state.judges} />
         <ConnectCodeForm
           judges={this.state.judges}
-          connectCode={this.state.connectCode}
-          onJudgeChange={this.on}
-          onConnectCodeChange={this.onConnectCodeChanged} />
+          onAuthorizeDeviceRequested={this.onAuthorizeDeviceRequested} />
       </div>
     );
   }

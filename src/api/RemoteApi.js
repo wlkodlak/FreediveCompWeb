@@ -3,21 +3,45 @@ class RemoteApi {
     this.baseUrl = baseUrl;
   }
 
-  postRaceSetup(raceId, raceSetup) {
-    const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/setup";
+  getRaceCall(raceId, path) {
+    const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
+    return fetch(serviceUrl)
+      .then(response => {
+        if (response.status == 200) return response.json;
+        if (response.status == 400) throw Error(response.body);
+        return null;
+      });
+  }
+
+  postRaceCall(raceId, path, postData) {
+    const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(raceSetup)
+      body: JSON.stringify(postData)
     };
     return fetch(serviceUrl, requestOptions)
-    .then(response => response.status === 200 ? response.json : null);
+      .then(response => {
+        if (response.status == 200) return response.json;
+        if (response.status == 400) throw Error(response.body);
+        return null;
+      });
+  }
+
+  postRaceSetup(raceId, raceSetup) {
+    return postRaceCall(raceId, "setup", raceSetup);
   }
 
   getRaceSetup(raceId) {
-    const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/setup";
-    return fetch(serviceUrl)
-    .then(response => response.status === 200 ? response.json : null);
+    return getRaceCall(raceId, "setup");
+  }
+
+  getAuthJudges(raceId) {
+    return getRaceCall(raceId, "auth/judges");
+  }
+
+  postAuthAuthorize(raceId, authorizeRequest) {
+    return postRaceCall(raceId, "auth/authorize", authorizeRequest);
   }
 }
 

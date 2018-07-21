@@ -161,6 +161,32 @@ class MockedApi {
       ]
     });
   }
+
+  getAuthJudges(raceId) {
+    return Promise.resolve([
+      {
+        "JudgeId": "admin",
+        "JudgeName": "Master Geralt",
+        "DeviceIds": ["lkacldskiuleknmcalkjdf"]
+      },
+      {
+        "JudgeId": "milan",
+        "JudgeName": "Milan Wilczak",
+        "DeviceIds": ["983fkljh34k3ijnkjcbkh", "n4378cnbas65kjdkjhbcyde"]
+      }
+    ]);
+  }
+
+  postAuthAuthorize(raceId, authorizeRequest) {
+    console.log("postAuthAuthorize(" + raceId + ")");
+    console.log(authorizeRequest);
+    return Promise.resolve({
+      "JudgeId": authorizeRequest["JudgeId"],
+      "JudgeName": authorizeRequest["JudgeName"],
+      "DeviceIds": ["tesjckiyekj48wncu4"]
+    });
+
+  }
 }
 
 export default MockedApi;
