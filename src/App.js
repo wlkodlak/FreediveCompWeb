@@ -7,6 +7,7 @@ const App = () => (
     <Switch>
       <Route path="/:raceId/create" render={({ match }) => (<CreateRace raceId={match.params.raceId} />)} />
       <Route path="/:raceId/homepage" render={({ match }) => (<HomePage raceId={match.params.raceId} />)} />
+      <Route path="/:raceId/judges" render={({ match }) => (<SetupJudges raceId={match.params.raceId} />)} />
     </Switch>
   </BrowserRouter>
 );
