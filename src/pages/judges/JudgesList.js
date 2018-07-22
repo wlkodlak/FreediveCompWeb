@@ -12,14 +12,16 @@ class JudgesList extends React.Component {
             <th>Devices</th>
           </tr>
         </thead>
-        {
-          judges.map(judge => (
-            <tr key={judge.JudgeId}>
-              <td>{judge.JudgeName}</td>
-              <td>{judge.DeviceIds.length}</td>
-            </tr>
-          ))
-        }
+        <tbody>
+          {
+            judges.map(judge => (
+              <tr key={judge.JudgeId}>
+                <td>{judge.JudgeName}</td>
+                <td>{judge.DeviceIds.length}</td>
+              </tr>
+            ))
+          }
+        </tbody>
       </HTMLTable>
     );
   }
