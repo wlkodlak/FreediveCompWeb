@@ -202,7 +202,8 @@ class MockedApi {
           },
           "Discipline": {
             "DisciplineId": "STA-M",
-            "Name": "STA"
+            "Name": "STA",
+            "Rules": "AIDA-STA"
           },
           "Announcement": {
             "Performance": {
@@ -225,7 +226,8 @@ class MockedApi {
           },
           "Discipline": {
             "DisciplineId": "STA-M",
-            "Name": "STA"
+            "Name": "STA",
+            "Rules": "AIDA-STA"
           },
           "Announcement": {
             "Performance": {
@@ -262,7 +264,8 @@ class MockedApi {
           },
           "Discipline": {
             "DisciplineId": "STA-F",
-            "Name": "STA"
+            "Name": "STA",
+            "Rules": "AIDA-STA"
           },
           "Announcement": {
             "Performance": {
@@ -310,7 +313,8 @@ class MockedApi {
           {
             "Discipline": {
               "DisciplineId": "DYN-M",
-              "Name": "DYN"
+              "Name": "DYN",
+              "Rules": "AIDA-DYN"
             },
             "Title": "DYN",
             "IsSortingSource": true
@@ -478,7 +482,8 @@ class MockedApi {
           {
             "Discipline": {
               "DisciplineId": "STA-M",
-              "Name": "STA"
+              "Name": "STA",
+              "Rules": "AIDA-STA"
             },
             "Title": "STA",
             "IsSortingSource": false
@@ -486,7 +491,8 @@ class MockedApi {
           {
             "Discipline": {
               "DisciplineId": "DYN-M",
-              "Name": "DYN"
+              "Name": "DYN",
+              "Rules": "AIDA-DYN"
             },
             "Title": "DYN",
             "IsSortingSource": false

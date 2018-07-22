@@ -1,6 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
 import { H1, HTMLTable } from '@blueprintjs/core';
+import { formatPerformance } from '../finalresults/PerformanceFormetters';
 
 class StartingList extends React.Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class StartingList extends React.Component {
   }
 
   componentWillMount() {
-    Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartingListReceived);
+    const { raceId, startingLaneId } = this.props;
+    Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived);
   }
 
   onStartingListReceived(report) {
@@ -23,14 +25,15 @@ class StartingList extends React.Component {
     this.setState({title, entries});
   }
 
-  convertEntry(entry) {
+  convertEntry(entry, index) {
     return {
+      number: index,
       fullName: `${entry.Athlete.FirstName} ${entry.Athlete.Surname}`,
       country: entry.Athlete.CountryName,
       officialTop: convertOfficialTop(entry.Start.OfficialTop),
       laneName: entry.Start.StartingLaneLongName,
-      announced: convertPerformance(entry.Announcement.Performance),
-      realized: entry.CurrentResult ? convertPerformance(entry.CurrentResult.Performance) : "",
+      announced: formatPerformance(entry.Announcement.Performance),
+      realized: entry.CurrentResult ? formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? convertShortCard(entry.CurrentResult.CardResult) : "",
       note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : ""
     };
@@ -83,7 +86,7 @@ class StartingList extends React.Component {
             {
               this.state.entries.map(entry => {
                 return (
-                  <tr>
+                  <tr key={entry.number}>
                     <td>{entry.fullName}</td>
                     <td>{entry.country}</td>
                     <td>{entry.officialTop}</td>
