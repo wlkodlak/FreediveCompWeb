@@ -187,6 +187,319 @@ class MockedApi {
     });
 
   }
+
+  getReportStartingList(raceId, laneId) {
+    return {
+      "Title": "STA",
+      "Entries": [
+        {
+          "Athlete": {
+            "AthleteId": "12-radim-pravy",
+            "FirstName": "Radim",
+            "Surname": "Pravy",
+            "CountryName": "CZE",
+            "Sex": "Male"
+          },
+          "Discipline": {
+            "DisciplineId": "STA-M",
+            "Name": "STA"
+          },
+          "Announcement": {
+            "Performance": {
+              "Duration": "00:02:00"
+            }
+          },
+          "Start": {
+            "StartingLaneId": "STA-B",
+            "StartingLaneLongName": "B",
+            "OfficialTop": "2018-05-27T09:44:00+02:00"
+          }
+        },
+        {
+          "Athlete": {
+            "AthleteId": "19-milan-wilczak",
+            "FirstName": "Milan",
+            "Surname": "Wilczak",
+            "CountryName": "CZE",
+            "Sex": "Male"
+          },
+          "Discipline": {
+            "DisciplineId": "STA-M",
+            "Name": "STA"
+          },
+          "Announcement": {
+            "Performance": {
+              "Duration": "00:05:00"
+            }
+          },
+          "Start": {
+            "StartingLaneId": "STA-A",
+            "StartingLaneLongName": "A",
+            "OfficialTop": "2018-05-27T10:52:00+02:00"
+          },
+          "CurrentResult": {
+            "Performance": {
+              "Duration": "00:06:47",
+              "Points": 81.4
+            },
+            "Penalizations": [],
+            "FinalPerformance": {
+              "Duration": "00:06:47",
+              "Points": 81.4
+            },
+            "CardResult": "White",
+            "JudgeId": "admin",
+            "JudgeName": "Master Geralt"
+          }
+        },
+        {
+          "Athlete": {
+            "AthleteId": "28-jana-novakova",
+            "FirstName": "Jana",
+            "Surname": "Novakova",
+            "CountryName": "CZE",
+            "Sex": "Female"
+          },
+          "Discipline": {
+            "DisciplineId": "STA-F",
+            "Name": "STA"
+          },
+          "Announcement": {
+            "Performance": {
+              "Duration": "00:03:00"
+            }
+          },
+          "Start": {
+            "StartingLaneId": "STA-B",
+            "StartingLaneLongName": "B",
+            "OfficialTop": "2018-05-27T11:04:00+02:00"
+          },
+          "CurrentResult": {
+            "Performance": {
+              "Duration": "00:04:55",
+              "Points": 57.4
+            },
+            "Penalizations": [
+              {
+                "Reason": "Blackout",
+                "ShortReason": "BO",
+                "PenalizationId": "BO",
+                "IsShortPerformance": false
+              }
+            ],
+            "FinalPerformance": {
+              "Duration": "00:04:55",
+              "Points": 0
+            },
+            "CardResult": "Red",
+            "JudgeId": "admin",
+            "JudgeName": "Master Geralt",
+            "JudgeNote": "BO"
+          }
+        }
+      ]
+    };
+  }
+
+  getReportDisciplineResults(raceId, disciplineId) {
+    return {
+      "Metadata": {
+        "DisciplineId": "DYN-M",
+        "Title": "Dynamic apnea - Men",
+        "Columns": [
+          {
+            "Discipline": {
+              "DisciplineId": "DYN-M",
+              "Name": "DYN"
+            },
+            "Title": "DYN",
+            "IsSortingSource": true
+          }
+        ]
+      },
+      "Results": [
+        {
+          "Athlete": {
+            "AthleteId": "73-mateusz-malina",
+            "FirstName": "Mateusz",
+            "Surname": "Malina",
+            "CountryName": "POL",
+            "Sex": "Male"
+          },
+          "Subresults": [
+            {
+              "Announcement": {
+                "Performance": {
+                  "Distance": 150
+                }
+              },
+              "CurrentResult": {
+                "Performance": {
+                  "Distance": 270,
+                  "Points": 135
+                },
+                "Penalizations": [],
+                "FinalPerformance": {
+                  "Distance": 270,
+                  "Points": 135
+                },
+                "CardResult": "White",
+                "JudgeId": "admin",
+                "JudgeName": "Master Geralt"
+              }
+            }
+          ]
+        },
+        {
+          "Athlete": {
+            "AthleteId": "19-milan-wilczak",
+            "FirstName": "Milan",
+            "Surname": "Wilczak",
+            "CountryName": "CZE",
+            "Sex": "Male"
+          },
+          "Subresults": [
+            {
+              "Announcement": {
+                "Performance": {
+                  "Distance": 100
+                }
+              },
+              "CurrentResult": {
+                "Performance": {
+                  "Distance": 125,
+                  "Points": 62.5
+                },
+                "Penalizations": [],
+                "FinalPerformance": {
+                  "Distance": 125,
+                  "Points": 62.5
+                },
+                "CardResult": "White",
+                "JudgeId": "admin",
+                "JudgeName": "Master Geralt"
+              }
+            }
+          ]
+        },
+        {
+          "Athlete": {
+            "AthleteId": "23-radek-svoboda",
+            "FirstName": "Radek",
+            "Surname": "Svoboda",
+            "CountryName": "CZE",
+            "Sex": "Male"
+          },
+          "Subresults": [
+            {
+              "Announcement": {
+                "Performance": {
+                  "Distance": 100
+                }
+              },
+              "CurrentResult": {
+                "Performance": {
+                  "Distance": 105,
+                  "Points": 60.5
+                },
+                "Penalizations": [
+                  {
+                    "Reason": "Push/pull on exit",
+                    "ShortReason": "Exit",
+                    "PenalizationId": "ExitHelp",
+                    "Performance": {
+                      "Points": 5
+                    },
+                    "IsShortPerformance": false
+                  }
+                ],
+                "FinalPerformance": {
+                  "Distance": 105,
+                  "Points": 50.0
+                },
+                "CardResult": "Yellow",
+                "JudgeId": "admin",
+                "JudgeName": "Master Geralt",
+                "JudgeComment": "Exit"
+              }
+            }
+          ]
+        },
+        {
+          "Athlete": {
+            "AthleteId": "61-radim-darous",
+            "FirstName": "Radim",
+            "Surname": "Darous",
+            "CountryName": "CZE",
+            "Sex": "Male"
+          },
+          "Subresults": [
+            {
+              "Announcement": {
+                "Performance": {
+                  "Distance": 100
+                }
+              },
+              "CurrentResult": {
+                "Performance": {
+                  "Distance": 120,
+                  "Points": 60
+                },
+                "Penalizations": [
+                  {
+                    "Reason": "Blackout",
+                    "ShortReason": "BO",
+                    "PenalizationId": "Blackout",
+                    "IsShortPerformance": false
+                  }
+                ],
+                "FinalPerformance": {
+                  "Distance": 120,
+                  "Points": 0
+                },
+                "CardResult": "White",
+                "JudgeId": "admin",
+                "JudgeName": "Master Geralt",
+                "JudgeComment": "BO"
+              }
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  getReportResultList(raceId, resultListId) {
+    return {
+      "Metadata": {
+        "ResultsListId": "Men",
+        "Title": "Final results - Men",
+        "Columns": [
+          {
+            "Discipline": {
+              "DisciplineId": "STA-M",
+              "Name": "STA"
+            },
+            "Title": "STA",
+            "IsSortingSource": false
+          },
+          {
+            "Discipline": {
+              "DisciplineId": "DYN-M",
+              "Name": "DYN"
+            },
+            "Title": "DYN",
+            "IsSortingSource": false
+          },
+          {
+            "Title": "Totals",
+            "IsSortingSource": true
+          }
+        ]
+      },
+      "Results": []
+    };
+  }
 }
 
 export default MockedApi;

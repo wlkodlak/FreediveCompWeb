@@ -43,6 +43,18 @@ class RemoteApi {
   postAuthAuthorize(raceId, authorizeRequest) {
     return postRaceCall(raceId, "auth/authorize", authorizeRequest);
   }
+
+  getReportStartingList(raceId, laneId) {
+    return getRaceCall(raceId, "reports/start/" + laneId);
+  }
+
+  getReportDisciplineResults(raceId, disciplineId) {
+    return getRaceCall(raceId, "reports/discipline/" + disciplineId);
+  }
+
+  getReportResultList(raceId, resultListId) {
+    return getRaceCall(raceId, "reports/results/" + resultsListId);
+  }
 }
 
 export default RemoteApi;
