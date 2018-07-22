@@ -250,5 +250,6 @@ class NewRaceSetupGenerator {
       "Components": components
     });
   }
-
 }
+
+export default NewRaceSetupGenerator;

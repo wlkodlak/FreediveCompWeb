@@ -1,5 +1,5 @@
 import React from 'react';
-import { H5, FormGroup, NumericInput, HTMLSelect, Checkbox } from '@blueprintjs/core'
+import { H5, FormGroup, NumericInput, HTMLSelect, Checkbox } from '@blueprintjs/core';
 
 class NewRaceStaSettings extends React.Component {
   constructor(props) {

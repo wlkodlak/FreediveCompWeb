@@ -1,6 +1,7 @@
-import React from 'react'
-import { H1 } from '@blueprintjs/core'
-import StartingLanesListLevel from './StartingLanesListLevel'
+import React from 'react';
+import { H1 } from '@blueprintjs/core';
+import StartingLanesListLevel from './StartingLanesListLevel';
+import Api from '../../api/Api';
 
 class StartingLanes extends React.Component {
   state = {
@@ -8,7 +9,7 @@ class StartingLanes extends React.Component {
   }
 
   componentWillMount() {
-    Api.getRaceSetup(raceId).then(this.onRaceSetupLoaded);
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded);
   }
 
   onRaceSetupLoaded(raceSetup) {

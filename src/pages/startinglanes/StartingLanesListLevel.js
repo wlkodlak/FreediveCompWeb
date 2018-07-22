@@ -31,4 +31,4 @@ class StartingLanesListLevel extends React.Component {
   }
 }
 
-export default StartingLanes;
+export default StartingLanesListLevel;
