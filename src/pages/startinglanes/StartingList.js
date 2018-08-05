@@ -1,7 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
 import { H1, HTMLTable } from '@blueprintjs/core';
-import { formatPerformance } from '../finalresults/PerformanceFormetters';
+import { formatPerformance } from '../finalresults/PerformanceFormatters';
 
 class StartingList extends React.Component {
   constructor(props) {

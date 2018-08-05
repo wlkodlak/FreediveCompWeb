@@ -55,6 +55,18 @@ class RemoteApi {
   getReportResultList(raceId, resultListId) {
     return getRaceCall(raceId, "reports/results/" + resultsListId);
   }
+
+  getAthletes(raceId) {
+    return getRaceCall(raceId, "athletes");
+  }
+
+  getAthlete(raceId, athleteId) {
+    return getRaceCall(raceId, "athletes/" + athleteId);
+  }
+
+  postAthlete(raceId, athleteId, athleteData) {
+    return postRaceCall(raceId, "athletes/" + athleteId, athleteData);
+  }
 }
 
 export default RemoteApi;

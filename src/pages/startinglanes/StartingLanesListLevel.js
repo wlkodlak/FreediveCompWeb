@@ -1,6 +1,6 @@
-import React from 'react'
-import { UL } from '@blueprintjs/core'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { UL } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
 
 class StartingLanesListLevel extends React.Component {
   render() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatPerformance, formatPointsPerformance } from './PerformanceFormetters';
+import { formatPerformance, formatPointsPerformance } from './PerformanceFormatters';
 
 export default class SingleAidaDisciplineColumn {
   constructor(columnMetadata) {

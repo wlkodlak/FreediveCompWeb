@@ -1,10 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import CreateRace from './pages/createrace/CreateRace'
-import Homepage from './pages/homepage/HomePage'
-import SetupJudges from './pages/judges/SetupJudges'
-import StartingLanes from './pages/startinglanes/StartingLanes'
-import Disciplines from './pages/disciplines/DisciplinesList'
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import CreateRace from './pages/createrace/CreateRace';
+import Homepage from './pages/homepage/HomePage';
+import SetupJudges from './pages/judges/SetupJudges';
+import StartingLanes from './pages/startinglanes/StartingLanes';
+import Disciplines from './pages/disciplines/DisciplinesList';
+import SetupAthletes from './pages/athletes/SetupAthletes';
+import SetupAthlete from './pages/athletes/SetupAthlete';
 
 const App = () => (
   <BrowserRouter>
@@ -36,6 +38,12 @@ const App = () => (
       <Route
         path="/:raceId/resultlists"
         render={({ match }) => (<FinalReportsList raceId={match.params.raceId} />)} />
+      <Route
+        path="/:raceId/athletes/:athleteId"
+        render={({ match }) => (<SetupAthlete raceId={match.params.raceId} athleteId={match.params.athleteId} />)} />
+      <Route
+        path="/:raceId/athletes"
+        render={({ match }) => (<SetupAthletes raceId={match.params.raceId} />)} />
     </Switch>
   </BrowserRouter>
 );

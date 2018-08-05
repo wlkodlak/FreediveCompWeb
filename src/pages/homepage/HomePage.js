@@ -36,11 +36,7 @@ class HomePage extends React.Component {
         <H2>Competition setup</H2>
         <UL>
           <li><Link to={`/${raceId}/judges`}>Judges</Link></li>
-        </UL>
-        <H2>Import/export</H2>
-        <UL>
-          <li><Link to={`${raceId}/import`}>Import athletes' starts</Link></li>
-          <li><Link to={`${raceId}/export`}>Export athletes' starts</Link></li>
+          <li><Link to={`/${raceId}/athletes`}>Athletes</Link></li>
         </UL>
       </div>
     );

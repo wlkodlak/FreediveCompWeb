@@ -11,7 +11,7 @@ class SetupJudges extends React.Component {
   }
 
   state = {
-    judges = []
+    judges: []
   }
 
   componentWillMount() {
@@ -48,7 +48,7 @@ class SetupJudges extends React.Component {
     } else {
       judges[existingIndex] = newJudge;
     }
-    this.setState({judges});    
+    this.setState({judges});
   }
 
   render() {

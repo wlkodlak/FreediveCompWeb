@@ -506,6 +506,129 @@ class MockedApi {
       "Results": []
     };
   }
+
+  getAthletes(raceId) {
+    return [
+      {
+        "Profile": {
+          "AthleteId": "73-mateusz-malina",
+          "FirstName": "Mateusz",
+          "Surname": "Malina",
+          "CountryName": "POL",
+          "Sex": "Male"
+        }
+      },
+      {
+        "Profile": {
+          "AthleteId": "19-milan-wilczak",
+          "FirstName": "Milan",
+          "Surname": "Wilczak",
+          "CountryName": "CZE",
+          "Sex": "Male"
+        }
+      },
+      {
+        "Profile": {
+          "AthleteId": "23-radek-svoboda",
+          "FirstName": "Radek",
+          "Surname": "Svoboda",
+          "CountryName": "CZE",
+          "Sex": "Male"
+        }
+      },
+      {
+        "Profile": {
+          "AthleteId": "61-radim-darous",
+          "FirstName": "Radim",
+          "Surname": "Darous",
+          "CountryName": "CZE",
+          "Sex": "Male"
+        }
+      },
+      {
+        "Profile": {
+          "AthleteId": "27-martina-silhava",
+          "FirstName": "Martina",
+          "Surname": "Silhava",
+          "CountryName": "CZE",
+          "Sex": "Female"
+        }
+      },
+      {
+        "Profile": {
+          "AthleteId": "44-jana-mala",
+          "FirstName": "Jana",
+          "Surname": "Mala",
+          "CountryName": "CZE",
+          "Sex": "Female"
+        }
+      }
+    ];
+  }
+
+  getAthlete(raceId, athleteId) {
+    return {
+      "Profile": {
+        "AthleteId": "19-milan-wilczak",
+        "FirstName": "Milan",
+        "Surname": "Wilczak",
+        "CountryName": "CZE",
+        "Sex": "Male"
+      },
+      "Announcements": [
+        {
+          "DisciplineId": "STA-M",
+          "Performance": {
+            "Duration": "5:00"
+          }
+        },
+        {
+          "DisciplineId": "DYN-M",
+          "Performance": {
+            "Distance": 100
+          }
+        }
+      ],
+      "Results": [
+        {
+          "DisciplineId": "STA-M",
+          "Performance": {
+            "Duration": "6:47",
+            "Points": 81.4
+          },
+          "Penalizations": [],
+          "FinalPerformance": {
+            "Duration": "6:47",
+            "Points": 81.4
+          },
+          "CardResult": "White",
+          "JudgeId": "admin",
+          "JudgeName": "Master Geralt"
+        },
+        {
+          "DisciplineId": "DYN-M",
+          "Performance": {
+            "Distance": 125,
+            "Points": 62.5
+          },
+          "Penalizations": [],
+          "FinalPerformance": {
+            "Distance": 125,
+            "Points": 62.5
+          },
+          "CardResult": "White",
+          "JudgeId": "admin",
+          "JudgeName": "Master Geralt"
+        }
+      ]
+    };
+  }
+
+  postAthlete(raceId, athleteId, athleteData) {
+    console.log("postAthlete(" + raceId + ", " + athleteId + ")");
+    console.log(raceSetup);
+    return Promise.resolve(null);
+  }
 }
 
 export default MockedApi;
