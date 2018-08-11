@@ -11,15 +11,15 @@ class CheckboxGroup extends React.Component {
     const value = event.target.value;
     const checked = event.target.checked;
     const selectedValues = this.props.options
-      .filter(option -> option.value == value ? checked : option.checked)
-      .map(option -> option.value);
+      .filter(option => option.value === value ? checked : option.checked)
+      .map(option => option.value);
     this.props.onChange({ value, checked, selectedValues });
   }
 
   render() {
     return (
       <FormGroup label={this.props.label}>
-        { this.props.options.map(option -> (
+        { this.props.options.map(option => (
           <Checkbox
             key={option.value}
             checked={this.props.selectedValues.includes(option.value)}
@@ -31,3 +31,5 @@ class CheckboxGroup extends React.Component {
     );
   }
 }
+
+export default CheckboxGroup;

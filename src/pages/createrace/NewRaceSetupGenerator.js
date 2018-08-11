@@ -1,5 +1,5 @@
 class NewRaceSetupGenerator {
-  constructor NewRaceSetupGenerator(raceId, settings) {
+  constructor(raceId, settings) {
     this.raceId = raceId;
     this.raceSettings = settings.raceSettings;
     this.athleteCategories = settings.athleteCategories;
@@ -10,10 +10,10 @@ class NewRaceSetupGenerator {
 
   buildRaceSetupDto() {
     return {
-      "Race": buildRaceSettings(),
-      "StartingLanes": buildStartingLanes(),
-      "Disciplines": buildDisciplines(),
-      "ResultLists": buildResultLists()
+      "Race": this.buildRaceSettings(),
+      "StartingLanes": this.buildStartingLanes(),
+      "Disciplines": this.buildDisciplines(),
+      "ResultLists": this.buildResultLists()
     };
   }
 
@@ -31,29 +31,29 @@ class NewRaceSetupGenerator {
 
     if (this.staSettings.lanes > 0) {
       const staDimensions = [
-        buildStaEquipmentDimension(),
-        buildCategoriesDimension(this.staSettings, true),
-        buildLanesCountDimension(this.staSettings)
+        this.buildStaEquipmentDimension(),
+        this.buildCategoriesDimension(this.staSettings, true),
+        this.buildLanesCountDimension(this.staSettings)
       ];
-      buildStartingLanesFromDimensions(allLanes, staDimensions);
+      this.buildStartingLanesFromDimensions(allLanes, staDimensions);
     }
 
     if (this.dynSettings.lanes > 0) {
       const dynDimensions = [
-        buildDynEquipmentDimension(this.dynSettings, true),
-        buildCategoriesDimension(this.dynSettings, true),
-        buildLanesCountDimension(this.dynSettings)
+        this.buildDynEquipmentDimension(this.dynSettings, true),
+        this.buildCategoriesDimension(this.dynSettings, true),
+        this.buildLanesCountDimension(this.dynSettings)
       ];
-      buildStartingLanesFromDimensions(allLanes, dynDimensions);
+      this.buildStartingLanesFromDimensions(allLanes, dynDimensions);
     }
 
     if (this.cwtSettings.lanes > 0) {
       const cwtDimensions = [
-        buildCwtEquipmentDimension(this.cwtSettings, true),
-        buildCategoriesDimension(this.cwtSettings, true),
-        buildLanesCountDimension(this.cwtSettings)
+        this.buildCwtEquipmentDimension(this.cwtSettings, true),
+        this.buildCategoriesDimension(this.cwtSettings, true),
+        this.buildLanesCountDimension(this.cwtSettings)
       ];
-      buildStartingLanesFromDimensions(allLanes, cwtDimensions);
+      this.buildStartingLanesFromDimensions(allLanes, cwtDimensions);
     }
 
     return allLanes;
@@ -69,7 +69,7 @@ class NewRaceSetupGenerator {
     if (settings.disciplineNoFins) equipmentDimension.push("DNF");
     if (settings.disciplineAnyFins) equipmentDimension.push("DYN");
     if (settings.disciplineBiFins) equipmentDimension.push("DYN-bi");
-    if (equipmentDimension.length == 0) equipmentDimension.push("DYN");
+    if (equipmentDimension.length === 0) equipmentDimension.push("DYN");
     return equipmentDimension;
   }
 
@@ -79,14 +79,14 @@ class NewRaceSetupGenerator {
     if (settings.disciplineNoFins) equipmentDimension.push("CNF");
     if (settings.disciplineAnyFins) equipmentDimension.push("CWT");
     if (settings.disciplineBiFins) equipmentDimension.push("CWT-bi");
-    if (equipmentDimension.length == 0) equipmentDimension.push("CWT");
+    if (equipmentDimension.length === 0) equipmentDimension.push("CWT");
     return equipmentDimension;
   }
 
   buildCategoriesDimension(settings, forStart) {
     if (!forStart && settings && settings.separateCategories) return [null];
     const athleteCategories = this.athleteCategories;
-    if (athleteCategories.length == 0) return [null];
+    if (athleteCategories.length === 0) return [null];
     return athleteCategories;
   }
 
@@ -101,16 +101,16 @@ class NewRaceSetupGenerator {
   }
 
   buildStartingLanesFromDimensions(parentId, targetList, dimensions) {
-    if (dimensions.length == 0) return;
+    if (dimensions.length === 0) return;
     const dimension = dimensions[0];
     const nextDimensions = dimensions.slice(1);
-    if (dimension.length == 1 && parentId != null) {
+    if (dimension.length === 1 && parentId != null) {
       const thisId = dimension[0];
       if (thisId == null) {
         // skip this dimension completely
-        buildStartingLanesFromDimensions(parentId, targetList, nextDimensions);
+        this.buildStartingLanesFromDimensions(parentId, targetList, nextDimensions);
       } else {
-        buildStartingLanesFromDimensions(parentId + "-" + thisId, targetList, nextDimensions);
+        this.buildStartingLanesFromDimensions(parentId + "-" + thisId, targetList, nextDimensions);
       }
     } else {
       for (const name of dimension) {
@@ -121,7 +121,7 @@ class NewRaceSetupGenerator {
           "ShortName": name,
           "SubLanes": subList
         });
-        buildStartingLanesFromDimensions(laneId, subList, nextDimensions);
+        this.buildStartingLanesFromDimensions(laneId, subList, nextDimensions);
       }
     }
   }
@@ -130,29 +130,29 @@ class NewRaceSetupGenerator {
     const disciplines = [];
 
     if (this.staSettings.lanes > 0) {
-      buildDisciplinesFromDimensions(
+      this.buildDisciplinesFromDimensions(
         disciplines,
-        buildStaEquipmentDimension(),
-        buildCategoriesDimension(this.staSettings, false),
-        buildSexDimension(),
+        this.buildStaEquipmentDimension(),
+        this.buildCategoriesDimension(this.staSettings, false),
+        this.buildSexDimension(),
         this.staSettings.rules);
     }
 
     if (this.dynSettings.lanes > 0) {
-      buildDisciplinesFromDimensions(
+      this.buildDisciplinesFromDimensions(
         disciplines,
-        buildDynEquipmentDimension(this.dynSettings, false),
-        buildCategoriesDimension(this.dynSettings, false),
-        buildSexDimension(),
+        this.buildDynEquipmentDimension(this.dynSettings, false),
+        this.buildCategoriesDimension(this.dynSettings, false),
+        this.buildSexDimension(),
         this.dynSettings.rules);
     }
 
     if (this.cwtSettings.lanes > 0) {
-      buildDisciplinesFromDimensions(
+      this.buildDisciplinesFromDimensions(
         disciplines,
-        buildCwtEquipmentDimension(this.cwtSettings, false),
-        buildCategoriesDimension(this.cwtSettings, false),
-        buildSexDimension(),
+        this.buildCwtEquipmentDimension(this.cwtSettings, false),
+        this.buildCategoriesDimension(this.cwtSettings, false),
+        this.buildSexDimension(),
         this.cwtSettings.rules);
     }
 
@@ -163,8 +163,8 @@ class NewRaceSetupGenerator {
     for (const name of names) {
       for (const category of categories) {
         for (const sex of sexes) {
-          const disciplineId = buildDisciplineName("-", [name, category, sex]);
-          const longName = buildDisciplineName("-", [name, category, sex]);
+          const disciplineId = this.buildDisciplineName("-", [name, category, sex]);
+          const longName = this.buildDisciplineName("-", [name, category, sex]);
           disciplines.push({
             "DisciplineId": disciplineId,
             "ShortName": name,
@@ -190,26 +190,26 @@ class NewRaceSetupGenerator {
 
   buildResultLists() {
     const resultLists = [];
-    const categories = buildCategoriesDimension(null, false);
-    const sexes = buildSexDimension();
+    const categories = this.buildCategoriesDimension(null, false);
+    const sexes = this.buildSexDimension();
 
     for (const category of categories) {
       for (const sex of sexes) {
-        const listId = buildDisciplineName("-", [category, sex]);
-        const listTitle = buildDisciplineName(" ", [category, sex]);
+        const listId = this.buildDisciplineName("-", [category, sex]);
+        const listTitle = this.buildDisciplineName(" ", [category, sex]);
         const listColumns = [];
-        buildResultListColumn(
+        this.buildResultListColumn(
           listColumns, this.staSettings, "STA", category, sex,
-          buildStaEquipmentDimension());
-        buildResultListColumn(
+          this.buildStaEquipmentDimension());
+        this.buildResultListColumn(
           listColumns, this.dynSettings, "DYN", category, sex,
-          buildDynEquipmentDimension(this.dynSettings, false));
-        buildResultListColumn(
+          this.buildDynEquipmentDimension(this.dynSettings, false));
+        this.buildResultListColumn(
           listColumns, this.cwtSettings, "CWT", category, sex,
-          buildDynEquipmentDimension(this.cwtSettings, false));
+          this.buildDynEquipmentDimension(this.cwtSettings, false));
 
         if (listColumns.length > 0) {
-          buildResultListTotals(listColumns);
+          this.buildResultListTotals(listColumns);
 
           resultLists.push({
             "ResultsListId": listId,
@@ -224,11 +224,11 @@ class NewRaceSetupGenerator {
   }
 
   buildResultListColumn(listColumns, settings, title, category, sex, disciplines) {
-    if (settings.lanes == 0) return;
+    if (settings.lanes === 0) return;
     if (!settings.rules.startsWith("AIDA-")) return;
 
     const components = disciplines.map(name => {
-      const disciplineId = buildDisciplineName("-", [name, category, sex]);
+      const disciplineId = this.buildDisciplineName("-", [name, category, sex]);
       return { "DisciplineId": disciplineId };
     });
 
@@ -240,7 +240,7 @@ class NewRaceSetupGenerator {
   }
 
   buildResultListTotals(listColumns) {
-    const components = [];
+    let components = [];
     for (const column of listColumns) {
       components = components.concat(column["Components"]);
     }

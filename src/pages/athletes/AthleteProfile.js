@@ -23,20 +23,20 @@ class AthleteProfile extends React.Component {
       }
     ];
 
-    const profile = this.props.profile;
+    let profile = this.props.profile;
     if (profile == null) profile = {};
     this.state = {
-      name: emptyIfNull(profile.FirstName),
-      surname: emptyIfNull(profile.Surname),
-      club: emptyIfNull(profile.Club),
-      country: emptyIfNull(profile.Country),
-      category: emptyIfNull(profile.Category),
-      sex: profile.Sex == "Female" ? "Male" : "Female"
+      name: this.emptyIfNull(profile.FirstName),
+      surname: this.emptyIfNull(profile.Surname),
+      club: this.emptyIfNull(profile.Club),
+      country: this.emptyIfNull(profile.Country),
+      category: this.emptyIfNull(profile.Category),
+      sex: profile.Sex === "Female" ? "Male" : "Female"
     };
   }
 
   emptyIfNull(s) {
-    return typeof s == "string" ? s : "";
+    return typeof s === "string" ? s : "";
   }
 
   onFormSubmit(event) {

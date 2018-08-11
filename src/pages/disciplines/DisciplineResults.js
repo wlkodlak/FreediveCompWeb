@@ -1,6 +1,6 @@
 import React from 'react';
 import Api from '../../api/Api';
-import { H1, HTMLTable } from '@blueprintjs/core';
+import { H1 } from '@blueprintjs/core';
 import SingleAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColumn';
 import ResultsReport from '../finalresults/ResultsReport';
 
@@ -24,10 +24,11 @@ class DisciplineResults extends React.Component {
   }
 
   convertColumn(column) {
-    return new SingleAidaDisciplineColumn(column);
+    return new SingleAidaDisciplineColumn();
   }
 
   render() {
+    const report = this.state.report;
     if (typeof report === "object") {
       const title = report.Metadata.Title;
       const columns = report.Metadata.Columns.map(this.convertColumn);

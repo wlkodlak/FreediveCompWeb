@@ -27,8 +27,8 @@ class SetupAthletes extends React.Component {
     const raceId = this.props.raceId;
     return {
       id: dto.Profile.AthleteId,
-      link: `/${raceId}/athletes/${athlete.Profile.AthleteId}`
-      fullName: `${athlete.Profile.FirstName} ${athlete.Profile.Surname}`,
+      link: `/${raceId}/athletes/${dto.Profile.AthleteId}`,
+      fullName: `${dto.Profile.FirstName} ${dto.Profile.Surname}`,
       club: dto.Profile.Club,
       country: dto.Profile.Country,
       sex: dto.Profile.Sex,
@@ -38,7 +38,7 @@ class SetupAthletes extends React.Component {
 
   render() {
     const raceId = this.props.raceId;
-    const athletes = this.state.athletes.map(athlete -> this.renderAthlete(athlete));
+    const athletes = this.state.athletes.map(athlete => this.renderAthlete(athlete));
 
     return (<div>
       <H1>Athletes</H1>
@@ -54,7 +54,7 @@ class SetupAthletes extends React.Component {
         </thead>
         <tbody>
           {
-            athletes.map(athlete -> (
+            athletes.map(athlete => (
               <tr key={athlete.id}>
                 <td><Link to={athlete.link}>{athlete.fullName}</Link></td>
                 <td>{athlete.club}</td>

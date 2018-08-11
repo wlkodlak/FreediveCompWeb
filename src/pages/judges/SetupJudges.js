@@ -1,6 +1,7 @@
 import React from 'react';
-import { FormGroup, ControlGroup, InputGroup, Button, HTMLSelect, HTMLTable, H5 } from '@blueprintjs/core';
 import Api from '../../api/Api';
+import ConnectCodeForm from './ConnectCodeForm';
+import JudgesList from './JudgesList';
 
 class SetupJudges extends React.Component {
   constructor(props) {

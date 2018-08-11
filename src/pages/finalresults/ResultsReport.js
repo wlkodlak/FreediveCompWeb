@@ -2,10 +2,6 @@ import React from 'react';
 import { H1, HTMLTable } from '@blueprintjs/core';
 
 class ResultsReport extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { title, columns, results } = this.props;
 

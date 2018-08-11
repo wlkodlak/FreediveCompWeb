@@ -11,7 +11,7 @@ class SetupAthlete extends React.Component {
     this.onAthleteLoaded = this.onAthleteLoaded.bind(this);
     this.onRaceLoaded = this.onRaceLoaded.bind(this);
     this.state = {
-      athleteId: props.athleteId == "new" ? null : props.athleteId,
+      athleteId: props.athleteId === "new" ? null : props.athleteId,
       profile: {},
       announcements: [],
       results: [],
@@ -23,10 +23,10 @@ class SetupAthlete extends React.Component {
 
   componentWillMount() {
     const { raceId, athleteId } = this.props;
-    if (athleteId == "new") {
-      this.
-    Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded);
     Api.getRaceSetup(raceId).then(this.onRaceLoaded);
+    if (athleteId !== "new") {
+      Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded);
+    }
   }
 
   onRaceLoaded(raceSetup) {
@@ -38,22 +38,24 @@ class SetupAthlete extends React.Component {
   onAthleteLoaded(athlete) {
     this.setState({
       profile: athlete.Profile,
-      announcements: athlete.Announcements
+      announcements: athlete.Announcements,
       results: athlete.Results
     });
   }
 
   onAthleteProfileSubmit(newProfile) {
-    if (this.state.athleteId == null) {
-      this.state.athleteId = generateAthleteId(newProfile.FirstName, newProfile.Surname);
-      newProfile.AthleteId = this.state.athleteId;
+    let athleteId = this.state.athleteId;
+    if (athleteId == null) {
+      athleteId = this.generateAthleteId(newProfile.FirstName, newProfile.Surname);
+      newProfile.AthleteId = athleteId;
+      this.setState({ athleteId });
     }
     const athleteData = {
       "Profile": newProfile
     };
     this.pendingProfile = newProfile;
 
-    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteProfileSaved);
+    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved);
   }
 
   onAthleteAnnouncementSubmit(newAnnouncements) {
@@ -67,9 +69,9 @@ class SetupAthlete extends React.Component {
 
   onAthleteProfileSaved() {
     this.setState({
-      profile: pendingProfile
+      profile: this.pendingProfile
     });
-    pendingProfile = null;
+    this.pendingProfile = null;
   }
 
   onAthleteAnnouncementsSaved() {
@@ -78,7 +80,7 @@ class SetupAthlete extends React.Component {
 
   render() {
     const isNewAthlete = this.state.athleteId == null;
-    const fullName = `${this.state.profile.FirstName this.state.profile.Surname}`;
+    const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
     return (
       <div>
         {

@@ -1,17 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CreateRace from './pages/createrace/CreateRace';
-import Homepage from './pages/homepage/HomePage';
+import HomePage from './pages/homepage/HomePage';
 import SetupJudges from './pages/judges/SetupJudges';
 import GeneratorTool from './pages/startinglanes/GeneratorTool';
 import StartingList from './pages/startinglanes/StartingList';
 import StartingLanes from './pages/startinglanes/StartingLanes';
 import DisciplineResults from './pages/disciplines/DisciplineResults';
-import Disciplines from './pages/disciplines/DisciplinesList';
+import DisciplinesList from './pages/disciplines/DisciplinesList';
 import FinalResults from './pages/finalresults/FinalResults';
 import FinalReportsList from './pages/finalresults/FinalReportsList';
 import SetupAthletes from './pages/athletes/SetupAthletes';
 import SetupAthlete from './pages/athletes/SetupAthlete';
+import NoRace from './pages/norace/NoRace';
+import BadPath from './pages/norace/BadPath';
 
 const App = () => (
   <BrowserRouter>
@@ -52,6 +54,12 @@ const App = () => (
       <Route
         path="/:raceId/athletes"
         render={({ match }) => (<SetupAthletes raceId={match.params.raceId} />)} />
+      <Route
+        path="/"
+        exact
+        render={({ match }) => (<NoRace />)} />
+      <Route
+        render={({ match }) => (<BadPath />)} />
     </Switch>
   </BrowserRouter>
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, ControlGroup, InputGroup, Button, HTMLSelect, HTMLTable, H5 } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Button, HTMLSelect } from '@blueprintjs/core';
 
 class ConnectCodeForm extends React.Component {
   constructor(props) {
@@ -24,10 +24,10 @@ class ConnectCodeForm extends React.Component {
 
   onJudgeIdChanged(event) {
     const judgeId = event.target.value;
-    if (judgeId == "new") {
+    if (judgeId === "new") {
       this.setState({ judgeId });
     } else {
-      const judge = this.props.judges.find(judge => judge.JudgeId == judgeId);
+      const judge = this.props.judges.find(judge => judge.JudgeId === judgeId);
       const judgeName = judge === undefined ? "" : judge.JudgeName;
       this.setState({judgeId, judgeName});
     }
@@ -42,12 +42,12 @@ class ConnectCodeForm extends React.Component {
   onSubmit(event) {
     event.preventDefault();
     const { judgeId, judgeName, connectCode } = this.state;
-    if (connectCode == "" || judgeName == "") return; // nothing prepared, ignore
+    if (connectCode === "" || judgeName === "") return; // nothing prepared, ignore
     this.props.onAuthorizeDeviceRequested(judgeId, judgeName, connectCode);
   }
 
   render() {
-    const judgeOptions = this.props.judges.map(judge => { value: judge.JudgeId, label: judge.JudgeName });
+    const judgeOptions = this.props.judges.map(judge => ({ value: judge.JudgeId, label: judge.JudgeName }));
     judgeOptions.splice(0, 0, { value: "new", label: "New judge" });
     return (
       <div>
@@ -67,14 +67,14 @@ class ConnectCodeForm extends React.Component {
             <InputGroup
               type="text"
               placeholder="Name"
-              disabled={this.state.judgeId != "new"}
+              disabled={this.state.judgeId !== "new"}
               value={this.state.judgeName}
               onChange={this.onJudgeNameChanged} />
           </FormGroup>
           <Button
             type="submit"
             text="Authorize device"
-            disabled={this.state.connectCode != "" && this.state.judgeName != ""} />
+            disabled={this.state.connectCode !== "" && this.state.judgeName !== ""} />
         </form>
       </div>
     );

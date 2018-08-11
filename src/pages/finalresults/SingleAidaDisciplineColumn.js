@@ -2,9 +2,6 @@ import React from 'react';
 import { formatPerformance, formatPointsPerformance } from './PerformanceFormatters';
 
 export default class SingleAidaDisciplineColumn {
-  constructor(columnMetadata) {
-  }
-
   renderHeader(key) {
     return [
       <th key={`${key}_announced`}>Announced</th>,
@@ -17,11 +14,11 @@ export default class SingleAidaDisciplineColumn {
 
   renderData(key, result) {
     return [
-      <td key={`${key}_announced`}>{formatAnnounced(result)}</td>,
-      <td key={`${key}_realized`}>{formatRealized(result)}</td>,
-      <td key={`${key}_points`}>{formatPoints(result)}</td>,
-      <td key={`${key}_card`}>{formatCard(result)}</td>,
-      <td key={`${key}_note`}>{formatNote(result)}</td>
+      <td key={`${key}_announced`}>{this.formatAnnounced(result)}</td>,
+      <td key={`${key}_realized`}>{this.formatRealized(result)}</td>,
+      <td key={`${key}_points`}>{this.formatPoints(result)}</td>,
+      <td key={`${key}_card`}>{this.formatCard(result)}</td>,
+      <td key={`${key}_note`}>{this.formatNote(result)}</td>
     ];
   }
 

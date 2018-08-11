@@ -30,11 +30,11 @@ class StartingList extends React.Component {
       number: index,
       fullName: `${entry.Athlete.FirstName} ${entry.Athlete.Surname}`,
       country: entry.Athlete.CountryName,
-      officialTop: convertOfficialTop(entry.Start.OfficialTop),
+      officialTop: this.convertOfficialTop(entry.Start.OfficialTop),
       laneName: entry.Start.StartingLaneLongName,
       announced: formatPerformance(entry.Announcement.Performance),
       realized: entry.CurrentResult ? formatPerformance(entry.CurrentResult.Performance) : "",
-      card: entry.CurrentResult ? convertShortCard(entry.CurrentResult.CardResult) : "",
+      card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
       note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : ""
     };
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { H5, HTMLTable, InputGroup, Button } from '@blueprintjs/core';
+import { H5, HTMLTable, InputGroup, Button, Intent } from '@blueprintjs/core';
 
 class AthleteAnnouncements extends React.Component {
   constructor(props) {
@@ -7,8 +7,8 @@ class AthleteAnnouncements extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onDisciplineChanged = this.onDisciplineChanged.bind(this);
     this.state = {
-      disciplines: this.props.disciplines.map((discipline, index) ->
-        this.buildDisciplineState(this.props.announcements, discipline, index)
+      disciplines: this.props.disciplines.map((discipline, index) =>
+        this.buildDisciplineState(this.props.announcements, discipline, index))
     };
   }
 
@@ -17,16 +17,16 @@ class AthleteAnnouncements extends React.Component {
       id: discipline.DisciplineId,
       index: index,
       name: discipline.ShortName,
-      placeholder: getPlaceholderByRules(discipline.Rules),
+      placeholder: this.getPlaceholderByRules(discipline.Rules),
       dirty: false,
       valid: true,
       performance: discipline.Performance,
-      formatted: findFormattedAnnouncement(
+      formatted: this.findFormattedAnnouncement(
         announcements, discipline.DisciplineId,
-        getPerformanceFormatter(discipline.Rules), ""),
-      performanceParser: getPerformanceParser(discipline.Rules)
+        this.getPerformanceFormatter(discipline.Rules), ""),
+      performanceParser: this.getPerformanceParser(discipline.Rules)
     };
-    row.onChangeHandler = (event) -> this.onDisciplineChanged(row, event.target.value);
+    row.onChangeHandler = (event) => this.onDisciplineChanged(row, event.target.value);
     return row;
   }
 
@@ -48,7 +48,7 @@ class AthleteAnnouncements extends React.Component {
 
   findFormattedAnnouncement(announcements, disciplineId, formatter, fallback) {
     for (const announcement of announcements) {
-      if (announcement.DisciplineId == disciplineId) {
+      if (announcement.DisciplineId === disciplineId) {
         return formatter(announcement);
       }
     }
@@ -59,18 +59,20 @@ class AthleteAnnouncements extends React.Component {
     switch (rules) {
       case "AIDA-STA":
       case "CMAS-STA":
-        return formatDurationPerformance;
+        return this.formatDurationPerformance;
       case "AIDA-DYN":
       case "CMAS-DYN":
-        return formatDistancePerformance;
+        return this.formatDistancePerformance;
       case "AIDA-CWT":
       case "CMAS-CWT":
-        return formatDepthPerformance;
+        return this.formatDepthPerformance;
+      default:
+        return (performance) => "";
     }
   }
 
   formatDurationPerformance(performance) {
-    if (typeof performance == "object" && typeof performance.Duration == "string") {
+    if (typeof performance === "object" && typeof performance.Duration === "string") {
       return performance.Duration.substring(3);
     } else {
       return "";
@@ -78,7 +80,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   formatDistancePerformance(performance) {
-    if (typeof performance == "object" && typeof performance.Distance == "number") {
+    if (typeof performance === "object" && typeof performance.Distance === "number") {
       return performance.Distance.toString();
     } else {
       return "";
@@ -86,7 +88,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   formatDepthPerformance(performance) {
-    if (typeof performance == "object" && typeof performance.Depth == "number") {
+    if (typeof performance === "object" && typeof performance.Depth === "number") {
       return performance.Depth.toString();
     } else {
       return "";
@@ -97,13 +99,15 @@ class AthleteAnnouncements extends React.Component {
     switch (rules) {
       case "AIDA-STA":
       case "CMAS-STA":
-        return parseDurationPerformance;
+        return this.parseDurationPerformance;
       case "AIDA-DYN":
       case "CMAS-DYN":
-        return parseDistancePerformance;
+        return this.parseDistancePerformance;
       case "AIDA-CWT":
       case "CMAS-CWT":
-        return parseDepthPerformance;
+        return this.parseDepthPerformance;
+      default:
+        return s => null;
     }
   }
 
@@ -112,29 +116,33 @@ class AthleteAnnouncements extends React.Component {
     let minutes = 0;
     let seconds = 0;
     if (colonPosition < 0) {
-      seconds = parseInt(value);
+      seconds = parseInt(value, 10);
     } else {
-      minutes = parseInt(value.substring(0, colonPosition));
-      seconds = parseInt(value.substring(colonPosition + 1));
+      minutes = parseInt(value.substring(0, colonPosition), 10);
+      seconds = parseInt(value.substring(colonPosition + 1), 10);
     }
     if (seconds >= 60) {
       minutes += seconds / 60;
       seconds = seconds % 60;
     }
+    const formattedDuration =
+      "00:" +
+      (minutes < 10 ? "0" : "") + minutes.toString() + ":" +
+      (seconds < 10 ? "0" : "") + seconds.toString();
     return {
-      "Duration": "00:" + (minutes < 10 ? "0" : "") + minutes.toString() + ":" + (seconds < 10 ? "0" : "") + seconds.toString();
+      "Duration": formattedDuration
     };
   }
 
   parseDistancePerformance(value) {
     return {
-      "Distance": parseInt(value)
+      "Distance": parseInt(value, 10)
     };
   }
 
   parseDepthPerformance(value) {
     return {
-      "Depth": parseInt(value)
+      "Depth": parseInt(value, 10)
     };
   }
 
@@ -155,11 +163,11 @@ class AthleteAnnouncements extends React.Component {
   onFormSubmit(event) {
     event.preventDefault();
     const announcements = this.state.disciplines
-      .filter(discipline -> discipline.dirty)
-      .map(discipline -> {
+      .filter(discipline => discipline.dirty)
+      .map(discipline => ({
         "DisciplineId": discipline.id,
         "Performance": discipline.performanceParser(discipline.value)
-      });
+      }));
     this.props.onSubmit(announcements);
   }
 
@@ -176,7 +184,7 @@ class AthleteAnnouncements extends React.Component {
           </thead>
           <tbody>
             {
-              this.state.disciplines.map(discipline -> (
+              this.state.disciplines.map(discipline => (
                 <tr key={discipline.id}>
                   <td>{discipline.name}</td>
                   <td>

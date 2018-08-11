@@ -5,7 +5,7 @@ import { formatPerformance } from '../finalresults/PerformanceFormatters';
 class AthleteResults extends React.Component {
   render() {
     const results = this.props.results;
-    if (results.length == 0) {
+    if (results.length === 0) {
       return (
         <div>
           <H5>No results</H5>
@@ -27,7 +27,7 @@ class AthleteResults extends React.Component {
             </thead>
             <tbody>
               {
-                results.map((result, index) -> this.renderResult(result, index))
+                results.map((result, index) => this.renderResult(result, index))
               }
             </tbody>
           </HTMLTable>
@@ -37,10 +37,10 @@ class AthleteResults extends React.Component {
   }
 
   renderResult(result, index) {
-    const disciplineName = findDisciplineName(result.DisciplineId);
+    const disciplineName = this.findDisciplineName(result.DisciplineId);
     const formattedPerformance = formatPerformance(result.Performance);
-    const judgeName = findJudgeName(result.JudgeId);
-    const formattedCard = formatCard(result.CardResult);
+    const judgeName = this.findJudgeName(result.JudgeId);
+    const formattedCard = this.formatCard(result.CardResult);
     const notes = result.JudgeComment;
 
     return (

@@ -3,6 +3,17 @@ class MockedApi {
     this.baseUrl = baseUrl;
   }
 
+  getGlobalSearch() {
+    return Promise.resolve([
+      {
+        "RaceId": "fedf1d4e-9c97-496a-96b0-673a0d830918",
+        "Name": "Brno Minicomp 2018",
+        "Start": "2018-11-10",
+        "End": "2018-11-10"
+      }
+    ]);
+  }
+
   postRaceSetup(raceId, raceSetup) {
     console.log("postRaceSetup(" + raceId + ")");
     console.log(raceSetup);
@@ -626,7 +637,7 @@ class MockedApi {
 
   postAthlete(raceId, athleteId, athleteData) {
     console.log("postAthlete(" + raceId + ", " + athleteId + ")");
-    console.log(raceSetup);
+    console.log(athleteData);
     return Promise.resolve(null);
   }
 
@@ -634,6 +645,17 @@ class MockedApi {
     console.log("postStartingList(" + raceId + ", " + startingLaneId + ")");
     console.log(entries);
     return Promise.resolve(null);
+  }
+
+  getNewRaceId() {
+    const randomHex = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    const randomUuid =
+      randomHex() + randomHex() + "-" +
+      randomHex() + "-" +
+      "4" + randomHex().substring(1) + "-" +
+      "a" + randomHex().substring(1) + "-" +
+      randomHex() + randomHex() + randomHex();
+    return randomUuid;        
   }
 }
 
