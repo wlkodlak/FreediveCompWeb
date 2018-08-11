@@ -629,6 +629,12 @@ class MockedApi {
     console.log(raceSetup);
     return Promise.resolve(null);
   }
+
+  postStartingList(raceId, startingLaneId, entries) {
+    console.log("postStartingList(" + raceId + ", " + startingLaneId + ")");
+    console.log(entries);
+    return Promise.resolve(null);
+  }
 }
 
 export default MockedApi;

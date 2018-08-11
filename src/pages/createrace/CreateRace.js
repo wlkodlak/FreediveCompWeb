@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { H1, Button } from '@blueprintjs/core';
 import NewRaceSettings from './NewRaceSettings';
 import AthleteCategories from './AthleteCategories';
 import NewRaceStaSettings from './NewRaceStaSettings';
@@ -65,7 +65,7 @@ class CreateRace extends React.Component {
     } else {
       return (
         <div>
-          <h1>Create competition</h1>
+          <H1>Create competition</H1>
           <form onSubmit={this.onFormSubmit}>
             <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
             <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />

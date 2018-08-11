@@ -3,8 +3,13 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CreateRace from './pages/createrace/CreateRace';
 import Homepage from './pages/homepage/HomePage';
 import SetupJudges from './pages/judges/SetupJudges';
+import GeneratorTool from './pages/startinglanes/GeneratorTool';
+import StartingList from './pages/startinglanes/StartingList';
 import StartingLanes from './pages/startinglanes/StartingLanes';
+import DisciplineResults from './pages/disciplines/DisciplineResults';
 import Disciplines from './pages/disciplines/DisciplinesList';
+import FinalResults from './pages/finalresults/FinalResults';
+import FinalReportsList from './pages/finalresults/FinalReportsList';
 import SetupAthletes from './pages/athletes/SetupAthletes';
 import SetupAthlete from './pages/athletes/SetupAthlete';
 
@@ -20,6 +25,9 @@ const App = () => (
       <Route
         path="/:raceId/judges"
         render={({ match }) => (<SetupJudges raceId={match.params.raceId} />)} />
+      <Route
+        path="/:raceId/startinglists/generator"
+        render={({ match }) => (<GeneratorTool raceId={match.params.raceId} />)} />
       <Route
         path="/:raceId/startinglists/:laneId"
         render={({ match }) => (<StartingList raceId={match.params.raceId} startingLaneId={match.params.laneId} />)} />

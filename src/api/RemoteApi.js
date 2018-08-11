@@ -67,6 +67,10 @@ class RemoteApi {
   postAthlete(raceId, athleteId, athleteData) {
     return postRaceCall(raceId, "athletes/" + athleteId, athleteData);
   }
+
+  postStartingList(raceId, startingLaneId, entries) {
+    return postRaceCall(raceId, "start/" + startingLaneId, entries);
+  }
 }
 
 export default RemoteApi;
