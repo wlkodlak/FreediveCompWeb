@@ -7,6 +7,7 @@ class StartingList extends React.Component {
   constructor(props) {
     super(props);
     this.onStartingListReceived = this.onStartingListReceived.bind(this);
+    this.convertEntry = this.convertEntry.bind(this);
   }
 
   state = {

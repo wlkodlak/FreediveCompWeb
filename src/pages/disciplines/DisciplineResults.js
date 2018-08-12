@@ -29,7 +29,7 @@ class DisciplineResults extends React.Component {
 
   render() {
     const report = this.state.report;
-    if (typeof report === "object") {
+    if (report != null && typeof report === "object") {
       const title = report.Metadata.Title;
       const columns = report.Metadata.Columns.map(this.convertColumn);
       const results = report.Results;

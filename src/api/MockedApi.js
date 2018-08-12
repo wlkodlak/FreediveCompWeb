@@ -200,7 +200,7 @@ class MockedApi {
   }
 
   getReportStartingList(raceId, laneId) {
-    return {
+    return Promise.resolve({
       "Title": "STA",
       "Entries": [
         {
@@ -312,11 +312,11 @@ class MockedApi {
           }
         }
       ]
-    };
+    });
   }
 
   getReportDisciplineResults(raceId, disciplineId) {
-    return {
+    return Promise.resolve({
       "Metadata": {
         "DisciplineId": "DYN-M",
         "Title": "Dynamic apnea - Men",
@@ -481,11 +481,11 @@ class MockedApi {
           ]
         }
       ]
-    };
+    });
   }
 
   getReportResultList(raceId, resultListId) {
-    return {
+    return Promise.resolve({
       "Metadata": {
         "ResultsListId": "Men",
         "Title": "Final results - Men",
@@ -515,11 +515,11 @@ class MockedApi {
         ]
       },
       "Results": []
-    };
+    });
   }
 
   getAthletes(raceId) {
-    return [
+    return Promise.resolve([
       {
         "Profile": {
           "AthleteId": "73-mateusz-malina",
@@ -574,11 +574,11 @@ class MockedApi {
           "Sex": "Female"
         }
       }
-    ];
+    ]);
   }
 
   getAthlete(raceId, athleteId) {
-    return {
+    return Promise.resolve({
       "Profile": {
         "AthleteId": "19-milan-wilczak",
         "FirstName": "Milan",
@@ -632,7 +632,7 @@ class MockedApi {
           "JudgeName": "Master Geralt"
         }
       ]
-    };
+    });
   }
 
   postAthlete(raceId, athleteId, athleteData) {
@@ -655,7 +655,7 @@ class MockedApi {
       "4" + randomHex().substring(1) + "-" +
       "a" + randomHex().substring(1) + "-" +
       randomHex() + randomHex() + randomHex();
-    return randomUuid;        
+    return randomUuid;
   }
 }
 

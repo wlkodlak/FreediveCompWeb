@@ -30,7 +30,7 @@ class SetupAthletes extends React.Component {
       link: `/${raceId}/athletes/${dto.Profile.AthleteId}`,
       fullName: `${dto.Profile.FirstName} ${dto.Profile.Surname}`,
       club: dto.Profile.Club,
-      country: dto.Profile.Country,
+      country: dto.Profile.CountryName,
       sex: dto.Profile.Sex,
       category: dto.Profile.Category,
     };

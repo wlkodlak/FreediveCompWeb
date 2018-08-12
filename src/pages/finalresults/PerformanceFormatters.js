@@ -1,5 +1,5 @@
 const formatDurationPerformance = performance => {
-  if (typeof performance === "object" && typeof performance.Duration === "string") {
+  if (performance != null && typeof performance === "object" && typeof performance.Duration === "string") {
     return performance.Duration.substring(3);
   } else {
     return "";
@@ -7,7 +7,7 @@ const formatDurationPerformance = performance => {
 };
 
 const formatDistancePerformance = performance => {
-  if (typeof performance === "object" && typeof performance.Distance === "number") {
+  if (performance != null && typeof performance === "object" && typeof performance.Distance === "number") {
     return `${performance.Distance}m`;
   } else {
     return "";
@@ -15,7 +15,7 @@ const formatDistancePerformance = performance => {
 }
 
 const formatDepthPerformance = performance => {
-  if (typeof performance === "object" && typeof performance.Depth === "number") {
+  if (performance != null && typeof performance === "object" && typeof performance.Depth === "number") {
     return `${performance.Depth}m`;
   } else {
     return "";
@@ -23,7 +23,7 @@ const formatDepthPerformance = performance => {
 }
 
 const formatPointsPerformance = performance => {
-  if (typeof performance === "object" && typeof performance.Points === "number") {
+  if (performance != null && typeof performance === "object" && typeof performance.Points === "number") {
     return `${performance.Points}`;
   } else {
     return "";
@@ -31,7 +31,7 @@ const formatPointsPerformance = performance => {
 }
 
 const formatPerformance = performance => {
-  if (typeof performance === "object") {
+  if (performance != null && typeof performance === "object") {
     if (typeof performance.Duration === "string") {
       return performance.Duration.substring(3);
     } else if (typeof performance.Distance === "number") {

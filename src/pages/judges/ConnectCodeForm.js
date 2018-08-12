@@ -41,9 +41,19 @@ class ConnectCodeForm extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
-    const { judgeId, judgeName, connectCode } = this.state;
+    let judgeId = this.state.judgeId;
+    const judgeName = this.state.judgeName;
+    const connectCode = this.state.connectCode;
+    if (judgeId === "new") judgeId = this.generateJudgeId(judgeName);
     if (connectCode === "" || judgeName === "") return; // nothing prepared, ignore
     this.props.onAuthorizeDeviceRequested(judgeId, judgeName, connectCode);
+    this.setState({connectCode: ""});
+  }
+
+  generateJudgeId(judgeName) {
+    return judgeName
+      .toLowerCase().replace(" ", "-")
+      .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z")).join("");
   }
 
   render() {
@@ -74,7 +84,7 @@ class ConnectCodeForm extends React.Component {
           <Button
             type="submit"
             text="Authorize device"
-            disabled={this.state.connectCode !== "" && this.state.judgeName !== ""} />
+            disabled={this.state.connectCode === "" || this.state.judgeName === ""} />
         </form>
       </div>
     );

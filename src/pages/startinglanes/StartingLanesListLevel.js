@@ -12,7 +12,7 @@ class StartingLanesListLevel extends React.Component {
             const hasSublanes = lane.SubLanes && lane.SubLanes.length > 0;
             const laneId = lane.StartingLaneId;
             const laneName = lane.ShortName;
-            const laneLink = hasSublanes ? null : `${raceId}/startinglists/${laneId}`;
+            const laneLink = `/${raceId}/startinglists/${laneId}`;
             return (
               <li key={laneId}>
                 <Link to={laneLink}>{laneName}</Link>

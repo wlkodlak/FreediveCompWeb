@@ -21,8 +21,8 @@ class NewRaceSetupGenerator {
     return {
       "RaceId": this.raceId,
       "Name": this.raceSettings.name,
-      "Start": this.raceSettings.since,
-      "End": this.raceSettings.until
+      "Start": this.raceSettings.since.toISOString(),
+      "End": this.raceSettings.until.toISOString()
     };
   }
 
@@ -35,7 +35,7 @@ class NewRaceSetupGenerator {
         this.buildCategoriesDimension(this.staSettings, true),
         this.buildLanesCountDimension(this.staSettings)
       ];
-      this.buildStartingLanesFromDimensions(allLanes, staDimensions);
+      this.buildStartingLanesFromDimensions(null, allLanes, staDimensions);
     }
 
     if (this.dynSettings.lanes > 0) {
@@ -44,7 +44,7 @@ class NewRaceSetupGenerator {
         this.buildCategoriesDimension(this.dynSettings, true),
         this.buildLanesCountDimension(this.dynSettings)
       ];
-      this.buildStartingLanesFromDimensions(allLanes, dynDimensions);
+      this.buildStartingLanesFromDimensions(null, allLanes, dynDimensions);
     }
 
     if (this.cwtSettings.lanes > 0) {
@@ -53,7 +53,7 @@ class NewRaceSetupGenerator {
         this.buildCategoriesDimension(this.cwtSettings, true),
         this.buildLanesCountDimension(this.cwtSettings)
       ];
-      this.buildStartingLanesFromDimensions(allLanes, cwtDimensions);
+      this.buildStartingLanesFromDimensions(null, allLanes, cwtDimensions);
     }
 
     return allLanes;
@@ -84,7 +84,7 @@ class NewRaceSetupGenerator {
   }
 
   buildCategoriesDimension(settings, forStart) {
-    if (!forStart && settings && settings.separateCategories) return [null];
+    if (forStart && !settings.separateCategories) return [null];
     const athleteCategories = this.athleteCategories;
     if (athleteCategories.length === 0) return [null];
     return athleteCategories;

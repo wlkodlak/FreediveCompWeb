@@ -9,6 +9,7 @@ class SetupJudges extends React.Component {
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onJudgesLoaded = this.onJudgesLoaded.bind(this);
     this.onAuthorizeDeviceRequested = this.onAuthorizeDeviceRequested.bind(this);
+    this.onAuthorizeDeviceFinished = this.onAuthorizeDeviceFinished.bind(this);
   }
 
   state = {
@@ -43,7 +44,7 @@ class SetupJudges extends React.Component {
 
   onAuthorizeDeviceFinished(newJudge) {
     const judges = this.state.judges.slice(0);
-    const existingIndex = judges.findIndex(judge => judge.JudgeId = newJudge.JudgeId);
+    const existingIndex = judges.findIndex(judge => judge.JudgeId === newJudge.JudgeId);
     if (existingIndex < 0) {
       judges.push(newJudge);
     } else {

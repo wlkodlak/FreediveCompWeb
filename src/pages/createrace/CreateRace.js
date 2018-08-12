@@ -53,7 +53,7 @@ class CreateRace extends React.Component {
   onFormSubmit(event) {
     event.preventDefault();
     const raceId = this.props.raceId;
-    const raceSetup = new NewRaceSetupGenerator(raceId, this.state);
+    const raceSetup = new NewRaceSetupGenerator(raceId, this.state).buildRaceSetupDto();
     Api.postRaceSetup(raceId, raceSetup)
       .then(response => this.setState({created: true}))
       .catch(error => this.setState({error}));

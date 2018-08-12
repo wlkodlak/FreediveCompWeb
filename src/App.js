@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import CreateRace from './pages/createrace/CreateRace';
 import HomePage from './pages/homepage/HomePage';
 import SetupJudges from './pages/judges/SetupJudges';
@@ -54,6 +54,10 @@ const App = () => (
       <Route
         path="/:raceId/athletes"
         render={({ match }) => (<SetupAthletes raceId={match.params.raceId} />)} />
+      <Route
+        path="/:raceId/"
+        exact
+        render={({ match }) => (<Redirect to={`/${match.params.raceId}/homepage`} />)} />
       <Route
         path="/"
         exact

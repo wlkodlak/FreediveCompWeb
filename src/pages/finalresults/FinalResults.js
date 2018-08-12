@@ -39,7 +39,7 @@ class FinalResults extends React.Component {
 
   render() {
     const report = this.state.report;
-    if (typeof report === "object") {
+    if (report != null && typeof report === "object") {
       const title = report.Metadata.Title;
       const columnMetadata = report.Metadata.Columns;
       const columns = columnMetadata.map(columnMetadata.length === 1 ? this.convertSingleColumn : this.convertColumn);

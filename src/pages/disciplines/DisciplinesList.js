@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom';
 import Api from '../../api/Api';
 
 class DisciplinesList extends React.Component {
-  state = {
-    raceSetup: null
+  constructor(props) {
+    super(props);
+    this.state = {
+      raceSetup: null
+    };
+    this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
   }
 
   componentWillMount() {
@@ -18,17 +22,19 @@ class DisciplinesList extends React.Component {
 
   render() {
     const raceId = this.props.raceId;
+    const raceSetup = this.state.raceSetup;
+    const disciplines = raceSetup == null ? [] : raceSetup.Disciplines;
     return (
       <div>
         <H1>Disciplines</H1>
         <UL>
           {
-            this.state.Disciplines.map(discipline => {
+            disciplines.map(discipline => {
               const id = discipline.DisciplineId;
-              const name = discipline.ShortName;
+              const name = discipline.LongName;
               return (
                 <li key={id}>
-                  <Link to={`${raceId}/disciplines/${id}`}>{name}</Link>
+                  <Link to={`/${raceId}/disciplines/${id}`}>{name}</Link>
                 </li>
               );
             })

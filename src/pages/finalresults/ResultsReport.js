@@ -10,11 +10,13 @@ class ResultsReport extends React.Component {
         <H1>{title}</H1>
         <HTMLTable>
           <thead>
-            <th>#</th>
-            <th colSpan="2">Athlete</th>
-            {
-              columns.map((column, index) => column.renderHeader(index))
-            }
+            <tr>
+              <th>#</th>
+              <th colSpan="2">Athlete</th>
+              {
+                columns.map((column, index) => column.renderHeader(index))
+              }
+            </tr>
           </thead>
           <tbody>
             {

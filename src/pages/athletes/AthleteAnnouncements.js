@@ -72,7 +72,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   formatDurationPerformance(performance) {
-    if (typeof performance === "object" && typeof performance.Duration === "string") {
+    if (performance != null && typeof performance === "object" && typeof performance.Duration === "string") {
       return performance.Duration.substring(3);
     } else {
       return "";
@@ -80,7 +80,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   formatDistancePerformance(performance) {
-    if (typeof performance === "object" && typeof performance.Distance === "number") {
+    if (performance != null && typeof performance === "object" && typeof performance.Distance === "number") {
       return performance.Distance.toString();
     } else {
       return "";
@@ -88,7 +88,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   formatDepthPerformance(performance) {
-    if (typeof performance === "object" && typeof performance.Depth === "number") {
+    if (performance != null && typeof performance === "object" && typeof performance.Depth === "number") {
       return performance.Depth.toString();
     } else {
       return "";
