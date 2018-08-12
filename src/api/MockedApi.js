@@ -535,7 +535,8 @@ class MockedApi {
           "FirstName": "Milan",
           "Surname": "Wilczak",
           "CountryName": "CZE",
-          "Sex": "Male"
+          "Sex": "Male",
+          "Club": "Ocean Devils"
         }
       },
       {
@@ -584,13 +585,14 @@ class MockedApi {
         "FirstName": "Milan",
         "Surname": "Wilczak",
         "CountryName": "CZE",
-        "Sex": "Male"
+        "Sex": "Male",
+        "Club": "Ocean Devils"
       },
       "Announcements": [
         {
           "DisciplineId": "STA-M",
           "Performance": {
-            "Duration": "5:00"
+            "Duration": "00:05:00"
           }
         },
         {
@@ -604,12 +606,12 @@ class MockedApi {
         {
           "DisciplineId": "STA-M",
           "Performance": {
-            "Duration": "6:47",
+            "Duration": "00:06:47",
             "Points": 81.4
           },
           "Penalizations": [],
           "FinalPerformance": {
-            "Duration": "6:47",
+            "Duration": "00:06:47",
             "Points": 81.4
           },
           "CardResult": "White",

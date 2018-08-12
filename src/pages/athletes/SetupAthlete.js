@@ -12,7 +12,6 @@ class SetupAthlete extends React.Component {
       athleteId: props.athleteId === "new" ? null : props.athleteId,
       profile: {},
       announcements: [],
-      announcementChanges: [],
       results: [],
       disciplines: []
     };
@@ -20,6 +19,8 @@ class SetupAthlete extends React.Component {
     this.onRaceLoaded = this.onRaceLoaded.bind(this);
     this.onAthleteProfileChanged = this.onAthleteProfileChanged.bind(this);
     this.onAthleteProfileSubmit = this.onAthleteProfileSubmit.bind(this);
+    this.onAthleteAnnouncementsSubmit = this.onAthleteAnnouncementsSubmit.bind(this);
+    this.onAthleteAnnouncementsSaved = this.onAthleteAnnouncementsSaved.bind(this);
   }
 
   componentWillMount() {
@@ -76,19 +77,15 @@ class SetupAthlete extends React.Component {
     // hmm, nothing to do
   }
 
-  onAthleteAnnouncementSubmit(announcements) {
+  onAthleteAnnouncementsSubmit(announcements) {
     const athleteData = {
       "Announcements": announcements
     };
-    this.pendingAnnouncements = announcement;
     Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved);
   }
 
   onAthleteAnnouncementsSaved() {
-    const announcements = this.state.announcements.slice(0);
-    announcements.concat(this.pendingAnnouncements);
-    this.pendingAnnouncements = null;
-    this.setState({ announcements });
+    // hmm, nothing to do
   }
 
   render() {
@@ -106,7 +103,7 @@ class SetupAthlete extends React.Component {
         <AthleteAnnouncements
           announcements={this.state.announcements}
           disciplines={this.state.disciplines}
-          onSubmit={this.onAthleteAnnouncementSubmit} />
+          onSubmit={this.onAthleteAnnouncementsSubmit} />
         <AthleteResults
           results={this.state.results} />
       </div>

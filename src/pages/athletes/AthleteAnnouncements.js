@@ -7,27 +7,8 @@ class AthleteAnnouncements extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onDisciplineChanged = this.onDisciplineChanged.bind(this);
     this.state = {
-      disciplines: this.props.disciplines.map((discipline, index) =>
-        this.buildDisciplineState(this.props.announcements, discipline, index))
+      changes: {}
     };
-  }
-
-  buildDisciplineState(announcements, discipline, index) {
-    const row = {
-      id: discipline.DisciplineId,
-      index: index,
-      name: discipline.ShortName,
-      placeholder: this.getPlaceholderByRules(discipline.Rules),
-      dirty: false,
-      valid: true,
-      performance: discipline.Performance,
-      formatted: this.findFormattedAnnouncement(
-        announcements, discipline.DisciplineId,
-        this.getPerformanceFormatter(discipline.Rules), ""),
-      performanceParser: this.getPerformanceParser(discipline.Rules)
-    };
-    row.onChangeHandler = (event) => this.onDisciplineChanged(row, event.target.value);
-    return row;
   }
 
   getPlaceholderByRules(rules) {
@@ -49,7 +30,7 @@ class AthleteAnnouncements extends React.Component {
   findFormattedAnnouncement(announcements, disciplineId, formatter, fallback) {
     for (const announcement of announcements) {
       if (announcement.DisciplineId === disciplineId) {
-        return formatter(announcement);
+        return formatter(announcement.Performance);
       }
     }
     return fallback;
@@ -112,6 +93,9 @@ class AthleteAnnouncements extends React.Component {
   }
 
   parseDurationPerformance(value) {
+    const checker = /^([0-9]+:)?([0-9]+)$/;
+    if (!checker.test(value)) return null;
+
     const colonPosition = value.indexOf(":");
     let minutes = 0;
     let seconds = 0;
@@ -135,39 +119,44 @@ class AthleteAnnouncements extends React.Component {
   }
 
   parseDistancePerformance(value) {
+    const checker = /^[0-9]+$/;
+    if (!checker.test(value)) return null;
+
     return {
       "Distance": parseInt(value, 10)
     };
   }
 
   parseDepthPerformance(value) {
+    const checker = /^[0-9]+$/;
+    if (!checker.test(value)) return null;
+
     return {
       "Depth": parseInt(value, 10)
     };
   }
 
-  onDisciplineChanged(oldDiscipline, newValue) {
-    const disciplines = this.state.disciplines.slice(0);
-    const performance = oldDiscipline.performanceParser(newValue);
-    const formatted = newValue;
-    const valid = performance != null;
-    disciplines[oldDiscipline.index] = {
-      ...oldDiscipline,
-      formatted: formatted,
-      valid: valid,
-      dirty: true
+  onDisciplineChanged(discipline, newValue) {
+    const performanceParser = this.getPerformanceParser(discipline.Rules);
+    const performance = performanceParser(newValue);
+
+    const changes = { ...this.state.changes };
+    changes[discipline.DisciplineId] = {
+      formatted: newValue,
+      performance: performance
     };
-    this.setState({disciplines});
+    this.setState({changes});
   }
 
   onFormSubmit(event) {
     event.preventDefault();
-    const announcements = this.state.disciplines
-      .filter(discipline => discipline.dirty)
-      .map(discipline => ({
-        "DisciplineId": discipline.id,
-        "Performance": discipline.performanceParser(discipline.value)
-      }));
+    const announcements = [];
+    for (const disciplineId in this.state.changes) {
+      announcements.push({
+        "DisciplineId": disciplineId,
+        "Performance": this.state.changes[disciplineId].performance
+      });
+    }
     this.props.onSubmit(announcements);
   }
 
@@ -184,19 +173,35 @@ class AthleteAnnouncements extends React.Component {
           </thead>
           <tbody>
             {
-              this.state.disciplines.map(discipline => (
-                <tr key={discipline.id}>
-                  <td>{discipline.name}</td>
-                  <td>
-                    <InputGroup
-                      type="text"
-                      placeholder={discipline.placeholder}
-                      value={discipline.formatted}
-                      intent={discipline.valid ? Intent.NONE : Intent.WARNING}
-                      onChange={discipline.onChangeHandler} />
-                  </td>
-                </tr>
-              ))
+              this.props.disciplines.map(discipline => {
+                let formattedValue = "";
+                let isValueValid = false;
+                const disciplineChange = this.state.changes[discipline.DisciplineId];
+                if (disciplineChange) {
+                  formattedValue = disciplineChange.formatted;
+                  isValueValid = disciplineChange.performance != null;
+                } else {
+                  formattedValue = this.findFormattedAnnouncement(
+                    this.props.announcements, discipline.DisciplineId,
+                    this.getPerformanceFormatter(discipline.Rules), "");
+                  isValueValid = true;
+                }
+                const onChangeHandler = (event) => this.onDisciplineChanged(discipline, event.target.value);
+
+                return (
+                  <tr key={discipline.DisciplineId}>
+                    <td>{discipline.LongName}</td>
+                    <td>
+                      <InputGroup
+                        type="text"
+                        placeholder={this.getPlaceholderByRules(discipline.Rules)}
+                        value={formattedValue}
+                        intent={isValueValid ? Intent.NONE : Intent.WARNING}
+                        onChange={onChangeHandler} />
+                    </td>
+                  </tr>
+                );
+              })
             }
           </tbody>
         </HTMLTable>
