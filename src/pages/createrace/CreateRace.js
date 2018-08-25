@@ -64,17 +64,15 @@ class CreateRace extends React.Component {
       return (<Redirect to={`/${this.props.raceId}/homepage`} />);
     } else {
       return (
-        <div>
+        <form onSubmit={this.onFormSubmit} className="createrace-form">
           <H1>Create competition</H1>
-          <form onSubmit={this.onFormSubmit}>
-            <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
-            <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />
-            <NewRaceStaSettings value={this.state.staSettings} onChange={this.onStaChanged} />
-            <NewRaceDynSettings value={this.state.dynSettings} onChange={this.onDynChanged} />
-            <NewRaceCwtSettings value={this.state.cwtSettings} onChange={this.onCwtChanged} />
-            <Button type="submit" text="Create competition" />
-          </form>
-        </div>
+          <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
+          <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />
+          <NewRaceStaSettings value={this.state.staSettings} onChange={this.onStaChanged} />
+          <NewRaceDynSettings value={this.state.dynSettings} onChange={this.onDynChanged} />
+          <NewRaceCwtSettings value={this.state.cwtSettings} onChange={this.onCwtChanged} />
+          <Button type="submit" text="Create competition" className="createrace-submit" />
+        </form>
       );
     }
   }

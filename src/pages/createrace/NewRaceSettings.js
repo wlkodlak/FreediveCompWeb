@@ -52,7 +52,7 @@ class NewRaceSettings extends React.Component {
     const until = settings.until == null ? null : settings.until;
 
     return (
-      <div>
+      <div className="createrace-settings">
         <H5>Competition</H5>
         <FormGroup label="Name">
           <InputGroup

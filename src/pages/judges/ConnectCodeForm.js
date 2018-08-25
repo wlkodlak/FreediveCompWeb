@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, InputGroup, Button, HTMLSelect } from '@blueprintjs/core';
+import { H5, FormGroup, InputGroup, Button, HTMLSelect } from '@blueprintjs/core';
 
 class ConnectCodeForm extends React.Component {
   constructor(props) {
@@ -60,33 +60,32 @@ class ConnectCodeForm extends React.Component {
     const judgeOptions = this.props.judges.map(judge => ({ value: judge.JudgeId, label: judge.JudgeName }));
     judgeOptions.splice(0, 0, { value: "new", label: "New judge" });
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <FormGroup label="Connect code">
-            <InputGroup
-              type="text"
-              placeholder="Connect code"
-              value={this.state.connectCode}
-              onChange={this.onConnectCodeChanged} />
-          </FormGroup>
-          <FormGroup label="Judge">
-            <HTMLSelect
-              value={this.state.judgeId}
-              options={judgeOptions}
-              onChange={this.onJudgeIdChanged} />
-            <InputGroup
-              type="text"
-              placeholder="Name"
-              disabled={this.state.judgeId !== "new"}
-              value={this.state.judgeName}
-              onChange={this.onJudgeNameChanged} />
-          </FormGroup>
-          <Button
-            type="submit"
-            text="Authorize device"
-            disabled={this.state.connectCode === "" || this.state.judgeName === ""} />
-        </form>
-      </div>
+      <form onSubmit={this.onSubmit} className="judges-connectcode">
+        <H5>Authorize judge's device</H5>
+        <FormGroup label="Connect code">
+          <InputGroup
+            type="text"
+            placeholder="Connect code"
+            value={this.state.connectCode}
+            onChange={this.onConnectCodeChanged} />
+        </FormGroup>
+        <FormGroup label="Judge">
+          <HTMLSelect
+            value={this.state.judgeId}
+            options={judgeOptions}
+            onChange={this.onJudgeIdChanged} />
+          <InputGroup
+            type="text"
+            placeholder="Name"
+            disabled={this.state.judgeId !== "new"}
+            value={this.state.judgeName}
+            onChange={this.onJudgeNameChanged} />
+        </FormGroup>
+        <Button
+          type="submit"
+          text="Authorize device"
+          disabled={this.state.connectCode === "" || this.state.judgeName === ""} />
+      </form>
     );
   }
 }

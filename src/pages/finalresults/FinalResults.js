@@ -5,6 +5,7 @@ import SingleAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColu
 import ReducedAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColumn';
 import FinalPointsColumn from '../finalresults/SingleAidaDisciplineColumn';
 import ResultsReport from '../finalresults/ResultsReport';
+import RaceHeader from '../homepage/RaceHeader';
 
 class FinalResults extends React.Component {
   constructor(props) {
@@ -44,9 +45,19 @@ class FinalResults extends React.Component {
       const columnMetadata = report.Metadata.Columns;
       const columns = columnMetadata.map(columnMetadata.length === 1 ? this.convertSingleColumn : this.convertColumn);
       const results = report.Results;
-      return (<ResultsReport title={title} results={results} columns={columns} />);
+      return (
+        <div className="finalresults-report">
+          <RaceHeader raceId={this.props.raceId} />
+          <ResultsReport title={title} results={results} columns={columns} />
+        </div>
+      );
     } else {
-      return (<div><H1>Final results</H1></div>);
+      return (
+        <div className="finalresults-report">
+          <RaceHeader raceId={this.props.raceId} />
+          <H1>Final results</H1>
+        </div>
+      );
     }
   }
 }

@@ -50,7 +50,7 @@ class AthleteCategories extends React.Component {
     const name = this.state.name;
     const categories = this.props.value;
 
-    return (<div>
+    return (<div className="createrace-categories">
       <H5>Athlete categories</H5>
       <ControlGroup fill={true}>
         <InputGroup value={name} onChange={this.onNameChanged} onKeyPress={this.onNameKey} />

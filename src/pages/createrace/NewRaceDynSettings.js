@@ -84,7 +84,7 @@ class NewRaceDynSettings extends React.Component {
     } = this.props.value;
 
     return (
-      <div>
+      <div className="createrace-discipline">
         <H5>DYN</H5>
         <FormGroup label="Lanes count">
           <NumericInput

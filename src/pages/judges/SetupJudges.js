@@ -2,6 +2,7 @@ import React from 'react';
 import Api from '../../api/Api';
 import ConnectCodeForm from './ConnectCodeForm';
 import JudgesList from './JudgesList';
+import RaceHeader from '../homepage/RaceHeader';
 
 class SetupJudges extends React.Component {
   constructor(props) {
@@ -55,7 +56,8 @@ class SetupJudges extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="judges-form">
+        <RaceHeader raceId={this.props.raceId} />
         <h1>Setup Judges</h1>
         <JudgesList
           judges={this.state.judges} />

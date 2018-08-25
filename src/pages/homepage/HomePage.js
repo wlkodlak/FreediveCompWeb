@@ -25,12 +25,12 @@ class HomePage extends React.Component {
     const raceId = this.props.raceId;
     const title = this.state.title;
     return (
-      <div>
+      <div className="homepage">
         <H1>{title}</H1>
         <H2>Competition progress</H2>
         <UL>
           <li><Link to={`/${raceId}/startinglists`}>Start lists</Link></li>
-          <li><Link to={`/${raceId}/disciplines`}>Discipines</Link></li>
+          <li><Link to={`/${raceId}/disciplines`}>Disciplines</Link></li>
           <li><Link to={`/${raceId}/resultlists`}>Results lists</Link></li>
           <li><Link to={`/${raceId}/startinglists/generator`}>Generate start list</Link></li>
         </UL>

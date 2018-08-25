@@ -7,13 +7,13 @@ class AthleteResults extends React.Component {
     const results = this.props.results;
     if (results.length === 0) {
       return (
-        <div>
+        <div className="athlete-results">
           <H5>No results</H5>
         </div>
       );
     } else {
       return (
-        <div>
+        <div className="athlete-results">
           <H5>Results</H5>
           <HTMLTable>
             <thead>

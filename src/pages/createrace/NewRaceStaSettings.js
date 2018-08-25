@@ -44,7 +44,7 @@ class NewRaceStaSettings extends React.Component {
     const { lanes, rules, separateCategories } = this.props.value;
 
     return (
-      <div>
+      <div className="createrace-discipline">
         <H5>STA</H5>
         <FormGroup label="Lanes count">
           <NumericInput

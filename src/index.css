@@ -2,3 +2,27 @@ body {
   padding: 1em;
   font-family: sans-serif;
 }
+
+.createrace-form {
+  max-width: 30em;
+}
+.createrace-form h5 {
+  margin-top: 2em;
+}
+.createrace-submit {
+  width: 100%;
+}
+
+.judges-connectcode {
+  max-width: 30em;
+}
+.judges-form h5 {
+  margin-top: 2em;
+}
+
+.athletes-addbutton {
+  margin-top: 2em;
+}
+.athletes-form h5 {
+  margin-top: 2em;
+}

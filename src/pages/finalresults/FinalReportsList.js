@@ -2,6 +2,7 @@ import React from 'react';
 import { H1, UL } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import Api from '../../api/Api';
+import RaceHeader from '../homepage/RaceHeader';
 
 class FinalReportsList extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class FinalReportsList extends React.Component {
     const raceSetup = this.state.raceSetup;
     const resultsLists = raceSetup == null ? [] : raceSetup.ResultsLists;
     return (
-      <div>
+      <div className="finalresults-list">
+        <RaceHeader raceId={this.props.raceId} />
         <H1>Final results</H1>
         <UL>
           {

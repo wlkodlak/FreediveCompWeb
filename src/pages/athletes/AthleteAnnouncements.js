@@ -162,7 +162,7 @@ class AthleteAnnouncements extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.onFormSubmit}>
+      <form onSubmit={this.onFormSubmit} className="athlete-announcements">
         <H5>Announcements</H5>
         <HTMLTable>
           <thead>

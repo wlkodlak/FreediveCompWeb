@@ -76,7 +76,7 @@ class AthleteProfile extends React.Component {
   render() {
     const profile = this.props.profile || {};
     return (
-      <form onSubmit={this.onFormSubmit}>
+      <form onSubmit={this.onFormSubmit} className="athlete-profile">
         <H5>Profile</H5>
         <FormGroup label="Name">
           <InputGroup

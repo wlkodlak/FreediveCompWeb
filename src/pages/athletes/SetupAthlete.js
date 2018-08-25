@@ -4,6 +4,7 @@ import Api from '../../api/Api';
 import AthleteProfile from './AthleteProfile';
 import AthleteAnnouncements from './AthleteAnnouncements';
 import AthleteResults from './AthleteResults';
+import RaceHeader from '../homepage/RaceHeader';
 
 class SetupAthlete extends React.Component {
   constructor(props) {
@@ -92,7 +93,8 @@ class SetupAthlete extends React.Component {
     const isNewAthlete = this.state.athleteId == null;
     const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
     return (
-      <div>
+      <div className="athletes-form">
+        <RaceHeader raceId={this.props.raceId} />
         {
           isNewAthlete ? <H1>New athlete</H1> : <H1>{fullName}</H1>
         }

@@ -2,6 +2,7 @@ import React from 'react';
 import { H1 } from '@blueprintjs/core';
 import StartingLanesListLevel from './StartingLanesListLevel';
 import Api from '../../api/Api';
+import RaceHeader from '../homepage/RaceHeader';
 
 class StartingLanes extends React.Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class StartingLanes extends React.Component {
     const raceSetup = this.state.raceSetup;
     const startingLanes = raceSetup == null ? [] : raceSetup.StartingLanes;
     return (
-      <div>
+      <div className="startinglanes-list">
+        <RaceHeader raceId={this.props.raceId} />
         <H1>Starting lanes</H1>
         <StartingLanesListLevel
           raceId={this.props.raceId}

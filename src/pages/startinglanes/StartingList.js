@@ -2,6 +2,7 @@ import React from 'react';
 import Api from '../../api/Api';
 import { H1, HTMLTable } from '@blueprintjs/core';
 import { formatPerformance } from '../finalresults/PerformanceFormatters';
+import RaceHeader from '../homepage/RaceHeader';
 
 class StartingList extends React.Component {
   constructor(props) {
@@ -70,7 +71,8 @@ class StartingList extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="startinglanes-startlist">
+        <RaceHeader raceId={this.props.raceId} />
         <H1>Starting List - {this.state.title}</H1>
         <HTMLTable>
           <thead>

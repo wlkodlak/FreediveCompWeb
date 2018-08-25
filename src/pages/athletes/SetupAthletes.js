@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { H1, HTMLTable } from '@blueprintjs/core';
 import Api from '../../api/Api';
+import RaceHeader from '../homepage/RaceHeader';
+import RoutedButton from '../../components/RoutedButton';
 
 class SetupAthletes extends React.Component {
   constructor(props) {
@@ -40,7 +42,8 @@ class SetupAthletes extends React.Component {
     const raceId = this.props.raceId;
     const athletes = this.state.athletes.map(athlete => this.renderAthlete(athlete));
 
-    return (<div>
+    return (<div className="athletes-list">
+      <RaceHeader raceId={this.props.raceId} />
       <H1>Athletes</H1>
       <HTMLTable>
         <thead>
@@ -66,7 +69,7 @@ class SetupAthletes extends React.Component {
           }
         </tbody>
       </HTMLTable>
-      <Link to={`/${raceId}/athletes/new`}>Add athlete</Link>
+      <RoutedButton to={`/${raceId}/athletes/new`} className="athletes-addbutton">Add athlete</RoutedButton>
     </div>);
   }
 }
