@@ -13,7 +13,7 @@ class RoutedButton extends React.Component {
   }
 
   render() {
-    const { to, children, ...others } = this.props;
+    const { to, children, history, location, match, staticContext, ...others } = this.props;
     return (<Button onClick={this.onButtonClick} {...others}>{children}</Button>);
   }
 }
