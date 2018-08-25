@@ -10,8 +10,9 @@ class CheckboxGroup extends React.Component {
   onCheckboxChanged(event) {
     const value = event.target.value;
     const checked = event.target.checked;
+    const previouslySelected = this.props.selectedValues;
     const selectedValues = this.props.options
-      .filter(option => option.value === value ? checked : option.checked)
+      .filter(option => option.value === value ? checked : previouslySelected.includes(option.value))
       .map(option => option.value);
     this.props.onChange({ value, checked, selectedValues });
   }

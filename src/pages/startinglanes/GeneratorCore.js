@@ -28,7 +28,7 @@ class GeneratorCore {
       if (input.SubLanes && input.SubLanes.length > 0) {
         this.buildLeafLanes(output, input.SubLanes);
       } else {
-        output.push(input.StartinLaneId);
+        output.push(input.StartingLaneId);
       }
     }
   }
@@ -107,7 +107,8 @@ class GeneratorCore {
     this.timeOffset += this.startInterval;
     this.timeSinceBreak += this.startInterval;
     if (this.timeSinceBreak <= this.maximumTimeSinceBreak) return;  // no break yet
-    this.timeOffset += this.breakInterval - this.timeSinceBreak;
+    const breakDuration = this.breakInterval - this.timeSinceBreak;
+    this.timeOffset += breakDuration;
     this.timeSinceBreak = 0;
   }
 }

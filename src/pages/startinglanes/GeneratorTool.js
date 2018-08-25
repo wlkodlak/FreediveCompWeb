@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import CheckboxGroup from './CheckboxGroup';
 import Api from '../../api/Api';
 import GeneratorCore from './GeneratorCore';
+import RaceHeader from '../homepage/RaceHeader';
 
 class GeneratorTool extends React.Component {
   constructor(props) {
@@ -22,11 +23,13 @@ class GeneratorTool extends React.Component {
     }
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onAthletesLoaded = this.onAthletesLoaded.bind(this);
+    this.onStartListCreated = this.onStartListCreated.bind(this);
     this.onStartingLaneChanged = this.onStartingLaneChanged.bind(this);
     this.onDisciplinesChanged = this.onDisciplinesChanged.bind(this);
     this.onStartIntervalChanged = this.onStartIntervalChanged.bind(this);
-    this.onBreakIntervalChanged = this.onBreakIntervalChanged.bind(this);
-    this.onStartListCreated = this.onStartListCreated.bind(this);
+    this.onBreakDurationChanged = this.onBreakDurationChanged.bind(this);
+    this.onFirstStartChanged = this.onFirstStartChanged.bind(this);
   }
 
   componentWillMount() {
@@ -39,23 +42,23 @@ class GeneratorTool extends React.Component {
 
     const disciplines = raceSetup.Disciplines.map(discipline => ({
         value: discipline.DisciplineId,
-        label: discipline.ShortName,
+        label: discipline.LongName,
         rawDiscipline: discipline
       }));
 
-    this.setState({ startingLanes, disciplines });
+    const firstStart = new Date(raceSetup.Race.Start);
+
+    this.setState({ startingLanes, disciplines, firstStart });
   }
 
   flattenStartingLanes(outputLanes, level, inputLanes) {
     if (inputLanes == null) return;
     for (const lane of inputLanes) {
-      let label = "";
-      for (let i = 0; i < level; i++) {
-        label = "  " + label;
-      }
+      const label = lane.ShortName;
       outputLanes.push({
         value: lane.StartingLaneId,
         label: label,
+        level: level,
         rawLane: lane
       });
       if (lane.SubLanes) {
@@ -75,7 +78,7 @@ class GeneratorTool extends React.Component {
     const generator = new GeneratorCore(
       this.state,
       this.state.startingLanes,
-      this.state.athletes)
+      athletes);
     const startingList = generator.buildStartListEntries();
     Api
       .postStartingList(raceId, startingLaneId, startingList)
@@ -138,40 +141,57 @@ class GeneratorTool extends React.Component {
     this.setState({ firstStart });
   }
 
-  formatDate(date) {
-    const iso = date.toISOString();
-    return iso.substring(0, 10) + iso.substring(11, 16);
+  formatDate(now) {
+    const year = ("0000" + now.getFullYear()).substr(-4);
+    const month = ("00" + now.getMonth()).substr(-2);
+    const day = ("00" + now.getDate()).substr(-2);
+    const hours = ("00" + now.getHours()).substr(-2);
+    const minutes = ("00" + now.getMinutes()).substr(-2);
+    return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
   }
 
   parseDate(formatted) {
     return new Date(formatted);
   }
 
+  buildOption(fullOption) {
+    const finalOption = {
+      label: fullOption.label,
+      value: fullOption.value
+    };
+    if (fullOption.level > 0) {
+      finalOption.className = "startinglanes-generator-level" + fullOption.level;
+    }
+    return finalOption;
+  }
+
   render() {
     if (this.state.generated) {
       const raceId = this.props.raceId;
       const startingLaneId = this.state.selectedStartingLane;
-      return (<Redirect to={`${raceId}/startinglists/${startingLaneId}`} />);
+      return (<Redirect push to={`${raceId}/startinglists/${startingLaneId}`} />);
     }
     return (
       <div>
+        <RaceHeader raceId={this.props.raceId} />
         <H1>Generate start list</H1>
         <form onSubmit={this.onFormSubmit}>
           <RadioGroup
+            className="startinglanes-generator-lanes"
             label="Starting lane"
             onChange={this.onStartingLaneChanged}
             selectedValue={this.state.selectedStartingLane}
-            options={this.state.startingLanes}
+            options={this.state.startingLanes.map(this.buildOption)}
           />
           <CheckboxGroup
             label="Disciplines"
             onChange={this.onDisciplinesChanged}
             selectedValues={this.state.selectedDisciplines}
-            options={this.state.disciplines}
+            options={this.state.disciplines.map(this.buildOption)}
           />
           <FormGroup label="First start">
             <DateInput
-              placeholder="YYYY-MM-DD"
+              placeholder="YYYY-MM-DD hh:mm"
               value={this.state.firstStart}
               onChange={this.onFirstStartChanged}
               formatDate={this.formatDate}

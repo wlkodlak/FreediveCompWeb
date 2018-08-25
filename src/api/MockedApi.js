@@ -527,7 +527,15 @@ class MockedApi {
           "Surname": "Malina",
           "CountryName": "POL",
           "Sex": "Male"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-M",
+            "Performance": {
+              "Duration": "00:00:01"
+            }
+          }
+        ]
       },
       {
         "Profile": {
@@ -537,7 +545,15 @@ class MockedApi {
           "CountryName": "CZE",
           "Sex": "Male",
           "Club": "Ocean Devils"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-M",
+            "Performance": {
+              "Duration": "00:05:00"
+            }
+          }
+        ]
       },
       {
         "Profile": {
@@ -546,7 +562,15 @@ class MockedApi {
           "Surname": "Svoboda",
           "CountryName": "CZE",
           "Sex": "Male"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-M",
+            "Performance": {
+              "Duration": "00:01:00"
+            }
+          }
+        ]
       },
       {
         "Profile": {
@@ -555,7 +579,15 @@ class MockedApi {
           "Surname": "Darous",
           "CountryName": "CZE",
           "Sex": "Male"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-M",
+            "Performance": {
+              "Duration": "00:02:00"
+            }
+          }
+        ]
       },
       {
         "Profile": {
@@ -564,7 +596,15 @@ class MockedApi {
           "Surname": "Silhava",
           "CountryName": "CZE",
           "Sex": "Female"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-F",
+            "Performance": {
+              "Duration": "00:01:00"
+            }
+          }
+        ]
       },
       {
         "Profile": {
@@ -573,7 +613,15 @@ class MockedApi {
           "Surname": "Mala",
           "CountryName": "CZE",
           "Sex": "Female"
-        }
+        },
+        "Announcements": [
+          {
+            "DisciplineId": "STA-F",
+            "Performance": {
+              "Duration": "00:00:05"
+            }
+          }
+        ]
       }
     ]);
   }

@@ -26,3 +26,15 @@ body {
 .athletes-form h5 {
   margin-top: 2em;
 }
+
+.startinglanes-generator-lanes .startinglanes-generator-level1 {
+  padding-left: 46px;
+}
+
+.startinglanes-generator-lanes .startinglanes-generator-level2 {
+  padding-left: 66px;
+}
+
+.startinglanes-generator-lanes .startinglanes-generator-level3 {
+  padding-left: 86px;
+}
