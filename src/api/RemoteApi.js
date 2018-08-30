@@ -9,7 +9,7 @@ class RemoteApi {
     const serviceUrl = this.baseUrl + "/api-1.0/global/" + path;
     return fetch(serviceUrl)
       .then(response => {
-        if (response.status === 200) return response.json;
+        if (response.status === 200) return response.json();
         if (response.status === 400) throw Error(response.body);
         return null;
       });
@@ -19,7 +19,7 @@ class RemoteApi {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
     return fetch(serviceUrl)
       .then(response => {
-        if (response.status === 200) return response.json;
+        if (response.status === 200) return response.json();
         if (response.status === 400) throw Error(response.body);
         return null;
       });
@@ -27,14 +27,18 @@ class RemoteApi {
 
   postRaceCall(raceId, path, postData) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
-    const requestOptions = {
+    const options = {
       method: "POST",
+      url: serviceUrl,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(postData)
     };
-    return fetch(serviceUrl, requestOptions)
+    const request = new Request(serviceUrl, options);
+    console.log(request);
+    console.log(postData);
+    return fetch(request)
       .then(response => {
-        if (response.status === 200) return response.json;
+        if (response.status === 200) return response.json();
         if (response.status === 400) throw Error(response.body);
         return null;
       });
@@ -59,10 +63,15 @@ class RemoteApi {
     this.cachedRaceSetup.catch(error => {
       this.cachedRaceSetup = null;
     });
+    return this.cachedRaceSetup;
   }
 
   getAuthJudges(raceId) {
     return this.getRaceCall(raceId, "auth/judges");
+  }
+
+  getAuthVerify(raceId) {
+    return this.getRaceCall(raceId, "auth/verify");
   }
 
   postAuthAuthorize(raceId, authorizeRequest) {
@@ -96,7 +105,7 @@ class RemoteApi {
   postStartingList(raceId, startingLaneId, entries) {
     return this.postRaceCall(raceId, "start/" + startingLaneId, entries);
   }
-  
+
   getNewRaceId() {
     const randomHex = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     const randomUuid =

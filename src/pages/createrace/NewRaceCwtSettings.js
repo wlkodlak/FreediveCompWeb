@@ -16,7 +16,7 @@ class NewRaceCwtSettings extends React.Component {
   static createSettings() {
     return {
       lanes: 2,
-      rules: "AIDA-CWT",
+      rules: "AIDA_CWT",
       separateCategories: false,
       separateEquipment: false,
       disciplineNoFins: false,
@@ -25,7 +25,7 @@ class NewRaceCwtSettings extends React.Component {
     };
   }
 
-  rulesOptions = [ "AIDA-CWT", "CMAS-CWT"];
+  rulesOptions = [ "AIDA_CWT", "CMAS_CWT"];
 
   onLanesChanged(lanes) {
     this.props.onChange({

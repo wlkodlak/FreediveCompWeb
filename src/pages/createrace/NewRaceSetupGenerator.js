@@ -13,7 +13,7 @@ class NewRaceSetupGenerator {
       "Race": this.buildRaceSettings(),
       "StartingLanes": this.buildStartingLanes(),
       "Disciplines": this.buildDisciplines(),
-      "ResultLists": this.buildResultLists()
+      "ResultsLists": this.buildResultLists()
     };
   }
 
@@ -181,6 +181,7 @@ class NewRaceSetupGenerator {
     let name = "";
     let first = true;
     for (const element of elements) {
+      if (!element) continue;
       if (!first) name += separator;
       name += element;
       first = false;
@@ -225,7 +226,7 @@ class NewRaceSetupGenerator {
 
   buildResultListColumn(listColumns, settings, title, category, sex, disciplines) {
     if (settings.lanes === 0) return;
-    if (!settings.rules.startsWith("AIDA-")) return;
+    if (!settings.rules.startsWith("AIDA_")) return;
 
     const components = disciplines.map(name => {
       const disciplineId = this.buildDisciplineName("-", [name, category, sex]);

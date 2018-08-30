@@ -71,28 +71,28 @@ class MockedApi {
           "DisciplineId": "STA-M",
           "ShortName": "STA",
           "LongName": "Static apnea - Men",
-          "Rules": "AIDA-STA",
+          "Rules": "AIDA_STA",
           "AnnouncementsClosed": false
         },
         {
           "DisciplineId": "STA-F",
           "ShortName": "STA",
           "LongName": "Static apnea - Women",
-          "Rules": "AIDA-STA",
+          "Rules": "AIDA_STA",
           "AnnouncementsClosed": false
         },
         {
           "DisciplineId": "DYN-M",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
-          "Rules": "AIDA-DYN",
+          "Rules": "AIDA_DYN",
           "AnnouncementsClosed": false
         },
         {
           "DisciplineId": "DYN-F",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
-          "Rules": "AIDA-DYN",
+          "Rules": "AIDA_DYN",
           "AnnouncementsClosed": false
         }
       ],
@@ -188,6 +188,14 @@ class MockedApi {
     ]);
   }
 
+  getAuthVerify(raceId) {
+    return Promise.resolve({
+      "JudgeId": "admin",
+      "JudgeName": "Master Geralt",
+      "DeviceIds": ["lkacldskiuleknmcalkjdf"]
+    });
+  }
+
   postAuthAuthorize(raceId, authorizeRequest) {
     console.log("postAuthAuthorize(" + raceId + ")");
     console.log(authorizeRequest);
@@ -214,7 +222,7 @@ class MockedApi {
           "Discipline": {
             "DisciplineId": "STA-M",
             "Name": "STA",
-            "Rules": "AIDA-STA"
+            "Rules": "AIDA_STA"
           },
           "Announcement": {
             "Performance": {
@@ -238,7 +246,7 @@ class MockedApi {
           "Discipline": {
             "DisciplineId": "STA-M",
             "Name": "STA",
-            "Rules": "AIDA-STA"
+            "Rules": "AIDA_STA"
           },
           "Announcement": {
             "Performance": {
@@ -276,7 +284,7 @@ class MockedApi {
           "Discipline": {
             "DisciplineId": "STA-F",
             "Name": "STA",
-            "Rules": "AIDA-STA"
+            "Rules": "AIDA_STA"
           },
           "Announcement": {
             "Performance": {
@@ -325,7 +333,7 @@ class MockedApi {
             "Discipline": {
               "DisciplineId": "DYN-M",
               "Name": "DYN",
-              "Rules": "AIDA-DYN"
+              "Rules": "AIDA_DYN"
             },
             "Title": "DYN",
             "IsSortingSource": true
@@ -494,7 +502,7 @@ class MockedApi {
             "Discipline": {
               "DisciplineId": "STA-M",
               "Name": "STA",
-              "Rules": "AIDA-STA"
+              "Rules": "AIDA_STA"
             },
             "Title": "STA",
             "IsSortingSource": false
@@ -503,7 +511,7 @@ class MockedApi {
             "Discipline": {
               "DisciplineId": "DYN-M",
               "Name": "DYN",
-              "Rules": "AIDA-DYN"
+              "Rules": "AIDA_DYN"
             },
             "Title": "DYN",
             "IsSortingSource": false

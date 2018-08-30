@@ -12,12 +12,12 @@ class NewRaceStaSettings extends React.Component {
   static createSettings() {
     return {
       lanes: 4,
-      rules: "AIDA-STA",
+      rules: "AIDA_STA",
       separateCategories: false
     };
   }
 
-  rulesOptions = [ "AIDA-STA", "CMAS-STA"];
+  rulesOptions = [ "AIDA_STA", "CMAS_STA"];
 
   onLanesChanged(lanes) {
     this.props.onChange({

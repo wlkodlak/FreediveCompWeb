@@ -16,7 +16,7 @@ class NewRaceDynSettings extends React.Component {
   static createSettings() {
     return {
       lanes: 2,
-      rules: "AIDA-DYN",
+      rules: "AIDA_DYN",
       separateCategories: false,
       separateEquipment: false,
       disciplineNoFins: false,
@@ -25,7 +25,7 @@ class NewRaceDynSettings extends React.Component {
     };
   }
 
-  rulesOptions = [ "AIDA-DYN", "CMAS-DYN"];
+  rulesOptions = [ "AIDA_DYN", "CMAS_DYN"];
 
   onLanesChanged(lanes) {
     this.props.onChange({

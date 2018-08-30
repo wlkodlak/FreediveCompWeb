@@ -11,16 +11,23 @@ class NoRace extends React.Component {
       canCreate: false
     };
     this.onRacesLoaded = this.onRacesLoaded.bind(this);
+    this.onUserVerified = this.onUserVerified.bind(this);
   }
 
   componentWillMount() {
     Api.getGlobalSearch().then(this.onRacesLoaded);
+    Api.getAuthVerify("global").then(this.onUserVerified);
   }
 
   onRacesLoaded(races) {
     this.setState({
-      races: races,
-      canCreate: true // this should probably be checked using some new API call
+      races: races
+    });
+  }
+
+  onUserVerified() {
+    this.setState({
+      canCreate: true
     });
   }
 
@@ -36,9 +43,11 @@ class NoRace extends React.Component {
               <Link to={`/${race.RaceId}/homepage`}>{race.Name}</Link>
             </li>
           )) }
-          <li>
-            <Link to={`/${newRaceId}/create`}>Create new competition</Link>
-          </li>
+          { this.state.canCreate && (
+            <li>
+              <Link to={`/${newRaceId}/create`}>Create new competition</Link>
+            </li>
+          )}
         </UL>
       </div>
     );

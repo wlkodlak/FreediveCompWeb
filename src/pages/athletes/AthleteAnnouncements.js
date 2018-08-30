@@ -13,14 +13,14 @@ class AthleteAnnouncements extends React.Component {
 
   getPlaceholderByRules(rules) {
     switch (rules) {
-      case "AIDA-STA":
-      case "CMAS-STA":
+      case "AIDA_STA":
+      case "CMAS_STA":
         return "mm:ss";
-      case "AIDA-DYN":
-      case "CMAS-DYN":
+      case "AIDA_DYN":
+      case "CMAS_DYN":
         return "100";
-      case "AIDA-CWT":
-      case "CMAS-CWT":
+      case "AIDA_CWT":
+      case "CMAS_CWT":
         return "50";
       default:
         return "";
@@ -38,14 +38,14 @@ class AthleteAnnouncements extends React.Component {
 
   getPerformanceFormatter(rules) {
     switch (rules) {
-      case "AIDA-STA":
-      case "CMAS-STA":
+      case "AIDA_STA":
+      case "CMAS_STA":
         return this.formatDurationPerformance;
-      case "AIDA-DYN":
-      case "CMAS-DYN":
+      case "AIDA_DYN":
+      case "CMAS_DYN":
         return this.formatDistancePerformance;
-      case "AIDA-CWT":
-      case "CMAS-CWT":
+      case "AIDA_CWT":
+      case "CMAS_CWT":
         return this.formatDepthPerformance;
       default:
         return (performance) => "";
@@ -78,14 +78,14 @@ class AthleteAnnouncements extends React.Component {
 
   getPerformanceParser(rules) {
     switch (rules) {
-      case "AIDA-STA":
-      case "CMAS-STA":
+      case "AIDA_STA":
+      case "CMAS_STA":
         return this.parseDurationPerformance;
-      case "AIDA-DYN":
-      case "CMAS-DYN":
+      case "AIDA_DYN":
+      case "CMAS_DYN":
         return this.parseDistancePerformance;
-      case "AIDA-CWT":
-      case "CMAS-CWT":
+      case "AIDA_CWT":
+      case "CMAS_CWT":
         return this.parseDepthPerformance;
       default:
         return s => null;

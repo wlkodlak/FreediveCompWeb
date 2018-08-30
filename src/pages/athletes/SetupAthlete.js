@@ -29,6 +29,14 @@ class SetupAthlete extends React.Component {
     Api.getRaceSetup(raceId).then(this.onRaceLoaded);
     if (athleteId !== "new") {
       Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded);
+    } else {
+      this.setState({
+        profile: {
+          "FirstName": "",
+          "LastName": "",
+          "Sex": "Male"          
+        }
+      });
     }
   }
 
@@ -71,7 +79,7 @@ class SetupAthlete extends React.Component {
     const random = Math.floor(1 + Math.random() * 1000);
     return `${firstName}-${lastName}-${random}`
       .toLowerCase().replace(" ", "-")
-      .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z")).join("");
+      .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z") || (c >= "0" && c <= "9")).join("");
   }
 
   onAthleteProfileSaved() {
