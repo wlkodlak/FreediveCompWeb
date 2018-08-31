@@ -33,7 +33,7 @@ class GeneratorTool extends React.Component {
   }
 
   componentWillMount() {
-    Api.getRaceSetup().then(this.onRaceSetupLoaded);
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded);
   }
 
   onRaceSetupLoaded(raceSetup) {
