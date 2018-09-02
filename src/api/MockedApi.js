@@ -7,9 +7,9 @@ class MockedApi {
     return Promise.resolve([
       {
         "RaceId": "fedf1d4e-9c97-496a-96b0-673a0d830918",
-        "Name": "Brno Minicomp 2018",
-        "Start": "2018-11-10",
-        "End": "2018-11-10"
+        "Name": "MČR 2018",
+        "Start": "2018-05-26T00:00:00+02:00",
+        "End": "2018-05-28T00:00:00+02:00"
       }
     ]);
   }
@@ -25,8 +25,8 @@ class MockedApi {
       "Race": {
         "RaceId": raceId,
         "Name": "MČR 2018",
-        "Start": "2018-05-26",
-        "End": "2018-05-28"
+        "Start": "2018-05-26T00:00:00+02:00",
+        "End": "2018-05-28T00:00:00+02:00"
       },
       "StartingLanes": [
         {
@@ -72,28 +72,32 @@ class MockedApi {
           "ShortName": "STA",
           "LongName": "Static apnea - Men",
           "Rules": "AIDA_STA",
-          "AnnouncementsClosed": false
+          "AnnouncementsClosed": false,
+          "Sex": "Male"
         },
         {
           "DisciplineId": "STA-F",
           "ShortName": "STA",
           "LongName": "Static apnea - Women",
           "Rules": "AIDA_STA",
-          "AnnouncementsClosed": false
+          "AnnouncementsClosed": false,
+          "Sex": "Female"
         },
         {
           "DisciplineId": "DYN-M",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
           "Rules": "AIDA_DYN",
-          "AnnouncementsClosed": false
+          "AnnouncementsClosed": false,
+          "Sex": "Male"
         },
         {
           "DisciplineId": "DYN-F",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
           "Rules": "AIDA_DYN",
-          "AnnouncementsClosed": false
+          "AnnouncementsClosed": false,
+          "Sex": "Female"
         }
       ],
       "ResultsLists": [

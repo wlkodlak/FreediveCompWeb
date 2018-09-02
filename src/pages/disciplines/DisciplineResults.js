@@ -36,14 +36,14 @@ class DisciplineResults extends React.Component {
       const results = report.Results;
       return (
         <div className="finalresults-report">
-          <RaceHeader raceId={this.props.raceId} />
+          <RaceHeader raceId={this.props.raceId} page="disciplines" pageName="Disciplines" />
           <ResultsReport title={title} results={results} columns={columns} />
         </div>
       );
     } else {
       return (
         <div className="finalresults-report">
-          <RaceHeader raceId={this.props.raceId} />
+          <RaceHeader raceId={this.props.raceId} page="disciplines" pageName="Disciplines" />
           <H1>Final results</H1>
         </div>
       );

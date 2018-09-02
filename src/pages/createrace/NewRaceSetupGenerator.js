@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 class NewRaceSetupGenerator {
   constructor(raceId, settings) {
     this.raceId = raceId;
@@ -21,8 +23,8 @@ class NewRaceSetupGenerator {
     return {
       "RaceId": this.raceId,
       "Name": this.raceSettings.name,
-      "Start": this.raceSettings.since.toISOString(),
-      "End": this.raceSettings.until.toISOString()
+      "Start": moment(this.raceSettings.since).startOf('day').format(),
+      "End": moment(this.raceSettings.until).endOf('day').format()
     };
   }
 
@@ -170,11 +172,19 @@ class NewRaceSetupGenerator {
             "ShortName": name,
             "LongName": longName,
             "Rules": rules,
-            "AnnouncementsClosed": false
+            "AnnouncementsClosed": false,
+            "Category": category,
+            "Sex": this.buildSex(sex)
           });
         }
       }
     }
+  }
+
+  buildSex(sexName) {
+    if (sexName === "Men") return "Male";
+    if (sexName === "Women") return "Female";
+    return null;
   }
 
   buildDisciplineName(separator, elements) {

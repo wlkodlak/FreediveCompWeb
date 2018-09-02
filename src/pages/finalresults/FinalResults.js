@@ -47,7 +47,7 @@ class FinalResults extends React.Component {
       const results = report.Results;
       return (
         <div className="finalresults-report">
-          <RaceHeader raceId={this.props.raceId} />
+          <RaceHeader raceId={this.props.raceId} page="resultlists" pageName="Result lists" />
           <ResultsReport title={title} results={results} columns={columns} />
         </div>
       );

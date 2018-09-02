@@ -6,6 +6,7 @@ import CheckboxGroup from './CheckboxGroup';
 import Api from '../../api/Api';
 import GeneratorCore from './GeneratorCore';
 import RaceHeader from '../homepage/RaceHeader';
+import moment from 'moment';
 
 class GeneratorTool extends React.Component {
   constructor(props) {
@@ -142,16 +143,11 @@ class GeneratorTool extends React.Component {
   }
 
   formatDate(now) {
-    const year = ("0000" + now.getFullYear()).substr(-4);
-    const month = ("00" + now.getMonth()).substr(-2);
-    const day = ("00" + now.getDate()).substr(-2);
-    const hours = ("00" + now.getHours()).substr(-2);
-    const minutes = ("00" + now.getMinutes()).substr(-2);
-    return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+    return moment(now).format("YYYY-MM-DD HH:mm");
   }
 
   parseDate(formatted) {
-    return new Date(formatted);
+    return moment(formatted, "YYYY-MM-DD HH:mm").toDate();
   }
 
   buildOption(fullOption) {
@@ -169,7 +165,7 @@ class GeneratorTool extends React.Component {
     if (this.state.generated) {
       const raceId = this.props.raceId;
       const startingLaneId = this.state.selectedStartingLane;
-      return (<Redirect push to={`${raceId}/startinglists/${startingLaneId}`} />);
+      return (<Redirect push to={`/${raceId}/startinglists/${startingLaneId}`} />);
     }
     return (
       <div>

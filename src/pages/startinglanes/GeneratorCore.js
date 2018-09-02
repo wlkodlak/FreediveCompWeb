@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 class GeneratorCore {
   constructor(settings, allStartingLanes, athletes) {
     this.startingLanes = this.getLeafLanes(allStartingLanes, settings.selectedStartingLane);
@@ -67,7 +69,7 @@ class GeneratorCore {
       "AthleteId": entry.athleteId,
       "DisciplineId": entry.disciplineId,
       "StartingLaneId": entry.startingLaneId,
-      "OfficialTop": entry.officialTop.toISOString()
+      "OfficialTop": moment(entry.officialTop).format()
     }));
   }
 

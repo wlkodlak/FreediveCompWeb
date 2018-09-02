@@ -41,3 +41,7 @@ body {
 .startinglanes-generator-lanes .startinglanes-generator-level3 {
   padding-left: 86px;
 }
+
+.headerLink {
+  color: inherit;
+}

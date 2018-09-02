@@ -25,8 +25,18 @@ class RaceHeader extends React.Component {
   render() {
     const raceId = this.props.raceId;
     const raceName = this.state.raceName;
+    const groupPath = this.props.page;
+    const groupName = this.props.pageName;
     return (
-      <Link to={`/${raceId}/homepage`}><H2>{raceName}</H2></Link>
+      <div>
+        <H2>
+          <Link to={`/${raceId}/homepage`} className="headerLink">{raceName}</Link>
+          { groupPath && [
+            " - ",
+            <Link to={`/${raceId}/${groupPath}`} className="headerLink">{groupName}</Link>
+          ]}
+        </H2>
+      </div>
     );
   }
 }

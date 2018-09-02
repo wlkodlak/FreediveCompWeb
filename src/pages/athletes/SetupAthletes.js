@@ -4,6 +4,7 @@ import { H1, HTMLTable } from '@blueprintjs/core';
 import Api from '../../api/Api';
 import RaceHeader from '../homepage/RaceHeader';
 import RoutedButton from '../../components/RoutedButton';
+import { formatPerformance } from '../finalresults/PerformanceFormatters';
 
 class SetupAthletes extends React.Component {
   constructor(props) {
@@ -35,7 +36,15 @@ class SetupAthletes extends React.Component {
       country: dto.Profile.CountryName,
       sex: dto.Profile.Sex,
       category: dto.Profile.Category,
+      announcements: this.renderAnnouncements(dto.Announcements)
     };
+  }
+
+  renderAnnouncements(announcements) {
+    if (announcements == null) return "";
+    return announcements
+      .map(a => a.DisciplineId + ": " + formatPerformance(a.Performance))
+      .join(", ");
   }
 
   render() {
@@ -53,6 +62,7 @@ class SetupAthletes extends React.Component {
             <th>Country</th>
             <th>Sex</th>
             <th>Category</th>
+            <th>Announcements</th>
           </tr>
         </thead>
         <tbody>
@@ -64,6 +74,7 @@ class SetupAthletes extends React.Component {
                 <td>{athlete.country}</td>
                 <td>{athlete.sex}</td>
                 <td>{athlete.category}</td>
+                <td>{athlete.announcements}</td>
               </tr>
             ))
           }

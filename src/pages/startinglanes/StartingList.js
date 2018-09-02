@@ -3,6 +3,7 @@ import Api from '../../api/Api';
 import { H1, HTMLTable } from '@blueprintjs/core';
 import { formatPerformance } from '../finalresults/PerformanceFormatters';
 import RaceHeader from '../homepage/RaceHeader';
+import moment from 'moment';
 
 class StartingList extends React.Component {
   constructor(props) {
@@ -43,19 +44,7 @@ class StartingList extends React.Component {
 
   convertOfficialTop(xmlDateTime) {
     if (typeof xmlDateTime === "string" && xmlDateTime.length >= 19) {
-      return xmlDateTime.substring(11, 19);
-    } else {
-      return "";
-    }
-  }
-
-  convertPerformance(performance) {
-    if (typeof performance.Distance === "number") {
-      return `${performance.Distance}m`;
-    } else if (typeof performance.Depth === "number") {
-      return `${performance.Depth}m`;
-    } else if (typeof performance.Duration === "string") {
-      return performance.Duration.substring(3); // remove hours
+      return moment(xmlDateTime).format("HH:mm");
     } else {
       return "";
     }
@@ -72,7 +61,7 @@ class StartingList extends React.Component {
   render() {
     return (
       <div className="startinglanes-startlist">
-        <RaceHeader raceId={this.props.raceId} />
+        <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
         <H1>Starting List - {this.state.title}</H1>
         <HTMLTable>
           <thead>

@@ -34,7 +34,7 @@ class SetupAthlete extends React.Component {
         profile: {
           "FirstName": "",
           "LastName": "",
-          "Sex": "Male"          
+          "Sex": "Male"
         }
       });
     }
@@ -97,12 +97,21 @@ class SetupAthlete extends React.Component {
     // hmm, nothing to do
   }
 
+  filterDiscipline(discipline, profile) {
+    if (typeof profile !== "object") return true;
+
+    if (profile.Sex != null && discipline.Sex != null && profile.Sex !== discipline.Sex) return false;
+    if (profile.Category != null && profile.Category !== "" && discipline.Category != null && profile.Category !== discipline.Category) return false;
+    return true;
+  }
+
   render() {
     const isNewAthlete = this.state.athleteId == null;
     const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
+    const filteredDisciplines = this.state.disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
     return (
       <div className="athletes-form">
-        <RaceHeader raceId={this.props.raceId} />
+        <RaceHeader raceId={this.props.raceId} page="athletes" pageName="Athletes" />
         {
           isNewAthlete ? <H1>New athlete</H1> : <H1>{fullName}</H1>
         }
@@ -112,7 +121,7 @@ class SetupAthlete extends React.Component {
           onSubmit={this.onAthleteProfileSubmit} />
         <AthleteAnnouncements
           announcements={this.state.announcements}
-          disciplines={this.state.disciplines}
+          disciplines={filteredDisciplines}
           onSubmit={this.onAthleteAnnouncementsSubmit} />
         <AthleteResults
           results={this.state.results} />

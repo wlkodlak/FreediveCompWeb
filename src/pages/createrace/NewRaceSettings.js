@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormGroup, InputGroup, H5 } from '@blueprintjs/core';
 import { DateRangeInput } from '@blueprintjs/datetime';
+import moment from 'moment';
 
 class NewRaceSettings extends React.Component {
   constructor(props) {
@@ -32,17 +33,12 @@ class NewRaceSettings extends React.Component {
     });
   }
 
-  formatDate(date) {
-    if (date instanceof Date) {
-      return date.toISOString().substring(0, 10);
-    } else {
-      return "";
-    }
+  formatDate(date, locale) {
+    return moment(date).format("YYYY-MM-DD");
   }
 
   parseDate(str) {
-    if (str == null) return null;
-    return new Date(str);
+    return moment(str, "YYYY-MM-DD").toDate();
   }
 
   render() {
