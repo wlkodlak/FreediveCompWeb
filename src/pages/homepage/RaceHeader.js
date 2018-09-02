@@ -31,10 +31,8 @@ class RaceHeader extends React.Component {
       <div>
         <H2>
           <Link to={`/${raceId}/homepage`} className="headerLink">{raceName}</Link>
-          { groupPath && [
-            " - ",
-            <Link to={`/${raceId}/${groupPath}`} className="headerLink">{groupName}</Link>
-          ]}
+          { groupPath && " - "}
+          { groupPath && <Link to={`/${raceId}/${groupPath}`} className="headerLink">{groupName}</Link> }
         </H2>
       </div>
     );
