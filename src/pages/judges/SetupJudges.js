@@ -3,6 +3,7 @@ import Api from '../../api/Api';
 import ConnectCodeForm from './ConnectCodeForm';
 import JudgesList from './JudgesList';
 import RaceHeader from '../homepage/RaceHeader';
+import { Toaster, Toast, Intent } from '@blueprintjs/core';
 
 class SetupJudges extends React.Component {
   constructor(props) {
@@ -11,16 +12,18 @@ class SetupJudges extends React.Component {
     this.onJudgesLoaded = this.onJudgesLoaded.bind(this);
     this.onAuthorizeDeviceRequested = this.onAuthorizeDeviceRequested.bind(this);
     this.onAuthorizeDeviceFinished = this.onAuthorizeDeviceFinished.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   state = {
-    judges: []
+    judges: [],
+    errors: []
   }
 
   componentWillMount() {
     const raceId = this.props.raceId;
-    Api.getRaceSetup(raceId).then(this.onRaceSetupLoaded);
-    Api.getAuthJudges(raceId).then(this.onJudgesLoaded);
+    Api.getRaceSetup(raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+    Api.getAuthJudges(raceId).then(this.onJudgesLoaded).catch(this.onError);
   }
 
   onRaceSetupLoaded(raceSetup) {
@@ -33,6 +36,22 @@ class SetupJudges extends React.Component {
     this.setState({judges});
   }
 
+  onError(error) {
+    const errors = this.state.errors.slice(0);
+    errors.push(error.message);
+    this.setState({
+      errors: errors
+    });
+  }
+
+  onErrorDismissed(index) {
+    const errors = this.state.errors.slice(0);
+    errors.splice(index, 1);
+    this.setState({
+      errors: errors
+    });
+  }
+
   onAuthorizeDeviceRequested(judgeId, judgeName, connectCode) {
     const raceId = this.props.raceId;
     const authorizeRequest = {
@@ -40,7 +59,7 @@ class SetupJudges extends React.Component {
       "JudgeName": judgeName,
       "ConnectCode": connectCode
     };
-    Api.postAuthAuthorize(raceId, authorizeRequest).then(this.onAuthorizeDeviceFinished);
+    Api.postAuthAuthorize(raceId, authorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.onError);
   }
 
   onAuthorizeDeviceFinished(newJudge) {
@@ -57,6 +76,7 @@ class SetupJudges extends React.Component {
   render() {
     return (
       <div className="judges-form">
+        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} />
         <h1>Setup Judges</h1>
         <JudgesList

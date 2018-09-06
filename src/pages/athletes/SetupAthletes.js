@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { H1, HTMLTable } from '@blueprintjs/core';
+import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
 import Api from '../../api/Api';
 import RaceHeader from '../homepage/RaceHeader';
 import RoutedButton from '../../components/RoutedButton';
@@ -11,19 +11,37 @@ class SetupAthletes extends React.Component {
     super(props);
     this.renderAthlete = this.renderAthlete.bind(this);
     this.onAthletesLoaded = this.onAthletesLoaded.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   state = {
-    athletes: []
+    athletes: [],
+    errors: []
   }
 
   componentWillMount() {
     const raceId = this.props.raceId;
-    Api.getAthletes(raceId).then(this.onAthletesLoaded);
+    Api.getAthletes(raceId).then(this.onAthletesLoaded).catch(this.onError);
   }
 
   onAthletesLoaded(athletes) {
     this.setState({athletes});
+  }
+
+  onError(error) {
+    const errors = this.state.errors.slice(0);
+    errors.push(error.message);
+    this.setState({
+      errors: errors
+    });
+  }
+
+  onErrorDismissed(index) {
+    const errors = this.state.errors.slice(0);
+    errors.splice(index, 1);
+    this.setState({
+      errors: errors
+    });
   }
 
   renderAthlete(dto) {
@@ -52,6 +70,7 @@ class SetupAthletes extends React.Component {
     const athletes = this.state.athletes.map(athlete => this.renderAthlete(athlete));
 
     return (<div className="athletes-list">
+      <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
       <RaceHeader raceId={this.props.raceId} />
       <H1>Athletes</H1>
       <HTMLTable>

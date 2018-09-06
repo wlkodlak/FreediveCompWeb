@@ -1,6 +1,6 @@
 import React from 'react';
 import Api from '../../api/Api';
-import { H1, HTMLTable } from '@blueprintjs/core';
+import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
 import { formatPerformance } from '../finalresults/PerformanceFormatters';
 import RaceHeader from '../homepage/RaceHeader';
 import moment from 'moment';
@@ -10,16 +10,18 @@ class StartingList extends React.Component {
     super(props);
     this.onStartingListReceived = this.onStartingListReceived.bind(this);
     this.convertEntry = this.convertEntry.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   state = {
     title: "",
-    entries: []
+    entries: [],
+    errors: []
   }
 
   componentWillMount() {
     const { raceId, startingLaneId } = this.props;
-    Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived);
+    Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived).catch(this.onError);
   }
 
   onStartingListReceived(report) {
@@ -58,9 +60,26 @@ class StartingList extends React.Component {
     }
   }
 
+  onError(error) {
+    const errors = this.state.errors.slice(0);
+    errors.push(error.message);
+    this.setState({
+      errors: errors
+    });
+  }
+
+  onErrorDismissed(index) {
+    const errors = this.state.errors.slice(0);
+    errors.splice(index, 1);
+    this.setState({
+      errors: errors
+    });
+  }
+
   render() {
     return (
       <div className="startinglanes-startlist">
+        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
         <H1>Starting List - {this.state.title}</H1>
         <HTMLTable>

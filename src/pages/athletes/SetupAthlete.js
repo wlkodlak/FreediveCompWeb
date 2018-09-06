@@ -1,5 +1,5 @@
 import React from 'react';
-import { H1 } from '@blueprintjs/core';
+import { H1, Toaster, Toast, Intent } from '@blueprintjs/core';
 import Api from '../../api/Api';
 import AthleteProfile from './AthleteProfile';
 import AthleteAnnouncements from './AthleteAnnouncements';
@@ -14,10 +14,12 @@ class SetupAthlete extends React.Component {
       profile: {},
       announcements: [],
       results: [],
-      disciplines: []
+      disciplines: [],
+      errors: []
     };
     this.onAthleteLoaded = this.onAthleteLoaded.bind(this);
     this.onRaceLoaded = this.onRaceLoaded.bind(this);
+    this.onError = this.onError.bind(this);
     this.onAthleteProfileChanged = this.onAthleteProfileChanged.bind(this);
     this.onAthleteProfileSubmit = this.onAthleteProfileSubmit.bind(this);
     this.onAthleteAnnouncementsSubmit = this.onAthleteAnnouncementsSubmit.bind(this);
@@ -26,9 +28,9 @@ class SetupAthlete extends React.Component {
 
   componentWillMount() {
     const { raceId, athleteId } = this.props;
-    Api.getRaceSetup(raceId).then(this.onRaceLoaded);
+    Api.getRaceSetup(raceId).then(this.onRaceLoaded).catch(this.onError);
     if (athleteId !== "new") {
-      Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded);
+      Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded).catch(this.onError);
     } else {
       this.setState({
         profile: {
@@ -54,6 +56,22 @@ class SetupAthlete extends React.Component {
     });
   }
 
+  onError(error) {
+    const errors = this.state.errors.slice(0);
+    errors.push(error.message);
+    this.setState({
+      errors: errors
+    });
+  }
+
+  onErrorDismissed(index) {
+    const errors = this.state.errors.slice(0);
+    errors.splice(index, 1);
+    this.setState({
+      errors: errors
+    });
+  }
+
   onAthleteProfileChanged(profile) {
     this.setState({profile});
   }
@@ -72,7 +90,7 @@ class SetupAthlete extends React.Component {
     const athleteData = {
       "Profile": profile
     };
-    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved);
+    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved).catch(this.onError);
   }
 
   generateAthleteId(firstName, lastName) {
@@ -90,7 +108,7 @@ class SetupAthlete extends React.Component {
     const athleteData = {
       "Announcements": announcements
     };
-    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved);
+    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved).catch(this.onError);
   }
 
   onAthleteAnnouncementsSaved() {
@@ -111,6 +129,7 @@ class SetupAthlete extends React.Component {
     const filteredDisciplines = this.state.disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
     return (
       <div className="athletes-form">
+        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} page="athletes" pageName="Athletes" />
         {
           isNewAthlete ? <H1>New athlete</H1> : <H1>{fullName}</H1>

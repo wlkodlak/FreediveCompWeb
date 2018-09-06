@@ -1,24 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { H1, H2, UL } from '@blueprintjs/core';
+import { H1, H2, UL, Toaster, Toast, Intent } from '@blueprintjs/core';
 import Api from '../../api/Api';
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   state = {
-    title: "Competition menu"
+    title: "Competition menu",
+    errors: []
   }
 
   componentWillMount() {
-    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded);
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
   }
 
   onRaceSetupLoaded(raceSetup) {
     this.setState({title: raceSetup.Race.Name});
+  }
+
+  onError(error) {
+    const errors = this.state.errors.slice(0);
+    errors.push(error.message);
+    this.setState({
+      errors: errors
+    });
+  }
+
+  onErrorDismissed(index) {
+    const errors = this.state.errors.slice(0);
+    errors.splice(index, 1);
+    this.setState({
+      errors: errors
+    });
   }
 
   render() {
@@ -26,6 +44,7 @@ class HomePage extends React.Component {
     const title = this.state.title;
     return (
       <div className="homepage">
+        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <H1>{title}</H1>
         <H2>Competition progress</H2>
         <UL>
