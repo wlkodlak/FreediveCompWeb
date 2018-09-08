@@ -20,7 +20,7 @@ class SetupJudges extends React.Component {
     errors: []
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const raceId = this.props.raceId;
     Api.getRaceSetup(raceId).then(this.onRaceSetupLoaded).catch(this.onError);
     Api.getAuthJudges(raceId).then(this.onJudgesLoaded).catch(this.onError);

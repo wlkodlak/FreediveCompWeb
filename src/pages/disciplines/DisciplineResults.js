@@ -17,7 +17,7 @@ class DisciplineResults extends React.Component {
     errors: []
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { raceId, disciplineId } = this.props;
     Api.getReportDisciplineResults(raceId, disciplineId).then(this.onReportLoaded).catch(this.onError);
   }

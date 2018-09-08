@@ -12,6 +12,7 @@ import FinalResults from './pages/finalresults/FinalResults';
 import FinalReportsList from './pages/finalresults/FinalReportsList';
 import SetupAthletes from './pages/athletes/SetupAthletes';
 import SetupAthlete from './pages/athletes/SetupAthlete';
+import EnterResult from './pages/enterresults/EnterResult';
 import NoRace from './pages/norace/NoRace';
 import BadPath from './pages/norace/BadPath';
 
@@ -54,6 +55,16 @@ const App = () => (
       <Route
         path="/:raceId/athletes"
         render={({ match }) => (<SetupAthletes raceId={match.params.raceId} />)} />
+      <Route
+        path="/:raceId/enterresults/:laneId/:athleteId/:disciplineId"
+        render={({ match }) => (
+          <EnterResult
+            raceId={match.params.raceId}
+            startingLaneId={match.params.laneId}
+            athleteId={match.params.athleteId}
+            disciplineId={match.params.disciplineId} />
+          )}
+        />
       <Route
         path="/:raceId/"
         exact

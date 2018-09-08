@@ -19,7 +19,7 @@ class SetupAthletes extends React.Component {
     errors: []
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const raceId = this.props.raceId;
     Api.getAthletes(raceId).then(this.onAthletesLoaded).catch(this.onError);
   }

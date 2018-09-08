@@ -19,7 +19,7 @@ class FinalResults extends React.Component {
     errors: []
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { raceId, resultListId } = this.props;
     Api.getReportResultList(raceId, resultListId).then(this.onReportLoaded).catch(this.onError);
   }

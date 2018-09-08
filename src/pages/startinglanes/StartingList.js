@@ -4,6 +4,7 @@ import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
 import { formatPerformance } from '../finalresults/PerformanceFormatters';
 import RaceHeader from '../homepage/RaceHeader';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 class StartingList extends React.Component {
   constructor(props) {
@@ -11,23 +12,37 @@ class StartingList extends React.Component {
     this.onStartingListReceived = this.onStartingListReceived.bind(this);
     this.convertEntry = this.convertEntry.bind(this);
     this.onError = this.onError.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this);
   }
 
   state = {
     title: "",
     entries: [],
-    errors: []
+    errors: [],
+    phone: false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { raceId, startingLaneId } = this.props;
     Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived).catch(this.onError);
+    window.addEventListener('resize', this.onWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onWindowResize);
   }
 
   onStartingListReceived(report) {
     const title = report.Title;
     const entries = report.Entries.map(this.convertEntry);
     this.setState({title, entries});
+  }
+
+  onWindowResize() {
+    const phone = window.innerWidth < 600;
+    if (phone !== this.state.phone) {
+      this.setState({phone: phone});
+    }
   }
 
   convertEntry(entry, index) {
@@ -40,7 +55,8 @@ class StartingList extends React.Component {
       announced: formatPerformance(entry.Announcement.Performance),
       realized: entry.CurrentResult ? formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
-      note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : ""
+      note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : "",
+      link: `/${raceId}/enterresults/${entry.Start.StartingLaneId}/${entry.Athlete.AthleteId}/${entry.Discipline.DisciplineId}`
     };
   }
 
@@ -77,6 +93,10 @@ class StartingList extends React.Component {
   }
 
   render() {
+    return this.state.isMobile > this.renderMobile() : this.renderDesktop();
+  }
+
+  renderDesktop() {
     return (
       <div className="startinglanes-startlist">
         <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
@@ -98,7 +118,7 @@ class StartingList extends React.Component {
               this.state.entries.map(entry => {
                 return (
                   <tr key={entry.number}>
-                    <td>{entry.fullName}</td>
+                    <td><Link to={entry.link}>{entry.fullName}</Link></td>
                     <td>{entry.country}</td>
                     <td>{entry.officialTop}</td>
                     <td>{entry.laneName}</td>
@@ -112,6 +132,30 @@ class StartingList extends React.Component {
             }
           </tbody>
         </HTMLTable>
+      </div>
+    );
+  }
+
+  renderPhone() {
+    return (
+      <div className="startinglanes-startlist">
+        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
+        <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
+        <H1>Starting List - {this.state.title}</H1>
+        {
+          this.state.entries.map(entry => {
+            return (
+              <div key={entry.number}>
+                <Link key={entry.number} to={entry.link} className="startinglanes-startlist-miniitem">
+                  <span className="startinglanes-athlete">{entry.fullName}</span>
+                  <span className="startinglanes-country">{entry.country}</span>
+                  <span className="startinglanes-officialTop">OT {entry.officialTop}</span>
+                  <span className="startinglanes-announced">AP {entry.announced}</span>
+                </Link>
+              </div>
+            );
+          })
+        }
       </div>
     );
   }

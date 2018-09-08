@@ -1,3 +1,5 @@
+import GenerateUuid from './GenerateUuid';
+
 class MockedApi {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
@@ -208,7 +210,21 @@ class MockedApi {
       "JudgeName": authorizeRequest["JudgeName"],
       "DeviceIds": ["tesjckiyekj48wncu4"]
     });
+  }
 
+  postAuthAuthenticate(raceId, connectCode) {
+    if (connectCode && connectCode.length > 0) {
+      return Promise.resolve({
+        "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
+        "ConnectCode": "218637",
+        "AuthenticationToken": "c13eaf476d5a468b76e5a4f6e84ac60547a8e7c6a54468lkjhvlk4a4cd654e",
+        "JudgeId": "admin",
+        "JudgeName": "Master Geralt"
+      });
+    } else {
+      "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
+      "ConnectCode": "218637"
+    }
   }
 
   getReportStartingList(raceId, laneId) {
@@ -703,6 +719,12 @@ class MockedApi {
     return Promise.resolve(null);
   }
 
+  postAthleteResult(raceId, athleteId, result) {
+    console.log("postAthleteResult(" + raceId + ", " + athleteId + ")");
+    console.log(result);
+    return Promise.resolve(null);
+  }
+
   postStartingList(raceId, startingLaneId, entries) {
     console.log("postStartingList(" + raceId + ", " + startingLaneId + ")");
     console.log(entries);
@@ -710,14 +732,7 @@ class MockedApi {
   }
 
   getNewRaceId() {
-    const randomHex = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    const randomUuid =
-      randomHex() + randomHex() + "-" +
-      randomHex() + "-" +
-      "4" + randomHex().substring(1) + "-" +
-      "a" + randomHex().substring(1) + "-" +
-      randomHex() + randomHex() + randomHex();
-    return randomUuid;
+    return GenerateUuid();
   }
 }
 

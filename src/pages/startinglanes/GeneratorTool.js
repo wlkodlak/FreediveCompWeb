@@ -35,7 +35,7 @@ class GeneratorTool extends React.Component {
     this.onError = this.onError.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
   }
 

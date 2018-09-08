@@ -1,6 +1,9 @@
+import GenerateUuid from './GenerateUuid';
+
 class RemoteApi {
-  constructor(baseUrl) {
+  constructor(baseUrl, tokenStorage) {
     this.baseUrl = baseUrl;
+    this.tokenStorage = tokenStorage;
     this.cachedRaceSetup = null;
     this.cachedRaceId = null;
   }
@@ -15,9 +18,17 @@ class RemoteApi {
       });
   }
 
-  getRaceCall(raceId, path) {
+  getRaceCall(raceId, path, forceAuthentication) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
-    return fetch(serviceUrl)
+    const options = {
+      method: "GET",
+      url: serviceUrl,
+      headers: {
+        "X-Authentication-Token": forceAuthentication ? tokenStorage.getRaceToken(raceId) : null
+      }
+    };
+    const request = new Request(serviceUrl, options);
+    return fetch(request)
       .then(response => {
         if (response.status === 200) return response.json();
         if (response.status === 400) throw Error(response.body);
@@ -25,12 +36,15 @@ class RemoteApi {
       });
   }
 
-  postRaceCall(raceId, path, postData) {
+  postRaceCall(raceId, path, postData, skipAuthentication) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
     const options = {
       method: "POST",
       url: serviceUrl,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Authentication-Token": skipAuthentication ? null : tokenStorage.getRaceToken(raceId)
+      },
       body: JSON.stringify(postData)
     };
     const request = new Request(serviceUrl, options);
@@ -71,11 +85,26 @@ class RemoteApi {
   }
 
   getAuthVerify(raceId) {
-    return this.getRaceCall(raceId, "auth/verify");
+    return this.getRaceCall(raceId, "auth/verify", true);
   }
 
   postAuthAuthorize(raceId, authorizeRequest) {
     return this.postRaceCall(raceId, "auth/authorize", authorizeRequest);
+  }
+
+  postAuthAuthenticate(raceId, connectCode) {
+    const body = {
+      "DeviceId": this.tokenStorage.getDeviceId(),
+      "ConnectCode": connectCode
+    };
+    const promise = this.postRaceCall(raceId, "auth/authenticate", body, true);
+    promise.then(response => {
+      const token = response.AuthenticationToken;
+      if (typeof token === "string") {
+        this.tokenStorage.setRaceToken(raceId, token);
+      }
+    });
+    return promise;
   }
 
   getReportStartingList(raceId, laneId) {
@@ -102,19 +131,16 @@ class RemoteApi {
     return this.postRaceCall(raceId, "athletes/" + athleteId, athleteData);
   }
 
+  postAthleteResult(raceId, athleteId, result) {
+    return this.postRaceCall(raceId, "athletes/" + athleteId + "/results", result);
+  }
+
   postStartingList(raceId, startingLaneId, entries) {
     return this.postRaceCall(raceId, "start/" + startingLaneId, entries);
   }
 
   getNewRaceId() {
-    const randomHex = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    const randomUuid =
-      randomHex() + randomHex() + "-" +
-      randomHex() + "-" +
-      "4" + randomHex().substring(1) + "-" +
-      "a" + randomHex().substring(1) + "-" +
-      randomHex() + randomHex() + randomHex();
-    return randomUuid;
+    return GenerateUuid();
   }
 }
 

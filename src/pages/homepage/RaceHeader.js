@@ -14,7 +14,7 @@ class RaceHeader extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
   }
 

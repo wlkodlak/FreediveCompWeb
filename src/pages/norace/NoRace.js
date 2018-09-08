@@ -16,7 +16,7 @@ class NoRace extends React.Component {
     this.onError = this.onError.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Api.getGlobalSearch().then(this.onRacesLoaded).catch(this.onError);
     Api.getAuthVerify("global").then(this.onUserVerified).catch(this.onError);
   }

@@ -26,7 +26,7 @@ class SetupAthlete extends React.Component {
     this.onAthleteAnnouncementsSaved = this.onAthleteAnnouncementsSaved.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { raceId, athleteId } = this.props;
     Api.getRaceSetup(raceId).then(this.onRaceLoaded).catch(this.onError);
     if (athleteId !== "new") {
