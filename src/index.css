@@ -45,3 +45,26 @@ body {
 .headerLink {
   color: inherit;
 }
+
+.startinglanes-startlist-miniitem {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.startinglanes-athlete, .startinglanes-extras  {
+  flex: auto;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.startinglanes-athlete-name {
+  flex: 1 auto;
+}
+
+.startinglanes-country {
+  flex: 0 0 auto;
+}
+
+.startinglanes-officialTop, .startinglanes-announced {
+  flex: 1 auto;
+}

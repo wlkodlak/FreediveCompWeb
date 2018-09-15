@@ -145,14 +145,16 @@ class StartingList extends React.Component {
         {
           this.state.entries.map(entry => {
             return (
-              <div key={entry.number}>
-                <Link key={entry.number} to={entry.link} className="startinglanes-startlist-miniitem">
-                  <span className="startinglanes-athlete">{entry.fullName}</span>
+              <Link key={entry.number} to={entry.link} className="startinglanes-startlist-miniitem">
+                <div className="startinglanes-athlete">
+                  <span className="startinglanes-athlete-name">{entry.fullName}</span>
                   <span className="startinglanes-country">{entry.country}</span>
+                </div>
+                <div className="startinglanes-extras">
                   <span className="startinglanes-officialTop">OT {entry.officialTop}</span>
                   <span className="startinglanes-announced">AP {entry.announced}</span>
-                </Link>
-              </div>
+                </div>
+              </Link>
             );
           })
         }

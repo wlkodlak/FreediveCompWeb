@@ -6,11 +6,33 @@ class RemoteApi {
     this.tokenStorage = tokenStorage;
     this.cachedRaceSetup = null;
     this.cachedRaceId = null;
+    this.cachedRules = null;
   }
 
   getGlobalCall(path) {
     const serviceUrl = this.baseUrl + "/api-1.0/global/" + path;
     return fetch(serviceUrl)
+      .then(response => {
+        if (response.status === 200) return response.json();
+        if (response.status === 400) throw Error(response.body);
+        return null;
+      });
+  }
+
+  postGlobalCall(path, postData) {
+    const serviceUrl = this.baseUrl + "/api-1.0/global/" + path;
+    const options = {
+      method: "POST",
+      url: serviceUrl,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    };
+    const request = new Request(serviceUrl, options);
+    console.log(request);
+    console.log(postData);
+    return fetch(request)
       .then(response => {
         if (response.status === 200) return response.json();
         if (response.status === 400) throw Error(response.body);
@@ -60,6 +82,34 @@ class RemoteApi {
 
   getGlobalSearch() {
     return this.getGlobalCall("search");
+  }
+
+  getGlobalRules() {
+    if (this.cachedRules != null) {
+      return this.cachedRules;
+    }
+
+    this.cachedRules = this.getGlobalCall("rules");
+    this.cachedRules.catch(error => {
+      this.cachedRules = null
+    });
+    return this.cachedRules;
+  }
+
+  postGlobalRulePoints(ruleName, path, body) {
+    return this.postGlobalCall("rules/" + ruleName + "/" + path, body);
+  }
+
+  postGlobalRulePoints(ruleName, performance) {
+    return this.postGlobalRuleCall(ruleName, "points", performance);
+  }
+
+  postGlobalRuleShort(ruleName, request) {
+    return this.postGlobalRuleCall(ruleName, "short", request);
+  }
+
+  postGlobalRulePenalization(ruleName, request) {
+    return this.postGlobalRuleCall(ruleName, "penalization", request);
   }
 
   postRaceSetup(raceId, raceSetup) {

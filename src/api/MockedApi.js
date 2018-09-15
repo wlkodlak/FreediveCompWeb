@@ -16,6 +16,393 @@ class MockedApi {
     ]);
   }
 
+  getGlobalRules() {
+    return Promise.resolve([
+      {
+        "Name": "AIDA_STA",
+        "HasDuration": true,
+        "HasDistance": false,
+        "HasDepth": false,
+        "HasPoints": true,
+        "PrimaryComponent": "Duration",
+        "PenalizationsTarget": "Points",
+        "Penalizations": [
+          {
+            "Id": "EarlyStart",
+            "Reason": "Early start",
+            "ShortReason": "Early",
+            "HasInput": true,
+            "InputName": "Time (seconds)",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "LateStart",
+            "Reason": "Late start",
+            "ShortReason": "Late",
+            "HasInput": true,
+            "InputName": "Seconds after OT",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "Blackout",
+            "Reason": "Blackout",
+            "ShortReason": "BO",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SurfaceProtocol",
+            "Reason": "Surface protocol",
+            "ShortReason": "SP",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SupportiveTouch",
+            "Reason": "Supportive touch",
+            "ShortReason": "Touch",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "Equipment",
+            "Reason": "Forbidden equipment",
+            "ShortReason": "Equipment",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "MissedStart",
+            "Reason": "Missed start",
+            "ShortReason": "DNS",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "DidNotStart"
+          }
+        ]
+      }, {
+        "Name": "AIDA_DYN",
+        "HasDuration": false,
+        "HasDistance": true,
+        "HasDepth": false,
+        "HasPoints": true,
+        "PrimaryComponent": "Distance",
+        "PenalizationsTarget": "Points",
+        "Penalizations": [
+          {
+            "Id": "EarlyStart",
+            "Reason": "Early start",
+            "ShortReason": "Early",
+            "HasInput": true,
+            "InputName": "Time (seconds)",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "LateStart",
+            "Reason": "Late start",
+            "ShortReason": "Late",
+            "HasInput": true,
+            "InputName": "Seconds after OT",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "ExitHelp",
+            "Reason": "Push/pull on exit",
+            "ShortReason": "Exit",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "NoWall",
+            "Reason": "Wrong turn <1m",
+            "ShortReason": "Turn",
+            "HasInput": true,
+            "InputName": "Count",
+            "InputUnit": "x",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "Blackout",
+            "Reason": "Blackout",
+            "ShortReason": "BO",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SurfaceProtocol",
+            "Reason": "Surface protocol",
+            "ShortReason": "SP",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SupportiveTouch",
+            "Reason": "Supportive touch",
+            "ShortReason": "Touch",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "Equipment",
+            "Reason": "Forbidden equipment",
+            "ShortReason": "Equipment",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "MissedStart",
+            "Reason": "Missed start",
+            "ShortReason": "DNS",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "DidNotStart"
+          }, {
+            "Id": "WrongTurn",
+            "Reason": "Wrong turn >1m",
+            "ShortReason": "Turn",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }
+        ]
+      }, {
+        "Name": "AIDA_CWT",
+        "HasDuration": false,
+        "HasDistance": false,
+        "HasDepth": true,
+        "HasPoints": true,
+        "PrimaryComponent": "Depth",
+        "PenalizationsTarget": "Points",
+        "Penalizations": [
+          {
+            "Id": "EarlyStart",
+            "Reason": "Early start",
+            "ShortReason": "Early",
+            "HasInput": true,
+            "InputName": "Time (seconds)",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "LateStart",
+            "Reason": "Late start",
+            "ShortReason": "Late",
+            "HasInput": true,
+            "InputName": "Seconds after OT",
+            "InputUnit": "s",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "Lanyard",
+            "Reason": "Removed lanyard",
+            "ShortReason": "Lanyard",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "GrabLine",
+            "Reason": "Grab line",
+            "ShortReason": "Grab",
+            "HasInput": true,
+            "InputName": "Count",
+            "InputUnit": "x",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "NoTag",
+            "Reason": "No tag delivered",
+            "ShortReason": "Tag",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Yellow"
+          }, {
+            "Id": "Blackout",
+            "Reason": "Blackout",
+            "ShortReason": "BO",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SurfaceProtocol",
+            "Reason": "Surface protocol",
+            "ShortReason": "SP",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "SupportiveTouch",
+            "Reason": "Supportive touch",
+            "ShortReason": "Touch",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "Equipment",
+            "Reason": "Forbidden equipment",
+            "ShortReason": "Equipment",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }, {
+            "Id": "MissedStart",
+            "Reason": "Missed start",
+            "ShortReason": "DNS",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "DidNotStart"
+          }, {
+            "Id": "WrongTurn",
+            "Reason": "Wrong turn >1m",
+            "ShortReason": "Turn",
+            "HasInput": false,
+            "InputName": "",
+            "InputUnit": "",
+            "CardResult": "Red"
+          }
+        ]
+      }
+    ]);
+  }
+
+  postGlobalRulePoints(ruleName, performance) {
+    console.log("postGlobalRulePoints(" + ruleName + ")");
+    console.log(performance);
+    try {
+      const points;
+      if (ruleName === "AIDA_STA") {
+        return Promise.resolve(this.calculateDurationPoints(performance));
+      } else if (ruleName === "AIDA_DYN") {
+        return Promise.resolve(this.calculateDistancePoints(performance));
+      } else if (ruleName === "AIDA_CWT") {
+        return Promise.resolve(this.calculateDepthPoints(performance));
+      } else {
+        return Promise.reject(new Error("Unsupported rules"));
+      }
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  calculateDurationPoints(performance) {
+    if (typeof performance.Duration === "string" && performance.Duration.length === 8) {
+      const minutes = parseInt(performance.Duration.substring(3, 5));
+      const seconds = parseInt(performance.Duration.substring(6, 8));
+      return 0.2 * (minutes * 60 + seconds);
+    } else {
+      throw new Error("Missing duration");
+    }
+  }
+
+  calculateDistancePoints(performance) {
+    if (typeof performance.Distance === "number") {
+      return performance.Distance * 0.5;
+    } else {
+      throw new Error("Missing distance");
+    }
+  }
+
+  calculateDepthPoints(performance) {
+    if (typeof performance.Distance === "number") {
+      return performance.Depth;
+    } else {
+      throw new Error("Missing depth");
+    }
+  }
+
+  buildShortPenalization(announced, realized) {
+    if (announced <= realized)
+      return null;
+    return {
+      "PenalizationId": "Short",
+      "Reason": "Short performance",
+      "ShortReason": "",
+      "IsShortPerformance": true,
+      "Performance": {
+        "Points": Math.ceil(announced - realized)
+      }
+    };
+  }
+
+  postGlobalRuleShort(ruleName, request) {
+    console.log("postGlobalRuleShort(" + ruleName + ")");
+    console.log(request);
+    try {
+      const points;
+      if (ruleName === "AIDA_STA") {
+        const announced = this.calculateDurationPoints(request.Announced);
+        const realized = this.calculateDurationPoints(request.Announced);
+        return Promise.resolve(buildShortPenalization(announced, realized));
+      } else if (ruleName === "AIDA_DYN") {
+        const announced = this.calculateDistancePoints(request.Announced);
+        const realized = this.calculateDistancePoints(request.Announced);
+        return Promise.resolve(buildShortPenalization(announced, realized));
+      } else if (ruleName === "AIDA_CWT") {
+        const announced = this.calculateDurationPoints(request.Announced);
+        const realized = this.calculateDurationPoints(request.Announced);
+        return Promise.resolve(buildShortPenalization(announced, realized));
+      } else {
+        return Promise.reject(new Error("Unsupported rules"));
+      }
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  postGlobalRulePenalization(ruleName, request) {
+    console.log("postGlobalRulePenalization(" + ruleName + ")");
+    console.log(request);
+    if (request.PenalizationId === "Blackout") {
+      return Promise.resolve({"PenalizationId": "Blackout", "Reason": "Blackout", "ShortReason": "BO"});
+    } else if (request.PenalizationId === "SurfaceProtocol") {
+      return Promise.resolve({"PenalizationId": "SurfaceProtocol", "Reason": "Surface Protocol", "ShortReason": "SP"});
+    } else if (request.PenalizationId === "EarlyStart") {
+      return Promise.resolve({
+        "PenalizationId": "EarlyStart",
+        "RuleInput": request.Input,
+        "Reason": "Early Start",
+        "ShortReason": "Early",
+        "Performance": {
+          "Points": Math.ceil(request.Input * 0.2)
+        }
+      });
+    } else if (request.PenalizationId === "LateStart") {
+      return Promise.resolve({
+        "PenalizationId": "LateStart",
+        "RuleInput": request.Input,
+        "Reason": "Late Start",
+        "ShortReason": "Late",
+        "Performance": {
+          "Points": Math.ceil((request.Input - 10) * 0.2)
+        }
+      });
+    } else {
+      return Promise.resolve({
+        "PenalizationId": request.PenalizationId,
+        "RuleInput": request.Input,
+        "Reason": request.PenalizationId,
+        "ShortReason": request.PenalizationId,
+        "Performance": {
+          "Points": request.Input
+        }
+      });
+    }
+  }
+
   postRaceSetup(raceId, raceSetup) {
     console.log("postRaceSetup(" + raceId + ")");
     console.log(raceSetup);
@@ -38,30 +425,25 @@ class MockedApi {
             {
               "StartingLaneId": "STA-A",
               "ShortName": "A"
-            },
-            {
+            }, {
               "StartingLaneId": "STA-B",
               "ShortName": "B"
-            },
-            {
+            }, {
               "StartingLaneId": "STA-C",
               "ShortName": "C"
-            },
-            {
+            }, {
               "StartingLaneId": "STA-D",
               "ShortName": "D"
             }
           ]
-        },
-        {
+        }, {
           "StartingLaneId": "DYN",
           "ShortName": "DYN",
           "SubLanes": [
             {
               "StartingLaneId": "DYN-A",
               "ShortName": "A"
-            },
-            {
+            }, {
               "StartingLaneId": "DYN-B",
               "ShortName": "B"
             }
@@ -76,24 +458,21 @@ class MockedApi {
           "Rules": "AIDA_STA",
           "AnnouncementsClosed": false,
           "Sex": "Male"
-        },
-        {
+        }, {
           "DisciplineId": "STA-F",
           "ShortName": "STA",
           "LongName": "Static apnea - Women",
           "Rules": "AIDA_STA",
           "AnnouncementsClosed": false,
           "Sex": "Female"
-        },
-        {
+        }, {
           "DisciplineId": "DYN-M",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
           "Rules": "AIDA_DYN",
           "AnnouncementsClosed": false,
           "Sex": "Male"
-        },
-        {
+        }, {
           "DisciplineId": "DYN-F",
           "ShortName": "DYN",
           "LongName": "Dynamic apnea - Men",
@@ -115,8 +494,7 @@ class MockedApi {
                   "DisciplineId": "STA-M"
                 }
               ]
-            },
-            {
+            }, {
               "Title": "DYN",
               "IsFinal": false,
               "Components": [
@@ -124,22 +502,19 @@ class MockedApi {
                   "DisciplineId": "DYN-M"
                 }
               ]
-            },
-            {
+            }, {
               "Title": "Total",
               "IsFinal": true,
               "Components": [
                 {
                   "DisciplineId": "STA-M"
-                },
-                {
+                }, {
                   "DisciplineId": "DYN-M"
                 }
               ]
             }
           ]
-        },
-        {
+        }, {
           "ResultsListId": "Women",
           "Title": "Final Results - Women",
           "Columns": [
@@ -151,8 +526,7 @@ class MockedApi {
                   "DisciplineId": "STA-F"
                 }
               ]
-            },
-            {
+            }, {
               "Title": "DYN",
               "IsFinal": false,
               "Components": [
@@ -160,15 +534,13 @@ class MockedApi {
                   "DisciplineId": "DYN-F"
                 }
               ]
-            },
-            {
+            }, {
               "Title": "Total",
               "IsFinal": true,
               "Components": [
                 {
                   "DisciplineId": "STA-F"
-                },
-                {
+                }, {
                   "DisciplineId": "DYN-F"
                 }
               ]
@@ -185,8 +557,7 @@ class MockedApi {
         "JudgeId": "admin",
         "JudgeName": "Master Geralt",
         "DeviceIds": ["lkacldskiuleknmcalkjdf"]
-      },
-      {
+      }, {
         "JudgeId": "milan",
         "JudgeName": "Milan Wilczak",
         "DeviceIds": ["983fkljh34k3ijnkjcbkh", "n4378cnbas65kjdkjhbcyde"]
@@ -195,35 +566,21 @@ class MockedApi {
   }
 
   getAuthVerify(raceId) {
-    return Promise.resolve({
-      "JudgeId": "admin",
-      "JudgeName": "Master Geralt",
-      "DeviceIds": ["lkacldskiuleknmcalkjdf"]
-    });
+    return Promise.resolve({"JudgeId": "admin", "JudgeName": "Master Geralt", "DeviceIds": ["lkacldskiuleknmcalkjdf"]});
   }
 
   postAuthAuthorize(raceId, authorizeRequest) {
     console.log("postAuthAuthorize(" + raceId + ")");
     console.log(authorizeRequest);
-    return Promise.resolve({
-      "JudgeId": authorizeRequest["JudgeId"],
-      "JudgeName": authorizeRequest["JudgeName"],
-      "DeviceIds": ["tesjckiyekj48wncu4"]
-    });
+    return Promise.resolve({"JudgeId": authorizeRequest["JudgeId"], "JudgeName": authorizeRequest["JudgeName"], "DeviceIds": ["tesjckiyekj48wncu4"]});
   }
 
   postAuthAuthenticate(raceId, connectCode) {
     if (connectCode && connectCode.length > 0) {
-      return Promise.resolve({
-        "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
-        "ConnectCode": "218637",
-        "AuthenticationToken": "c13eaf476d5a468b76e5a4f6e84ac60547a8e7c6a54468lkjhvlk4a4cd654e",
-        "JudgeId": "admin",
-        "JudgeName": "Master Geralt"
-      });
+      return Promise.resolve({"DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01", "ConnectCode": "218637", "AuthenticationToken": "c13eaf476d5a468b76e5a4f6e84ac60547a8e7c6a54468lkjhvlk4a4cd654e", "JudgeId": "admin", "JudgeName": "Master Geralt"});
     } else {
-      "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
-      "ConnectCode": "218637"
+      "DeviceId" : "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
+      "ConnectCode" : "218637"
     }
   }
 
@@ -254,8 +611,7 @@ class MockedApi {
             "StartingLaneLongName": "B",
             "OfficialTop": "2018-05-27T09:44:00+02:00"
           }
-        },
-        {
+        }, {
           "Athlete": {
             "AthleteId": "19-milan-wilczak",
             "FirstName": "Milan",
@@ -292,8 +648,7 @@ class MockedApi {
             "JudgeId": "admin",
             "JudgeName": "Master Geralt"
           }
-        },
-        {
+        }, {
           "Athlete": {
             "AthleteId": "28-jana-novakova",
             "FirstName": "Jana",
@@ -392,8 +747,7 @@ class MockedApi {
               }
             }
           ]
-        },
-        {
+        }, {
           "Athlete": {
             "AthleteId": "19-milan-wilczak",
             "FirstName": "Milan",
@@ -424,8 +778,7 @@ class MockedApi {
               }
             }
           ]
-        },
-        {
+        }, {
           "Athlete": {
             "AthleteId": "23-radek-svoboda",
             "FirstName": "Radek",
@@ -467,8 +820,7 @@ class MockedApi {
               }
             }
           ]
-        },
-        {
+        }, {
           "Athlete": {
             "AthleteId": "61-radim-darous",
             "FirstName": "Radim",
@@ -526,8 +878,7 @@ class MockedApi {
             },
             "Title": "STA",
             "IsSortingSource": false
-          },
-          {
+          }, {
             "Discipline": {
               "DisciplineId": "DYN-M",
               "Name": "DYN",
@@ -535,8 +886,7 @@ class MockedApi {
             },
             "Title": "DYN",
             "IsSortingSource": false
-          },
-          {
+          }, {
             "Title": "Totals",
             "IsSortingSource": true
           }
@@ -564,8 +914,7 @@ class MockedApi {
             }
           }
         ]
-      },
-      {
+      }, {
         "Profile": {
           "AthleteId": "19-milan-wilczak",
           "FirstName": "Milan",
@@ -582,8 +931,7 @@ class MockedApi {
             }
           }
         ]
-      },
-      {
+      }, {
         "Profile": {
           "AthleteId": "23-radek-svoboda",
           "FirstName": "Radek",
@@ -599,8 +947,7 @@ class MockedApi {
             }
           }
         ]
-      },
-      {
+      }, {
         "Profile": {
           "AthleteId": "61-radim-darous",
           "FirstName": "Radim",
@@ -616,8 +963,7 @@ class MockedApi {
             }
           }
         ]
-      },
-      {
+      }, {
         "Profile": {
           "AthleteId": "27-martina-silhava",
           "FirstName": "Martina",
@@ -633,8 +979,7 @@ class MockedApi {
             }
           }
         ]
-      },
-      {
+      }, {
         "Profile": {
           "AthleteId": "44-jana-mala",
           "FirstName": "Jana",
@@ -670,8 +1015,7 @@ class MockedApi {
           "Performance": {
             "Duration": "00:05:00"
           }
-        },
-        {
+        }, {
           "DisciplineId": "DYN-M",
           "Performance": {
             "Distance": 100
@@ -693,8 +1037,7 @@ class MockedApi {
           "CardResult": "White",
           "JudgeId": "admin",
           "JudgeName": "Master Geralt"
-        },
-        {
+        }, {
           "DisciplineId": "DYN-M",
           "Performance": {
             "Distance": 125,
