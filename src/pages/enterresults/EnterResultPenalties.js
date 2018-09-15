@@ -1,10 +1,10 @@
 import React from 'react';
-import {Label} from '@blueprintjs/core';
+// import {Label} from '@blueprintjs/core';
 
 class EnterResultPenalties extends React.Component {
-  constructor(props) {
+  /*constructor(props) {
     super(props);
-  }
+  }*/
 
   render() {
     return (

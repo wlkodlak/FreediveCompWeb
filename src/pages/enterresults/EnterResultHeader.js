@@ -1,14 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {FormGroup} from '@blueprintjs/core';
+import moment from 'moment';
 
 class EnterResultHeader extends React.Component {
+  convertOfficialTop(xmlDateTime) {
+    if (typeof xmlDateTime === "string" && xmlDateTime.length >= 19) {
+      return moment(xmlDateTime).format("HH:mm");
+    } else {
+      return "";
+    }
+  }
+
   render() {
     const raceId = this.props.raceId;
     const startingLaneId = this.props.startingLaneId;
     const entry = this.props.entry;
     const laneName = entry.Start.StartingLaneLongName;
-    const officialTop = entry.Start.OfficialTop;
+    const officialTop = this.convertOfficialTop(entry.Start.OfficialTop);
     const athleteId = entry.Athlete.AthleteId;
     const athleteName = `${entry.Athlete.FirstName} ${entry.Athlete.Surname}`;
     const disciplineName = entry.Discipline.Name;

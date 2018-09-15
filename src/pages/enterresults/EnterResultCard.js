@@ -36,9 +36,9 @@ class EnterResultCard extends React.Component {
     const classesRed = this.cardClasses(selectedCard, "Red", "red");
     return (
       <div className="enterresult-cards">
-        <button className={classesWhite} onClick={this.onWhiteClick}>White</button>
-        <button className={classesYellow} onClick={this.onYellowClick}>Yellow</button>
-        <button className={classesRed} onClick={this.onRedClick}>Red</button>
+        <button type="button" className={classesWhite} onClick={this.onWhiteClick}>White</button>
+        <button type="button" className={classesYellow} onClick={this.onYellowClick}>Yellow</button>
+        <button type="button" className={classesRed} onClick={this.onRedClick}>Red</button>
       </div>
     );
   }

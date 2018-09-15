@@ -65,7 +65,7 @@ class EnterResult extends React.Component {
 
   onStartListLoaded(startList) {
     const changes = {
-      startList: startList,
+      startList: startList.Entries,
       entry: null,
       result: null,
       modified: false,
@@ -74,22 +74,16 @@ class EnterResult extends React.Component {
     this.setState((oldState, props) => this.changeState(oldState, props, changes));
   }
 
-  onPrimaryComponentChanged(value) {
+  onPrimaryComponentChanged(rawInput, performance) {
     const result = {
       ...this.state.result
     };
     result.Performance = {
-      ...result.Performance
+      ...result.Performance,
+      ...performance
     };
-    if (this.state.rules.PrimaryComponent === "Duration") {
-      result.Performance.Duration = value;
-    } else if (this.state.rules.PrimaryComponent === "Distance") {
-      result.Performance.Distance = value;
-    } else if (this.state.rules.PrimaryComponent === "Depth") {
-      result.Performance.Depth = value;
-    }
     this.recalculateResult(result, true);
-    this.setState({modified: true, result: result});
+    this.setState({modified: true, rawRealized: rawInput, result: result});
   }
 
   onCardSelected(card) {
@@ -148,6 +142,7 @@ class EnterResult extends React.Component {
     }
     if (!state.result && state.entry) {
       state.result = state.entry.CurrentResult || {};
+      state.rawRealized = null;
     }
     if (state.entry && state.allRules) {
       state.rules = this.findRules(state.allRules, state.entry.Discipline.Rules);
@@ -180,7 +175,84 @@ class EnterResult extends React.Component {
     return null;
   }
 
-  recalculateResult(result, needsShortPenalty) {}
+  recalculateResult(result, needsShortPenalty) {
+    const rules = this.state.rules;
+    if (!result.Performance || !rules) {
+      result.FinalPerformance = {};
+      return;
+    }
+    const penalizableExtractor = this.getComponentValueExtractor(rules.PenalizationsTarget);
+    const penalizableSetter = this.getComponentValueSetter(rules.PenalizationsTarget);
+    let penalizableValue = penalizableExtractor(result.Performance);
+    if (result.Penalizations) {
+      for (const penalization of result.Penalizations) {
+        penalizableValue -= penalizableExtractor(penalization.Performance);
+      }
+    }
+    const finalPerformance = {
+      ...result.Performance
+    };
+    penalizableSetter(finalPerformance, penalizableValue);
+    result.FinalPerformance = finalPerformance;
+  }
+
+  getComponentValueExtractor(component) {
+    if (component === "Duration") {
+      return this.extractDurationFromPerformance;
+    } else if (component === 'Distance') {
+      return(performance) => performance.Distance;
+    } else if (component === "Depth") {
+      return(performance) => performance.Depth;
+    } else if (component === "Points") {
+      return(performance) => performance.Points;
+    } else {
+      return(performance) => 0;
+    }
+  }
+
+  extractDurationFromPerformance(performance) {
+    if (performance && typeof performance.Duration === "string" && performance.Duration.length === 8) {
+      const minutes = parseInt(performance.Duration.substring(3, 5), 10);
+      const seconds = parseInt(performance.Duration.substring(6, 8), 10);
+      return minutes * 60 + seconds;
+    } else {
+      return 0;
+    }
+  }
+
+  getComponentValueSetter(component) {
+    if (component === "Duration") {
+      return this.setDurationToPerformance;
+    } else if (component === 'Distance') {
+      return (performance, value) => {
+        performance.Distance = value
+      };
+    } else if (component === "Depth") {
+      return (performance, value) => {
+        performance.Depth = value
+      };
+    } else if (component === "Points") {
+      return (performance, value) => {
+        performance.Points = value
+      };
+    } else {
+      return (performance, value) => {};
+    }
+  }
+
+  setDurationToPerformance(performance, value) {
+    const minutes = value / 60;
+    const seconds = value % 60;
+    performance.Duration = "00:" + (
+      minutes < 10
+        ? "0"
+        : ""
+    ) + minutes.toString() + ":" + (
+      seconds < 10
+        ? "0"
+        : ""
+    ) + seconds.toString();
+  }
 
   buildLink(position) {
     const startList = this.state.startList;
@@ -229,13 +301,14 @@ class EnterResult extends React.Component {
                 (error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)}/>
               )
             }</Toaster>
-          <RaceHeader raceId={raceId} page="athletes" pageName="Athletes"/>
+          <RaceHeader raceId={raceId}/>
           <H1>Enter performance</H1>
-          <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} start={entry}/>
+          <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} entry={entry}/>
           <EnterResultComponent
             raceId={raceId}
             announced={entry.Announcement.Performance}
             realized={result.Performance}
+            rawRealized={this.state.rawRealized}
             component={rules.PrimaryComponent}
             onChange={this.onPrimaryComponentChanged}/>
           <EnterResultCard raceId={raceId} result={result} onCardSelected={this.onCardSelected}/>
@@ -245,7 +318,13 @@ class EnterResult extends React.Component {
             rules={rules}
             onAddPenalty={this.onAddPenalty}
             onRemovePenalty={this.onRemovePenalty}/>
-          <EnterResultFooter raceId={raceId} result={result} modified={modified} previousLink={previousLink} nextLink={nextLink}/>
+          <EnterResultFooter
+            raceId={raceId}
+            result={result}
+            component={rules.PenalizationsTarget}
+            modified={modified}
+            previousLink={previousLink}
+            nextLink={nextLink}/>
         </form>
       );
     }
