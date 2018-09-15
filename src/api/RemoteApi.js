@@ -46,7 +46,7 @@ class RemoteApi {
       method: "GET",
       url: serviceUrl,
       headers: {
-        "X-Authentication-Token": forceAuthentication ? tokenStorage.getRaceToken(raceId) : null
+        "X-Authentication-Token": forceAuthentication ? this.tokenStorage.getRaceToken(raceId) : null
       }
     };
     const request = new Request(serviceUrl, options);
@@ -65,7 +65,7 @@ class RemoteApi {
       url: serviceUrl,
       headers: {
         "Content-Type": "application/json",
-        "X-Authentication-Token": skipAuthentication ? null : tokenStorage.getRaceToken(raceId)
+        "X-Authentication-Token": skipAuthentication ? null : this.tokenStorage.getRaceToken(raceId)
       },
       body: JSON.stringify(postData)
     };
@@ -96,7 +96,7 @@ class RemoteApi {
     return this.cachedRules;
   }
 
-  postGlobalRulePoints(ruleName, path, body) {
+  postGlobalRuleCall(ruleName, path, body) {
     return this.postGlobalCall("rules/" + ruleName + "/" + path, body);
   }
 

@@ -11,7 +11,7 @@ import EnterResultFooter from './EnterResultFooter.js';
 class EnterResult extends React.Component {
   constructor(props) {
     super(props);
-    const emptyState = {
+    this.state = {
       entryIndex: -1,
       startList: [],
       allRules: [],
@@ -21,6 +21,12 @@ class EnterResult extends React.Component {
       rules: null,
       errors: []
     };
+    this.onRulesLoaded = this.onRulesLoaded.bind(this);
+    this.onStartListLoaded = this.onStartListLoaded.bind(this);
+    this.onPrimaryComponentChanged = this.onPrimaryComponentChanged.bind(this);
+    this.onCardSelected = this.onCardSelected.bind(this);
+    this.onAddPenalty = this.onAddPenalty.bind(this);
+    this.onRemovePenalty = this.onRemovePenalty.bind(this);
     this.onError = this.onError.bind(this);
   }
 
@@ -129,11 +135,11 @@ class EnterResult extends React.Component {
 
   changeState(original, props, changes) {
     const state = {
-      ...state,
+      ...original,
       ...changes
     };
     if (state.entryIndex < 0) {
-      state.entryIndex = findEditingEntry(state.startList, props.athleteId, props.disciplineId);
+      state.entryIndex = this.findEditingEntry(state.startList, props.athleteId, props.disciplineId);
     }
     if (state.entryIndex < 0 || !state.startList) {
       state.entry = null;
@@ -142,6 +148,9 @@ class EnterResult extends React.Component {
     }
     if (!state.result && state.entry) {
       state.result = state.entry.CurrentResult || {};
+    }
+    if (state.entry && state.allRules) {
+      state.rules = this.findRules(state.allRules, state.entry.Discipline.Rules);
     }
     return state;
   }
@@ -188,11 +197,11 @@ class EnterResult extends React.Component {
 
   render() {
     const raceId = this.props.raceId;
+    const startingLaneId = this.props.startingLaneId;
     const entryIndex = this.state.entryIndex;
     const entry = this.state.entry;
     const rules = this.state.rules;
     const result = this.state.result;
-    const status = this.state.status;
     const errors = this.state.errors;
 
     if (entry == null || rules == null || result == null) {
@@ -211,6 +220,7 @@ class EnterResult extends React.Component {
     } else {
       const previousLink = this.buildLink(entryIndex - 1);
       const nextLink = this.buildLink(entryIndex + 1);
+      const modified = this.state.modified;
 
       return (
         <form className="enterresults-form" onSubmit={this.onFormSubmit}>
@@ -221,7 +231,7 @@ class EnterResult extends React.Component {
             }</Toaster>
           <RaceHeader raceId={raceId} page="athletes" pageName="Athletes"/>
           <H1>Enter performance</H1>
-          <EnterResultHeader raceId={raceId} start={entry}/>
+          <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} start={entry}/>
           <EnterResultComponent
             raceId={raceId}
             announced={entry.Announcement.Performance}

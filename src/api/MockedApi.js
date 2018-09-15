@@ -283,7 +283,6 @@ class MockedApi {
     console.log("postGlobalRulePoints(" + ruleName + ")");
     console.log(performance);
     try {
-      const points;
       if (ruleName === "AIDA_STA") {
         return Promise.resolve(this.calculateDurationPoints(performance));
       } else if (ruleName === "AIDA_DYN") {
@@ -300,8 +299,8 @@ class MockedApi {
 
   calculateDurationPoints(performance) {
     if (typeof performance.Duration === "string" && performance.Duration.length === 8) {
-      const minutes = parseInt(performance.Duration.substring(3, 5));
-      const seconds = parseInt(performance.Duration.substring(6, 8));
+      const minutes = parseInt(performance.Duration.substring(3, 5), 10);
+      const seconds = parseInt(performance.Duration.substring(6, 8), 10);
       return 0.2 * (minutes * 60 + seconds);
     } else {
       throw new Error("Missing duration");
@@ -342,19 +341,18 @@ class MockedApi {
     console.log("postGlobalRuleShort(" + ruleName + ")");
     console.log(request);
     try {
-      const points;
       if (ruleName === "AIDA_STA") {
         const announced = this.calculateDurationPoints(request.Announced);
         const realized = this.calculateDurationPoints(request.Announced);
-        return Promise.resolve(buildShortPenalization(announced, realized));
+        return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else if (ruleName === "AIDA_DYN") {
         const announced = this.calculateDistancePoints(request.Announced);
         const realized = this.calculateDistancePoints(request.Announced);
-        return Promise.resolve(buildShortPenalization(announced, realized));
+        return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else if (ruleName === "AIDA_CWT") {
         const announced = this.calculateDurationPoints(request.Announced);
         const realized = this.calculateDurationPoints(request.Announced);
-        return Promise.resolve(buildShortPenalization(announced, realized));
+        return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else {
         return Promise.reject(new Error("Unsupported rules"));
       }
@@ -566,136 +564,169 @@ class MockedApi {
   }
 
   getAuthVerify(raceId) {
-    return Promise.resolve({"JudgeId": "admin", "JudgeName": "Master Geralt", "DeviceIds": ["lkacldskiuleknmcalkjdf"]});
+    const judge = {
+      "JudgeId": "admin",
+      "JudgeName": "Master Geralt",
+      "IsAdmin": false,
+      "DeviceIds": ["lkacldskiuleknmcalkjdf"]
+    };
+    return Promise.resolve(judge);
   }
 
   postAuthAuthorize(raceId, authorizeRequest) {
     console.log("postAuthAuthorize(" + raceId + ")");
     console.log(authorizeRequest);
-    return Promise.resolve({"JudgeId": authorizeRequest["JudgeId"], "JudgeName": authorizeRequest["JudgeName"], "DeviceIds": ["tesjckiyekj48wncu4"]});
+    return Promise.resolve(
+      {"JudgeId": authorizeRequest["JudgeId"], "JudgeName": authorizeRequest["JudgeName"], "DeviceIds": ["tesjckiyekj48wncu4"]}
+    );
   }
 
   postAuthAuthenticate(raceId, connectCode) {
     if (connectCode && connectCode.length > 0) {
-      return Promise.resolve({"DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01", "ConnectCode": "218637", "AuthenticationToken": "c13eaf476d5a468b76e5a4f6e84ac60547a8e7c6a54468lkjhvlk4a4cd654e", "JudgeId": "admin", "JudgeName": "Master Geralt"});
+      const result = {
+        "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
+        "ConnectCode": "218637",
+        "AuthenticationToken": "c13eaf476d5a468b76e5a4f6e84ac60547a8e7c6a54468lkjhvlk4a4cd654e",
+        "JudgeId": "admin",
+        "JudgeName": "Master Geralt"
+      };
+      return Promise.resolve(result);
     } else {
-      "DeviceId" : "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
-      "ConnectCode" : "218637"
+      const result = {
+        "DeviceId": "1e8488e4-5a0e-4048-e8c4-99a8ceba2e01",
+        "ConnectCode": "218637"
+      }
+      return Promise.resolve(result);
     }
   }
 
   getReportStartingList(raceId, laneId) {
-    return Promise.resolve({
-      "Title": "STA",
-      "Entries": [
-        {
-          "Athlete": {
-            "AthleteId": "12-radim-pravy",
-            "FirstName": "Radim",
-            "Surname": "Pravy",
-            "CountryName": "CZE",
-            "Sex": "Male"
-          },
-          "Discipline": {
-            "DisciplineId": "STA-M",
-            "Name": "STA",
-            "Rules": "AIDA_STA"
-          },
-          "Announcement": {
-            "Performance": {
-              "Duration": "00:02:00"
-            }
-          },
-          "Start": {
-            "StartingLaneId": "STA-B",
-            "StartingLaneLongName": "B",
-            "OfficialTop": "2018-05-27T09:44:00+02:00"
+    if (laneId === "STA") {
+      return Promise.resolve({
+        "Title": "STA",
+        "Entries": this.getReportStartingListEntries()
+      });
+    } else if (laneId.startsWith("STA-")) {
+      const title = laneId.replace("-", " ");
+      const entries = this.getReportStartingListEntries().filter(entry => entry.Start.StartingLaneId === laneId);
+      return Promise.resolve({
+        "Title": title,
+        "Entries": entries
+      });
+    } else {
+      return Promise.reject(new Error("Unknown starting lane"));
+    }
+  }
+
+  getReportStartingListEntries() {
+    return [
+      {
+        "Athlete": {
+          "AthleteId": "12-radim-pravy",
+          "FirstName": "Radim",
+          "Surname": "Pravy",
+          "CountryName": "CZE",
+          "Sex": "Male"
+        },
+        "Discipline": {
+          "DisciplineId": "STA-M",
+          "Name": "STA",
+          "Rules": "AIDA_STA"
+        },
+        "Announcement": {
+          "Performance": {
+            "Duration": "00:02:00"
           }
-        }, {
-          "Athlete": {
-            "AthleteId": "19-milan-wilczak",
-            "FirstName": "Milan",
-            "Surname": "Wilczak",
-            "CountryName": "CZE",
-            "Sex": "Male"
-          },
-          "Discipline": {
-            "DisciplineId": "STA-M",
-            "Name": "STA",
-            "Rules": "AIDA_STA"
-          },
-          "Announcement": {
-            "Performance": {
-              "Duration": "00:05:00"
-            }
-          },
-          "Start": {
-            "StartingLaneId": "STA-A",
-            "StartingLaneLongName": "A",
-            "OfficialTop": "2018-05-27T10:52:00+02:00"
-          },
-          "CurrentResult": {
-            "Performance": {
-              "Duration": "00:06:47",
-              "Points": 81.4
-            },
-            "Penalizations": [],
-            "FinalPerformance": {
-              "Duration": "00:06:47",
-              "Points": 81.4
-            },
-            "CardResult": "White",
-            "JudgeId": "admin",
-            "JudgeName": "Master Geralt"
-          }
-        }, {
-          "Athlete": {
-            "AthleteId": "28-jana-novakova",
-            "FirstName": "Jana",
-            "Surname": "Novakova",
-            "CountryName": "CZE",
-            "Sex": "Female"
-          },
-          "Discipline": {
-            "DisciplineId": "STA-F",
-            "Name": "STA",
-            "Rules": "AIDA_STA"
-          },
-          "Announcement": {
-            "Performance": {
-              "Duration": "00:03:00"
-            }
-          },
-          "Start": {
-            "StartingLaneId": "STA-B",
-            "StartingLaneLongName": "B",
-            "OfficialTop": "2018-05-27T11:04:00+02:00"
-          },
-          "CurrentResult": {
-            "Performance": {
-              "Duration": "00:04:55",
-              "Points": 57.4
-            },
-            "Penalizations": [
-              {
-                "Reason": "Blackout",
-                "ShortReason": "BO",
-                "PenalizationId": "BO",
-                "IsShortPerformance": false
-              }
-            ],
-            "FinalPerformance": {
-              "Duration": "00:04:55",
-              "Points": 0
-            },
-            "CardResult": "Red",
-            "JudgeId": "admin",
-            "JudgeName": "Master Geralt",
-            "JudgeNote": "BO"
-          }
+        },
+        "Start": {
+          "StartingLaneId": "STA-B",
+          "StartingLaneLongName": "B",
+          "OfficialTop": "2018-05-27T09:44:00+02:00"
         }
-      ]
-    });
+      }, {
+        "Athlete": {
+          "AthleteId": "19-milan-wilczak",
+          "FirstName": "Milan",
+          "Surname": "Wilczak",
+          "CountryName": "CZE",
+          "Sex": "Male"
+        },
+        "Discipline": {
+          "DisciplineId": "STA-M",
+          "Name": "STA",
+          "Rules": "AIDA_STA"
+        },
+        "Announcement": {
+          "Performance": {
+            "Duration": "00:05:00"
+          }
+        },
+        "Start": {
+          "StartingLaneId": "STA-A",
+          "StartingLaneLongName": "A",
+          "OfficialTop": "2018-05-27T10:52:00+02:00"
+        },
+        "CurrentResult": {
+          "Performance": {
+            "Duration": "00:06:47",
+            "Points": 81.4
+          },
+          "Penalizations": [],
+          "FinalPerformance": {
+            "Duration": "00:06:47",
+            "Points": 81.4
+          },
+          "CardResult": "White",
+          "JudgeId": "admin",
+          "JudgeName": "Master Geralt"
+        }
+      }, {
+        "Athlete": {
+          "AthleteId": "28-jana-novakova",
+          "FirstName": "Jana",
+          "Surname": "Novakova",
+          "CountryName": "CZE",
+          "Sex": "Female"
+        },
+        "Discipline": {
+          "DisciplineId": "STA-F",
+          "Name": "STA",
+          "Rules": "AIDA_STA"
+        },
+        "Announcement": {
+          "Performance": {
+            "Duration": "00:03:00"
+          }
+        },
+        "Start": {
+          "StartingLaneId": "STA-B",
+          "StartingLaneLongName": "B",
+          "OfficialTop": "2018-05-27T11:04:00+02:00"
+        },
+        "CurrentResult": {
+          "Performance": {
+            "Duration": "00:04:55",
+            "Points": 57.4
+          },
+          "Penalizations": [
+            {
+              "Reason": "Blackout",
+              "ShortReason": "BO",
+              "PenalizationId": "BO",
+              "IsShortPerformance": false
+            }
+          ],
+          "FinalPerformance": {
+            "Duration": "00:04:55",
+            "Points": 0
+          },
+          "CardResult": "Red",
+          "JudgeId": "admin",
+          "JudgeName": "Master Geralt",
+          "JudgeNote": "BO"
+        }
+      }
+    ];
   }
 
   getReportDisciplineResults(raceId, disciplineId) {

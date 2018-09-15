@@ -56,7 +56,7 @@ class StartingList extends React.Component {
       realized: entry.CurrentResult ? formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
       note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : "",
-      link: `/${raceId}/enterresults/${entry.Start.StartingLaneId}/${entry.Athlete.AthleteId}/${entry.Discipline.DisciplineId}`
+      link: `/${this.props.raceId}/enterresults/${entry.Start.StartingLaneId}/${entry.Athlete.AthleteId}/${entry.Discipline.DisciplineId}`
     };
   }
 
@@ -93,7 +93,7 @@ class StartingList extends React.Component {
   }
 
   render() {
-    return this.state.isMobile > this.renderMobile() : this.renderDesktop();
+    return this.state.isMobile ? this.renderMobile() : this.renderDesktop();
   }
 
   renderDesktop() {

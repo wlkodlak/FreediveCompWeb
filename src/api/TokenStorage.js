@@ -18,3 +18,5 @@ class TokenStorage {
     window.localStorage.setItem("raceToken-" + raceId, token);
   }
 }
+
+export default TokenStorage;
