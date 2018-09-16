@@ -23,12 +23,12 @@ class EnterResultFooter extends React.Component {
           className="enterresult-go-previous"
           icon="chevron-left"
           to={this.props.previousLink}
-          active={this.props.previousLink != null}/>
+          disabled={this.props.previousLink == null}/>
         <RoutedButton
           className="enterresult-go-next"
           icon="chevron-right"
-          to={this.props.previousLink}
-          active={this.props.previousLink != null}/>
+          to={this.props.nextLink}
+          disabled={this.props.nextLink == null}/>
       </div>
     );
   }
