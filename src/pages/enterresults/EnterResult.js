@@ -8,6 +8,7 @@ import EnterResultCard from './EnterResultCard.js';
 import EnterResultPenalties from './EnterResultPenalties.js';
 import EnterResultFooter from './EnterResultFooter.js';
 import PerformanceComponent from '../../api/PerformanceComponent';
+import EnterResultCalculator from './EnterResultCalculator';
 
 class EnterResult extends React.Component {
   constructor(props) {
@@ -38,16 +39,26 @@ class EnterResult extends React.Component {
     Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(
       this.onError
     );
+    this.calculator = new EnterResultCalculator(
+      (calculationResult) => this.setState((state, props) => this.processCalculationResult(state, props, calculationResult)),
+      (error) => this.onError(error)
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const sameStartList = nextProps.raceId === this.props.raceId && nextProps.startingLaneId === this.props.startingLaneId;
     const sameEntry = nextProps.athleteId === this.props.athleteId && nextProps.disciplineId === this.props.disciplineId;
     if (!sameStartList) {
+      if (this.calculator) {
+        this.calculator.cancel();
+      }
       Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(
         this.onError
       );
     } else if (!sameEntry) {
+      if (this.calculator) {
+        this.calculator.cancel();
+      }
       const changes = {
         entry: null,
         result: null,
@@ -55,6 +66,12 @@ class EnterResult extends React.Component {
         entryIndex: -1
       };
       this.setState((oldState, props) => this.changeState(oldState, props, changes));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.calculator) {
+      this.calculator.cancel();
     }
   }
 
@@ -88,6 +105,7 @@ class EnterResult extends React.Component {
       ...performance
     };
     this.recalculateResult(result);
+    this.calculator.calculate(this.state.rules, this.state.entry.Announcement.Performance, result.Performance);
     this.setState({modified: true, rawRealized: rawInput, result: result});
   }
 
@@ -104,8 +122,12 @@ class EnterResult extends React.Component {
     const result = {
       ...this.state.result
     };
-    result.Penalizations = result.Penalizations.slice(0);
-    result.Penalizations.add(penalty);
+    if (result.Penalizations) {
+      result.Penalizations = result.Penalizations.slice(0);
+      result.Penalizations.push(penalty);
+    } else {
+      result.Penalizations = [penalty];
+    }
     this.recalculateResult(result);
     this.setState({modified: true, result: result});
   }
@@ -206,6 +228,39 @@ class EnterResult extends React.Component {
     };
     penalizationComponent.saveInto(finalPerformance, penalizableValue);
     result.FinalPerformance = finalPerformance;
+  }
+
+  processCalculationResult(oldState, props, calculationResult) {
+    const result = {
+      ...oldState.result
+    };
+    result.Performance = {
+      ...result.Performance,
+      Points: calculationResult.points
+    }
+
+    let shortPenalizationIndex = -1;
+    if (result.Penalizations) {
+      result.Penalizations = result.Penalizations.slice(0);
+      shortPenalizationIndex = result.Penalizations.findIndex((penalization) => penalization.IsShortPenalization);
+    } else {
+      result.Penalizations = [];
+    }
+
+    if (result.shortPenalization) {
+      if (shortPenalizationIndex < 0) {
+        result.Penalizations.splice(0, 0, result.shortPenalization);
+      } else {
+        result.Penalizations.splice(shortPenalizationIndex, 1, result.shortPenalization);
+      }
+    } else if (shortPenalizationIndex >= 0) {
+      result.Penalizations.splice(shortPenalizationIndex, 1);
+    }
+
+    return {
+      ...oldState,
+      result: result
+    };
   }
 
   buildLink(position) {
