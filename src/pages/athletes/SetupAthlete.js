@@ -11,12 +11,14 @@ class SetupAthlete extends React.Component {
     super(props);
     this.state = {
       athleteId: props.athleteId === "new" ? null : props.athleteId,
+      allRules: [],
       profile: {},
       announcements: [],
       results: [],
       disciplines: [],
       errors: []
     };
+    this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onAthleteLoaded = this.onAthleteLoaded.bind(this);
     this.onRaceLoaded = this.onRaceLoaded.bind(this);
     this.onError = this.onError.bind(this);
@@ -28,6 +30,7 @@ class SetupAthlete extends React.Component {
 
   componentDidMount() {
     const { raceId, athleteId } = this.props;
+    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
     Api.getRaceSetup(raceId).then(this.onRaceLoaded).catch(this.onError);
     if (athleteId !== "new") {
       Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded).catch(this.onError);
@@ -40,6 +43,10 @@ class SetupAthlete extends React.Component {
         }
       });
     }
+  }
+
+  onRulesLoaded(allRules) {
+    this.setState({allRules});
   }
 
   onRaceLoaded(raceSetup) {
@@ -139,6 +146,7 @@ class SetupAthlete extends React.Component {
           onChange={this.onAthleteProfileChanged}
           onSubmit={this.onAthleteProfileSubmit} />
         <AthleteAnnouncements
+          allRules={this.state.allRules}
           announcements={this.state.announcements}
           disciplines={filteredDisciplines}
           onSubmit={this.onAthleteAnnouncementsSubmit} />

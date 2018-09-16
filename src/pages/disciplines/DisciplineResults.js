@@ -8,18 +8,25 @@ import RaceHeader from '../homepage/RaceHeader';
 class DisciplineResults extends React.Component {
   constructor(props) {
     super(props);
+    this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onReportLoaded = this.onReportLoaded.bind(this);
     this.onError = this.onError.bind(this);
   }
 
   state = {
     report: null,
+    allRules: null,
     errors: []
   }
 
   componentDidMount() {
     const { raceId, disciplineId } = this.props;
+    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
     Api.getReportDisciplineResults(raceId, disciplineId).then(this.onReportLoaded).catch(this.onError);
+  }
+
+  onRulesLoaded(allRules) {
+    this.setState({allRules});
   }
 
   onReportLoaded(report) {
@@ -43,7 +50,7 @@ class DisciplineResults extends React.Component {
   }
 
   convertColumn(column) {
-    return new SingleAidaDisciplineColumn();
+    return new SingleAidaDisciplineColumn(column, this.state.allRules);
   }
 
   render() {

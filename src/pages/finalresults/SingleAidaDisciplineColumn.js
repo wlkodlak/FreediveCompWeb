@@ -1,7 +1,12 @@
 import React from 'react';
-import { formatPerformance, formatPointsPerformance } from './PerformanceFormatters';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 export default class SingleAidaDisciplineColumn {
+  constructor(column, allRules) {
+    this.primaryComponent = PerformanceComponent.findPrimaryForDiscipline(column.Discipline.Rules, allRules);
+    this.pointsComponent = PerformanceComponent.Points;
+  }
+
   renderHeader(key) {
     return [
       <th key={`${key}_announced`}>Announced</th>,
@@ -24,7 +29,7 @@ export default class SingleAidaDisciplineColumn {
 
   formatAnnounced(result) {
     if (result.Announcement && result.Announcement.Performance) {
-      return formatPerformance(result.Announcement.Performance);
+      return this.primaryComponent.format(result.Announcement.Performance, true);
     } else {
       return "";
     }
@@ -32,7 +37,7 @@ export default class SingleAidaDisciplineColumn {
 
   formatRealized(result) {
     if (result.CurrentResult && result.CurrentResult.Performance) {
-      return formatPerformance(result.CurrentResult.Performance);
+      return this.primaryComponent.format(result.CurrentResult.Performance, true);
     } else {
       return "";
     }
@@ -40,7 +45,7 @@ export default class SingleAidaDisciplineColumn {
 
   formatPoints(result) {
     if (result.CurrentResult && result.CurrentResult.FinalPerformance) {
-      return formatPointsPerformance(result.CurrentResult.FinalPerformance);
+      return this.pointsComponent.format(result.CurrentResult.FinalPerformance, true);
     } else {
       return "";
     }

@@ -1,4 +1,5 @@
 import GenerateUuid from './GenerateUuid';
+import PerformanceComponent from './PerformanceComponent';
 
 class MockedApi {
   constructor(baseUrl) {
@@ -298,10 +299,9 @@ class MockedApi {
   }
 
   calculateDurationPoints(performance) {
-    if (typeof performance.Duration === "string" && performance.Duration.length === 8) {
-      const minutes = parseInt(performance.Duration.substring(3, 5), 10);
-      const seconds = parseInt(performance.Duration.substring(6, 8), 10);
-      return 0.2 * (minutes * 60 + seconds);
+    const duration = PerformanceComponent.Duration.extract(performance);
+    if (duration) {
+      return duration * 0.2;
     } else {
       throw new Error("Missing duration");
     }
@@ -343,15 +343,15 @@ class MockedApi {
     try {
       if (ruleName === "AIDA_STA") {
         const announced = this.calculateDurationPoints(request.Announced);
-        const realized = this.calculateDurationPoints(request.Announced);
+        const realized = this.calculateDurationPoints(request.Realized);
         return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else if (ruleName === "AIDA_DYN") {
         const announced = this.calculateDistancePoints(request.Announced);
-        const realized = this.calculateDistancePoints(request.Announced);
+        const realized = this.calculateDistancePoints(request.Realized);
         return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else if (ruleName === "AIDA_CWT") {
         const announced = this.calculateDurationPoints(request.Announced);
-        const realized = this.calculateDurationPoints(request.Announced);
+        const realized = this.calculateDurationPoints(request.Realized);
         return Promise.resolve(this.buildShortPenalization(announced, realized));
       } else {
         return Promise.reject(new Error("Unsupported rules"));

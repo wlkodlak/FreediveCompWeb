@@ -1,6 +1,5 @@
 import React from 'react';
 import {Classes} from '@blueprintjs/core';
-import {formatDurationPerformance, formatDistancePerformance, formatDepthPerformance} from '../finalresults/PerformanceFormatters';
 
 class EnterResultComponent extends React.Component {
   constructor(props) {
@@ -9,90 +8,12 @@ class EnterResultComponent extends React.Component {
   }
 
   getComponentName() {
-    return this.props.component;
-  }
-
-  getFormatter() {
-    const component = this.props.component;
-    if (component === "Duration") {
-      return formatDurationPerformance;
-    } else if (component === "Distance") {
-      return formatDistancePerformance;
-    } else if (component === "Depth") {
-      return formatDepthPerformance;
-    } else {
-      return this.formatUnknown;
-    }
-  }
-
-  formatUnknown(performance) {
-    return "";
-  }
-
-  getParser() {
-    const component = this.props.component;
-    if (component === "Duration") {
-      return this.parseDurationPerformance;
-    } else if (component === "Distance") {
-      return this.parseDistancePerformance;
-    } else if (component === "Depth") {
-      return this.parseDepthPerformance;
-    } else {
-      return this.parseUnknown;
-    }
-  }
-
-  parseDurationPerformance(value) {
-    const checker = /^([0-9]+:)?([0-9]+)$/;
-    if (!checker.test(value)) return null;
-
-    const colonPosition = value.indexOf(":");
-    let minutes = 0;
-    let seconds = 0;
-    if (colonPosition < 0) {
-      seconds = parseInt(value, 10);
-    } else {
-      minutes = parseInt(value.substring(0, colonPosition), 10);
-      seconds = parseInt(value.substring(colonPosition + 1), 10);
-    }
-    if (seconds >= 60) {
-      minutes += seconds / 60;
-      seconds = seconds % 60;
-    }
-    const formattedDuration =
-      "00:" +
-      (minutes < 10 ? "0" : "") + minutes.toString() + ":" +
-      (seconds < 10 ? "0" : "") + seconds.toString();
-    return {
-      "Duration": formattedDuration
-    };
-  }
-
-  parseDistancePerformance(value) {
-    const checker = /^[0-9]+$/;
-    if (!checker.test(value)) return null;
-
-    return {
-      "Distance": parseInt(value, 10)
-    };
-  }
-
-  parseDepthPerformance(value) {
-    const checker = /^[0-9]+$/;
-    if (!checker.test(value)) return null;
-
-    return {
-      "Depth": parseInt(value, 10)
-    };
-  }
-
-  parseUnknown(value) {
-    return {};
+    return this.props.component.name;
   }
 
   getFormattedAnnouncement() {
-    const formatter = this.getFormatter();
-    return formatter(this.props.announced);
+    const component = this.props.component;
+    return component.format(this.props.announced, true);
   }
 
   getFormattedRealized() {
@@ -101,8 +22,8 @@ class EnterResultComponent extends React.Component {
     } else if (!this.props.realized) {
       return "";
     } else {
-      const formatter = this.getFormatter();
-      return formatter(this.props.realized);
+      const component = this.props.component;
+      return component.format(this.props.realized, false);
     }
   }
 
@@ -111,9 +32,10 @@ class EnterResultComponent extends React.Component {
     if (inputValue === "") {
       this.props.onChange("", null);
     } else {
-      const parser = this.getParser();
-      const parsedValue = inputValue === "" ? null : parser(inputValue);
-      this.props.onChange(inputValue, parsedValue || this.props.realized);
+      const component = this.props.component;
+      const parsedValue = component.parse(inputValue);
+      const performance = component.buildPerformance(parsedValue);
+      this.props.onChange(inputValue, performance || this.props.realized);
     }
   }
 

@@ -4,7 +4,7 @@ import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
 import Api from '../../api/Api';
 import RaceHeader from '../homepage/RaceHeader';
 import RoutedButton from '../../components/RoutedButton';
-import { formatPerformance } from '../finalresults/PerformanceFormatters';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 class SetupAthletes extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ class SetupAthletes extends React.Component {
   renderAnnouncements(announcements) {
     if (announcements == null) return "";
     return announcements
-      .map(a => a.DisciplineId + ": " + formatPerformance(a.Performance))
+      .map(a => a.DisciplineId + ": " + PerformanceComponent.formatPerformance(a.Performance))
       .join(", ");
   }
 

@@ -10,6 +10,7 @@ import RaceHeader from '../homepage/RaceHeader';
 class FinalResults extends React.Component {
   constructor(props) {
     super(props);
+    this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onReportLoaded = this.onReportLoaded.bind(this);
     this.onError = this.onError.bind(this);
   }
@@ -21,7 +22,12 @@ class FinalResults extends React.Component {
 
   componentDidMount() {
     const { raceId, resultListId } = this.props;
+    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
     Api.getReportResultList(raceId, resultListId).then(this.onReportLoaded).catch(this.onError);
+  }
+
+  onRulesLoaded(allRules) {
+    this.setState({allRules});
   }
 
   onReportLoaded(report) {
@@ -29,12 +35,12 @@ class FinalResults extends React.Component {
   }
 
   convertSingleColumn(column) {
-    return new SingleAidaDisciplineColumn(column);
+    return new SingleAidaDisciplineColumn(column, this.state.allRules);
   }
 
   convertColumn(column) {
     if (column.Discipline) {
-      return new ReducedAidaDisciplineColumn(column);
+      return new ReducedAidaDisciplineColumn(column, this.state.allRules);
     } else {
       return new FinalPointsColumn(column);
     }

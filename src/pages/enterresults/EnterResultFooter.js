@@ -1,11 +1,10 @@
 import React from 'react';
 import {Button} from '@blueprintjs/core';
 import RoutedButton from '../../components/RoutedButton';
-import {formatPerformance} from '../finalresults/PerformanceFormatters';
 
 class EnterResultFooter extends React.Component {
   render() {
-    const finalResult = formatPerformance(this.props.result.FinalPerformance);
+    const finalResult = this.props.component.format(this.props.result.FinalPerformance, true);
     return (
       <div className="enterresult-footer">
         <div className="enterresult-final">

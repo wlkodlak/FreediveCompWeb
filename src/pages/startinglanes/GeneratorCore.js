@@ -1,4 +1,5 @@
 import moment from 'moment';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 class GeneratorCore {
   constructor(settings, allStartingLanes, athletes) {
@@ -47,9 +48,9 @@ class GeneratorCore {
           this.startingList.push({
             athleteId: athlete.Profile.AthleteId,
             disciplineId: announcement.DisciplineId,
-            duration: this.extractDuration(announcement.Performance),
-            distance: this.extractDistance(announcement.Performance),
-            depth: this.extractDepth(announcement.Performance),
+            duration: PerformanceComponent.Duration.extract(announcement.Performance),
+            distance: PerformanceComponent.Distance.extract(announcement.Performance),
+            depth: PerformanceComponent.Depth.extract(announcement.Performance),
             startingLaneId: null,
             officialTop: null
           });
@@ -71,28 +72,6 @@ class GeneratorCore {
       "StartingLaneId": entry.startingLaneId,
       "OfficialTop": moment(entry.officialTop).format()
     }));
-  }
-
-  extractDuration(performance) {
-    if (typeof performance !== "object") return 0;
-    if (typeof performance.Duration !== "string") return 0;
-    let duration = 0;
-    for (const part of performance.Duration.split(":")) {
-      duration = duration * 60 + parseInt(part, 10);
-    }
-    return duration;
-  }
-
-  extractDistance(performance) {
-    if (typeof performance !== "object") return 0;
-    if (typeof performance.Distance !== "number") return 0;
-    return performance.Distance;
-  }
-
-  extractDepth(performance) {
-    if (typeof performance !== "object") return 0;
-    if (typeof performance.Depth !== "number") return 0;
-    return performance.Depth;
   }
 
   compareAnnouncements(a, b) {

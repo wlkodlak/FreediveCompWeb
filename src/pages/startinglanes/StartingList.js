@@ -1,7 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
 import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
-import { formatPerformance } from '../finalresults/PerformanceFormatters';
+import PerformanceComponent from '../../api/PerformanceComponent';
 import RaceHeader from '../homepage/RaceHeader';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -52,8 +52,8 @@ class StartingList extends React.Component {
       country: entry.Athlete.CountryName,
       officialTop: this.convertOfficialTop(entry.Start.OfficialTop),
       laneName: entry.Start.StartingLaneLongName,
-      announced: formatPerformance(entry.Announcement.Performance),
-      realized: entry.CurrentResult ? formatPerformance(entry.CurrentResult.Performance) : "",
+      announced: PerformanceComponent.formatPerformance(entry.Announcement.Performance),
+      realized: entry.CurrentResult ? PerformanceComponent.formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
       note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : "",
       link: `/${this.props.raceId}/enterresults/${entry.Start.StartingLaneId}/${entry.Athlete.AthleteId}/${entry.Discipline.DisciplineId}`

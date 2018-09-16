@@ -1,8 +1,8 @@
 function repeatString(input, count) {
-  if (count == 0) {
+  if (count === 0) {
     return "";
   }
-  if (count == 1) {
+  if (count === 1) {
     return input;
   }
   let result = input;
@@ -64,18 +64,18 @@ export function formatDuration(value, allowUnit) {
 
 export function parseDuration(input) {
   const checker = /^([0-9]+:)?([0-9]+)$/;
-  if (!checker.test(value)) {
+  if (!checker.test(input)) {
     return null;
   }
 
-  const colonPosition = value.indexOf(":");
+  const colonPosition = input.indexOf(":");
   let minutes = 0;
   let seconds = 0;
   if (colonPosition < 0) {
-    seconds = parseInt(value, 10);
+    seconds = parseInt(input, 10);
   } else {
-    minutes = parseInt(value.substring(0, colonPosition), 10);
-    seconds = parseInt(value.substring(colonPosition + 1), 10);
+    minutes = parseInt(input.substring(0, colonPosition), 10);
+    seconds = parseInt(input.substring(colonPosition + 1), 10);
   }
   if (seconds >= 60) {
     minutes += seconds / 60;
@@ -217,26 +217,31 @@ export default class PerformanceComponent {
       this.setter = saveDurationInto;
       this.formatter = formatDuration;
       this.parser = parseDuration;
+      this.placeholder = "mm:ss";
     } else if (name === 'Distance') {
       this.extractor = extractDistanceFrom;
       this.setter = saveDistanceInto;
       this.formatter = formatDistance;
       this.parser = parseDistance;
+      this.placeholder = "100";
     } else if (name === 'Depth') {
       this.extractor = extractDepthFrom;
       this.setter = saveDepthInto;
       this.formatter = formatDepth;
       this.parser = parseDepth;
+      this.placeholder = "50";
     } else if (name === 'Points') {
       this.extractor = extractPointsFrom;
       this.setter = savePointsInto;
       this.formatter = formatPoints;
       this.parser = parsePoints;
+      this.placeholder = "10";
     } else {
       this.extractor = extractUnknownFrom;
       this.setter = saveUnknownInto;
       this.formatter = formatUnknown;
       this.parser = parseUnknown;
+      this.placeholder = "";
     }
   }
 
@@ -249,11 +254,23 @@ export default class PerformanceComponent {
   }
 
   format(value, allowUnit) {
-    return this.formatter(value, allowUnit);
+    if (typeof value === "object") {
+      return this.formatter(value[this.name], allowUnit);
+    } else {
+      return this.formatter(value, allowUnit);
+    }
   }
 
   parse(input) {
     return this.parser(input);
+  }
+
+  buildPerformance(value) {
+    if (value) {
+      return this.setter({}, value);
+    } else {
+      return null;
+    }
   }
 
   static get Duration() {
@@ -272,6 +289,10 @@ export default class PerformanceComponent {
     return new PerformanceComponent("Points");
   }
 
+  static get Unknown() {
+    return new PerformanceComponent("Unknown");
+  }
+
   static autoDetectFrom(performance) {
     if (!performance) {
       return new PerformanceComponent("Unknown");
@@ -279,7 +300,7 @@ export default class PerformanceComponent {
       return new PerformanceComponent("Distance");
     } else if (typeof performance.Depth === "number") {
       return new PerformanceComponent("Depth");
-    } else if (typeof performance.Duration === "number") {
+    } else if (typeof performance.Duration === "string") {
       return new PerformanceComponent("Duration");
     } else if (typeof performance.Points === "number") {
       return new PerformanceComponent("Points");
@@ -290,7 +311,29 @@ export default class PerformanceComponent {
 
   static formatPerformance(performance) {
     const component = PerformanceComponent.autoDetectFrom(performance);
-    const rawValue = performance[component.name];
-    return component.format(rawValue, true);
+    return component.format(performance, true);
+  }
+
+  static findPrimaryForDiscipline(ruleName, allRules) {
+    if (allRules) {
+      for (const rules of allRules) {
+        if (rules.Name === ruleName) {
+          return new PerformanceComponent(rules.PrimaryComponent);
+        }
+      }
+    }
+    switch (ruleName) {
+      case "AIDA_STA":
+      case "CMAS_STA":
+        return PerformanceComponent.Duration;
+      case "AIDA_DYN":
+      case "CMAS_DYN":
+        return PerformanceComponent.Distance;
+      case "AIDA_CWT":
+      case "CMAS_CWT":
+        return PerformanceComponent.Depth;
+      default:
+        return PerformanceComponent.Unknown;
+    }
   }
 }

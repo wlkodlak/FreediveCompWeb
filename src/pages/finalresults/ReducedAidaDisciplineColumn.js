@@ -1,9 +1,11 @@
 import React from 'react';
-import { formatPerformance, formatPointsPerformance } from './PerformanceFormatters';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 export default class ReducedAidaDisciplineColumn {
-  constructor(columnMetadata) {
-    this.title = columnMetadata.Title;
+  constructor(column, allRules) {
+    this.title = column.Title;
+    this.primaryComponent = PerformanceComponent.findPrimaryForDiscipline(column.Discipline.Rules, allRules);
+    this.pointsComponent = PerformanceComponent.Points;
   }
 
   renderHeader(key) {
@@ -21,7 +23,7 @@ export default class ReducedAidaDisciplineColumn {
 
   formatRealized(result) {
     if (result.CurrentResult) {
-      return formatPerformance(result.CurrentResult.Performance);
+      return this.primaryComponent.format(result.CurrentResult.Performance, true);
     } else {
       return "";
     }
@@ -29,7 +31,7 @@ export default class ReducedAidaDisciplineColumn {
 
   formatPoints(result) {
     if (result.CurrentResult) {
-      return formatPointsPerformance(result.CurrentResult.Performance);
+      return this.pointsComponent.format(result.CurrentResult.Performance, true);
     } else {
       return "";
     }

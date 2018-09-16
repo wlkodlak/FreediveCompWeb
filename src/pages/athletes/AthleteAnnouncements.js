@@ -1,5 +1,6 @@
 import React from 'react';
 import { H5, HTMLTable, InputGroup, Button, Intent } from '@blueprintjs/core';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 class AthleteAnnouncements extends React.Component {
   constructor(props) {
@@ -11,134 +12,23 @@ class AthleteAnnouncements extends React.Component {
     };
   }
 
-  getPlaceholderByRules(rules) {
-    switch (rules) {
-      case "AIDA_STA":
-      case "CMAS_STA":
-        return "mm:ss";
-      case "AIDA_DYN":
-      case "CMAS_DYN":
-        return "100";
-      case "AIDA_CWT":
-      case "CMAS_CWT":
-        return "50";
-      default:
-        return "";
-    }
+  getComponentByRules(rules) {
+    return PerformanceComponent.findPrimaryForDiscipline(rules, this.props.allRules);
   }
 
-  findFormattedAnnouncement(announcements, disciplineId, formatter, fallback) {
+  findFormattedAnnouncement(announcements, disciplineId, component, fallback) {
     for (const announcement of announcements) {
       if (announcement.DisciplineId === disciplineId) {
-        return formatter(announcement.Performance);
+        return component.format(announcement.Performance, false);
       }
     }
     return fallback;
   }
 
-  getPerformanceFormatter(rules) {
-    switch (rules) {
-      case "AIDA_STA":
-      case "CMAS_STA":
-        return this.formatDurationPerformance;
-      case "AIDA_DYN":
-      case "CMAS_DYN":
-        return this.formatDistancePerformance;
-      case "AIDA_CWT":
-      case "CMAS_CWT":
-        return this.formatDepthPerformance;
-      default:
-        return (performance) => "";
-    }
-  }
-
-  formatDurationPerformance(performance) {
-    if (performance != null && typeof performance === "object" && typeof performance.Duration === "string") {
-      return performance.Duration.substring(3);
-    } else {
-      return "";
-    }
-  }
-
-  formatDistancePerformance(performance) {
-    if (performance != null && typeof performance === "object" && typeof performance.Distance === "number") {
-      return performance.Distance.toString();
-    } else {
-      return "";
-    }
-  }
-
-  formatDepthPerformance(performance) {
-    if (performance != null && typeof performance === "object" && typeof performance.Depth === "number") {
-      return performance.Depth.toString();
-    } else {
-      return "";
-    }
-  }
-
-  getPerformanceParser(rules) {
-    switch (rules) {
-      case "AIDA_STA":
-      case "CMAS_STA":
-        return this.parseDurationPerformance;
-      case "AIDA_DYN":
-      case "CMAS_DYN":
-        return this.parseDistancePerformance;
-      case "AIDA_CWT":
-      case "CMAS_CWT":
-        return this.parseDepthPerformance;
-      default:
-        return s => null;
-    }
-  }
-
-  parseDurationPerformance(value) {
-    const checker = /^([0-9]+:)?([0-9]+)$/;
-    if (!checker.test(value)) return null;
-
-    const colonPosition = value.indexOf(":");
-    let minutes = 0;
-    let seconds = 0;
-    if (colonPosition < 0) {
-      seconds = parseInt(value, 10);
-    } else {
-      minutes = parseInt(value.substring(0, colonPosition), 10);
-      seconds = parseInt(value.substring(colonPosition + 1), 10);
-    }
-    if (seconds >= 60) {
-      minutes += seconds / 60;
-      seconds = seconds % 60;
-    }
-    const formattedDuration =
-      "00:" +
-      (minutes < 10 ? "0" : "") + minutes.toString() + ":" +
-      (seconds < 10 ? "0" : "") + seconds.toString();
-    return {
-      "Duration": formattedDuration
-    };
-  }
-
-  parseDistancePerformance(value) {
-    const checker = /^[0-9]+$/;
-    if (!checker.test(value)) return null;
-
-    return {
-      "Distance": parseInt(value, 10)
-    };
-  }
-
-  parseDepthPerformance(value) {
-    const checker = /^[0-9]+$/;
-    if (!checker.test(value)) return null;
-
-    return {
-      "Depth": parseInt(value, 10)
-    };
-  }
-
   onDisciplineChanged(discipline, newValue) {
-    const performanceParser = this.getPerformanceParser(discipline.Rules);
-    const performance = performanceParser(newValue);
+    const component = this.getComponentByRules(discipline.Rules);
+    const parsedValue = component.parse(newValue);
+    const performance = component.buildPerformance(parsedValue);
 
     const changes = { ...this.state.changes };
     changes[discipline.DisciplineId] = {
@@ -177,13 +67,14 @@ class AthleteAnnouncements extends React.Component {
                 let formattedValue = "";
                 let isValueValid = false;
                 const disciplineChange = this.state.changes[discipline.DisciplineId];
+                const component = this.getComponentByRules(discipline.Rules);
                 if (disciplineChange) {
                   formattedValue = disciplineChange.formatted;
                   isValueValid = disciplineChange.performance != null;
                 } else {
                   formattedValue = this.findFormattedAnnouncement(
                     this.props.announcements, discipline.DisciplineId,
-                    this.getPerformanceFormatter(discipline.Rules), "");
+                    component, "");
                   isValueValid = true;
                 }
                 const onChangeHandler = (event) => this.onDisciplineChanged(discipline, event.target.value);
@@ -194,7 +85,7 @@ class AthleteAnnouncements extends React.Component {
                     <td>
                       <InputGroup
                         type="text"
-                        placeholder={this.getPlaceholderByRules(discipline.Rules)}
+                        placeholder={component.placeholder}
                         value={formattedValue}
                         intent={isValueValid ? Intent.NONE : Intent.WARNING}
                         onChange={onChangeHandler} />

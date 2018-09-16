@@ -1,6 +1,6 @@
 import React from 'react';
 import { H5, HTMLTable } from '@blueprintjs/core';
-import { formatPerformance } from '../finalresults/PerformanceFormatters';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 class AthleteResults extends React.Component {
   render() {
@@ -38,7 +38,7 @@ class AthleteResults extends React.Component {
 
   renderResult(result, index) {
     const disciplineName = this.findDisciplineName(result.DisciplineId);
-    const formattedPerformance = formatPerformance(result.Performance);
+    const formattedPerformance = PerformanceComponent.formatPerformance(result.Performance);
     const judgeName = this.findJudgeName(result.JudgeId);
     const formattedCard = this.formatCard(result.CardResult);
     const notes = result.JudgeComment;
