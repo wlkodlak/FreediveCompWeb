@@ -1,6 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
-import {FormGroup, InputGroup, HTMLSelect, Button} from '@blueprintjs/core';
+import {FormGroup, InputGroup, HTMLSelect, Button, Classes} from '@blueprintjs/core';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 class EnterResultPenalties extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class EnterResultPenalties extends React.Component {
 
   onFormSubmit(event) {
     event.preventDefault();
-    const penalizationRule = getSelectedPenalization();
+    const penalizationRule = this.getSelectedPenalization();
     const selectedReason = penalizationRule.PenalizationId;
     const customReason = this.state.customReason;
     const amount = this.state.amount;
