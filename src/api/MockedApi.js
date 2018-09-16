@@ -299,7 +299,7 @@ class MockedApi {
   }
 
   calculateDurationPoints(performance) {
-    const duration = PerformanceComponent.Duration.extract(performance);
+    const duration = PerformanceComponent.Duration.extractFrom(performance);
     if (duration) {
       return duration * 0.2;
     } else {

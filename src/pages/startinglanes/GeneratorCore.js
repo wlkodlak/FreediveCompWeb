@@ -48,9 +48,9 @@ class GeneratorCore {
           this.startingList.push({
             athleteId: athlete.Profile.AthleteId,
             disciplineId: announcement.DisciplineId,
-            duration: PerformanceComponent.Duration.extract(announcement.Performance),
-            distance: PerformanceComponent.Distance.extract(announcement.Performance),
-            depth: PerformanceComponent.Depth.extract(announcement.Performance),
+            duration: PerformanceComponent.Duration.extractFrom(announcement.Performance),
+            distance: PerformanceComponent.Distance.extractFrom(announcement.Performance),
+            depth: PerformanceComponent.Depth.extractFrom(announcement.Performance),
             startingLaneId: null,
             officialTop: null
           });

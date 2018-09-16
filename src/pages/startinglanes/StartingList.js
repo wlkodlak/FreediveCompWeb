@@ -25,6 +25,7 @@ class StartingList extends React.Component {
   componentDidMount() {
     const { raceId, startingLaneId } = this.props;
     Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived).catch(this.onError);
+    this.onWindowResize();
     window.addEventListener('resize', this.onWindowResize);
   }
 
@@ -93,7 +94,7 @@ class StartingList extends React.Component {
   }
 
   render() {
-    return this.state.isMobile ? this.renderMobile() : this.renderDesktop();
+    return this.state.phone ? this.renderPhone() : this.renderDesktop();
   }
 
   renderDesktop() {

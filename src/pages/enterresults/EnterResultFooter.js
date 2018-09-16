@@ -14,8 +14,8 @@ class EnterResultFooter extends React.Component {
         <Button className="enterresult-confirm" type="submit">
           {
             this.props.modified
-              ? "Confirmed"
-              : "Confirm"
+              ? "Confirm"
+              : "Confirmed"
           }
         </Button>
         <RoutedButton

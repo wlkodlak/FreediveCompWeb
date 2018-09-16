@@ -87,7 +87,7 @@ class EnterResult extends React.Component {
       ...result.Performance,
       ...performance
     };
-    this.recalculateResult(result, true);
+    this.recalculateResult(result);
     this.setState({modified: true, rawRealized: rawInput, result: result});
   }
 
@@ -96,7 +96,7 @@ class EnterResult extends React.Component {
       ...this.state.result
     };
     result.CardResult = card;
-    this.recalculateResult(result, false);
+    this.recalculateResult(result);
     this.setState({modified: true, result: result});
   }
 
@@ -106,7 +106,7 @@ class EnterResult extends React.Component {
     };
     result.Penalizations = result.Penalizations.slice(0);
     result.Penalizations.add(penalty);
-    this.recalculateResult(result, false);
+    this.recalculateResult(result);
     this.setState({modified: true, result: result});
   }
 
@@ -116,8 +116,11 @@ class EnterResult extends React.Component {
     };
     result.Penalizations = result.Penalizations.slice(0);
     result.Penalizations.splice(index, 1);
-    this.recalculateResult(result, false);
     this.setState({modified: true, result: result});
+  }
+
+  onFormSubmit(event) {
+    event.preventDefault();
   }
 
   onError(error) {
@@ -182,17 +185,17 @@ class EnterResult extends React.Component {
     return null;
   }
 
-  recalculateResult(result, needsShortPenalty) {
+  recalculateResult(result) {
     const rules = this.state.rules;
     if (!result.Performance || !rules) {
       result.FinalPerformance = {};
       return;
     }
     const penalizationComponent = this.state.penalizationComponent;
-    let penalizableValue = penalizationComponent.extract(result.Performance);
+    let penalizableValue = penalizationComponent.extractFrom(result.Performance);
     if (result.Penalizations) {
       for (const penalization of result.Penalizations) {
-        penalizableValue -= penalizationComponent.extract(penalization.Performance);
+        penalizableValue -= penalizationComponent.extractFrom(penalization.Performance);
       }
     }
     if (result.CardResult === "Red" || result.CardResult === "DidNotStart") {
@@ -260,7 +263,7 @@ class EnterResult extends React.Component {
             announced={entry.Announcement.Performance}
             realized={result.Performance}
             rawRealized={this.state.rawRealized}
-            component={rules.state.primaryComponent}
+            component={this.state.primaryComponent}
             onChange={this.onPrimaryComponentChanged}/>
           <EnterResultCard raceId={raceId} result={result} onCardSelected={this.onCardSelected}/>
           <EnterResultPenalties
@@ -272,7 +275,7 @@ class EnterResult extends React.Component {
           <EnterResultFooter
             raceId={raceId}
             result={result}
-            component={rules.state.penalizationComponent}
+            component={this.state.penalizationComponent}
             modified={modified}
             previousLink={previousLink}
             nextLink={nextLink}/>
