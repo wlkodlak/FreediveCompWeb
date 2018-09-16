@@ -314,21 +314,19 @@ class EnterResult extends React.Component {
           <H1>Enter performance</H1>
           <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} entry={entry}/>
           <EnterResultComponent
-            raceId={raceId}
             announced={entry.Announcement.Performance}
             realized={result.Performance}
             rawRealized={this.state.rawRealized}
             component={this.state.primaryComponent}
             onChange={this.onPrimaryComponentChanged}/>
-          <EnterResultCard raceId={raceId} result={result} onCardSelected={this.onCardSelected}/>
+          <EnterResultCard result={result} onCardSelected={this.onCardSelected}/>
           <EnterResultPenalties
-            raceId={raceId}
             result={result}
             rules={rules}
             onAddPenalty={this.onAddPenalty}
-            onRemovePenalty={this.onRemovePenalty}/>
+            onRemovePenalty={this.onRemovePenalty}
+            onAddError={this.onError}/>
           <EnterResultFooter
-            raceId={raceId}
             result={result}
             component={this.state.penalizationComponent}
             modified={modified}
