@@ -24,17 +24,17 @@ class EnterResultHeader extends React.Component {
     const laneLink = `/${raceId}/startinglists/${startingLaneId}`;
     const athleteLink = `/${raceId}/athletes/${athleteId}`;
     return (
-      <div className="enterresult-header">
-        <FormGroup label="Lane" className="enterresult-lane">
+      <div className="enterresults-header">
+        <FormGroup label="Lane" className="enterresults-lane">
           <Link to={laneLink}>{laneName}</Link>
         </FormGroup>
-        <FormGroup label="OT" className="enterresult-ot">
+        <FormGroup label="OT" className="enterresults-ot">
           {officialTop}
         </FormGroup>
-        <FormGroup label="Athlete" className="enterresult-athlete">
+        <FormGroup label="Athlete" className="enterresults-athlete">
           <Link to={athleteLink}>{athleteName}</Link>
         </FormGroup>
-        <FormGroup label="Discipline" className="enterresult-discipline">
+        <FormGroup label="Discipline" className="enterresults-discipline">
           {disciplineName}
         </FormGroup>
       </div>

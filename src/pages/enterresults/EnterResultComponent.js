@@ -42,9 +42,9 @@ class EnterResultComponent extends React.Component {
   render() {
     return (
       <div className={Classes.FORM_GROUP}>
-        <label className={Classes.LABEL + " enterresult-label-cell"} htmlFor="form-group-input">
-          <span className="enterresult-label">{this.getComponentName()}</span>
-          <span className="enterresult-announcement">AP {this.getFormattedAnnouncement()}</span>
+        <label className={Classes.LABEL + " enterresults-label-cell"} htmlFor="form-group-input">
+          <span className="enterresults-label">{this.getComponentName()}</span>
+          <span className="enterresults-announcement">AP {this.getFormattedAnnouncement()}</span>
         </label>
         <div className={Classes.FORM_CONTENT}>
           <div className={Classes.INPUT_GROUP}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Api from '../../api/Api';
-import {FormGroup, InputGroup, HTMLSelect, Button, Classes} from '@blueprintjs/core';
+import {FormGroup, InputGroup, HTMLSelect, Button, Tag, Classes} from '@blueprintjs/core';
 import PerformanceComponent from '../../api/PerformanceComponent';
 
 class EnterResultPenalties extends React.Component {
@@ -37,7 +37,7 @@ class EnterResultPenalties extends React.Component {
   onFormSubmit(event) {
     event.preventDefault();
     const penalizationRule = this.getSelectedPenalization();
-    const selectedReason = penalizationRule.PenalizationId;
+    const selectedReason = penalizationRule.Id;
     const customReason = this.state.customReason;
     const amount = this.state.amount;
 
@@ -118,7 +118,7 @@ class EnterResultPenalties extends React.Component {
 
   render() {
     return (
-      <form className="enterresult-add-penalty-form" onSubmit={this.onFormSubmit}>
+      <form className="enterresults-add-penalty-form" onSubmit={this.onFormSubmit}>
         <FormGroup label="Penalizations">{this.renderExistingPenalizations()}</FormGroup>
         {this.renderReason()}
         {this.renderAmount()}
@@ -142,13 +142,13 @@ class EnterResultPenalties extends React.Component {
     const value = penalizationComponent.format(penalization.Performance, true);
 
     return (
-      <div key={index}>
-        <span className="enterresult-penalization-reason">{reason}</span>
-        <span className="enterresult-penalization-value">{value}</span>
+      <div key={index} className="enterresults-existing-penalty">
+        <span className="enterresults-penalization-reason">{reason}</span>
+        <span className="enterresults-penalization-value">{value}</span>
         <Button
           onClick={() => this.props.onRemovePenalty(index)}
           icon="remove"
-          className={Classes.FIXED + " enterresult-penalization-remove"}/>
+          className={Classes.FIXED + " enterresults-penalization-remove"}/>
       </div>
     );
   }
@@ -162,7 +162,7 @@ class EnterResultPenalties extends React.Component {
 
     return (
       <FormGroup label="Reason">
-        <HTMLSelect options={reasonOptions} value={selectedReason} onChange={this.onReasonChanged}></HTMLSelect>
+        <HTMLSelect options={reasonOptions} value={selectedReason} onChange={this.onReasonChanged} className="enterresults-penalization-selector"></HTMLSelect>
         {hasCustomReason && <InputGroup value={customReason} onChange={this.onCustomReasonChanged} placeholder="Reason"/>}
       </FormGroup>
     );
@@ -177,9 +177,11 @@ class EnterResultPenalties extends React.Component {
     const label = penalization.InputName;
     const unit = penalization.InputUnit;
 
+    const unitElement = unit ? <Tag minimal={true}>{unit}</Tag> : null;
+
     return (
       <FormGroup label={label}>
-        <InputGroup value={amount} rightElement={unit} onChange={this.onAmountChanged}/>
+        <InputGroup value={amount} rightElement={unitElement} onChange={this.onAmountChanged}/>
       </FormGroup>
     );
   }

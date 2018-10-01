@@ -68,3 +68,118 @@ body {
 .startinglanes-officialTop, .startinglanes-announced {
   flex: 1 auto;
 }
+
+.enterresults-form {
+  max-width: 30em;
+}
+
+.enterresults-header {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.enterresults-lane, .enterresults-ot {
+  flex: 0 0 50%;
+}
+
+.enterresults-athlete, .enterresults-discipline {
+  flex: 0 0 100%;
+}
+
+label.bp3-label.enterresults-label-cell {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.enterresults-label, .enterresults-announcement {
+  display: block;
+  flex: 0 0 50%;
+}
+
+.enterresults-announcement {
+  text-align: right;
+}
+
+.enterresults-cards {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 0.5em;
+}
+
+.enterresults-white-card, .enterresults-yellow-card, .enterresults-red-card {
+  flex: 1 1 33%;
+  padding: 0.5em;
+}
+
+.enterresults-white-card.enterresults-card-selected {
+  background: white;
+}
+
+.enterresults-yellow-card.enterresults-card-selected {
+  background: yellow;
+}
+
+.enterresults-red-card.enterresults-card-selected {
+  background: red;
+}
+
+.enterresults-white-card.enterresults-card-unselected {
+  background: #ddd;
+}
+
+.enterresults-yellow-card.enterresults-card-unselected {
+  background: #dd0;
+}
+
+.enterresults-red-card.enterresults-card-unselected {
+  background: #d00;
+}
+
+.enterresults-existing-penalty {
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: center;
+}
+
+.enterresults-penalization-reason {
+  flex: 1 1 auto;
+}
+
+.enterresults-penalization-value, .enterresults-penalization-remove {
+  flex: 0 0 auto;
+  margin-left: 0.5em;
+}
+
+.enterresults-penalization-selector {
+  width: 100%;
+}
+
+.enterresults-footer {
+  margin-top: 1em;
+}
+
+.enterresults-final {
+  display: flex;
+}
+
+.enterresults-final-label {
+  flex: 1 1 auto;
+}
+
+.enterresults-final-value {
+  flex: 0 0 auto;
+}
+
+.enterresults-buttons {
+  display: flex;
+}
+
+.enterresults-confirm {
+  flex: 1 1 auto;
+}
+
+.enterresults-go-previous, .enterresults-go-next {
+  flex: 0 0 auto;
+  margin-left: 0.2em;
+}

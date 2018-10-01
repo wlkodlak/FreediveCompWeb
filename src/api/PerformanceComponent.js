@@ -33,7 +33,7 @@ export function saveDurationInto(performance, value) {
     performance = {};
   }
   if (typeof value === "number") {
-    performance.Duration = "00:" + formatPaddedInteger(value / 60, 2) + ":" + formatPaddedInteger(value % 60, 2);
+    performance.Duration = "00:" + formatPaddedInteger(Math.floor(value / 60), 2) + ":" + formatPaddedInteger(value % 60, 2);
   } else if (typeof value === "string") {
     if (value.length === 5) {
       performance.Duration = "00:" + value;
@@ -50,7 +50,7 @@ export function saveDurationInto(performance, value) {
 
 export function formatDuration(value, allowUnit) {
   if (typeof value === "number") {
-    return formatPaddedInteger(value / 60, 2) + ":" + formatPaddedInteger(value % 60, 2);
+    return formatPaddedInteger(Math.floor(value / 60), 2) + ":" + formatPaddedInteger(value % 60, 2);
   } else if (typeof value === "string") {
     if (value.length <= 5) {
       return value;
@@ -78,7 +78,7 @@ export function parseDuration(input) {
     seconds = parseInt(input.substring(colonPosition + 1), 10);
   }
   if (seconds >= 60) {
-    minutes += seconds / 60;
+    minutes += Math.floor(seconds / 60);
     seconds = seconds % 60;
   }
   const formattedDuration = "00:" + (

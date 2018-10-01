@@ -105,8 +105,8 @@ class EnterResult extends React.Component {
       ...performance
     };
     this.recalculateResult(result);
-    this.calculator.calculate(this.state.rules, this.state.entry.Announcement.Performance, result.Performance);
     this.setState({modified: true, rawRealized: rawInput, result: result});
+    this.calculator.calculate(this.state.rules, this.state.entry.Announcement.Performance, result.Performance);
   }
 
   onCardSelected(card) {
@@ -138,6 +138,7 @@ class EnterResult extends React.Component {
     };
     result.Penalizations = result.Penalizations.slice(0);
     result.Penalizations.splice(index, 1);
+    this.recalculateResult(result);
     this.setState({modified: true, result: result});
   }
 
@@ -242,20 +243,22 @@ class EnterResult extends React.Component {
     let shortPenalizationIndex = -1;
     if (result.Penalizations) {
       result.Penalizations = result.Penalizations.slice(0);
-      shortPenalizationIndex = result.Penalizations.findIndex((penalization) => penalization.IsShortPenalization);
+      shortPenalizationIndex = result.Penalizations.findIndex((penalization) => penalization.IsShortPerformance);
     } else {
       result.Penalizations = [];
     }
 
-    if (result.shortPenalization) {
+    if (calculationResult.shortPenalization) {
       if (shortPenalizationIndex < 0) {
-        result.Penalizations.splice(0, 0, result.shortPenalization);
+        result.Penalizations.splice(0, 0, calculationResult.shortPenalization);
       } else {
-        result.Penalizations.splice(shortPenalizationIndex, 1, result.shortPenalization);
+        result.Penalizations.splice(shortPenalizationIndex, 1, calculationResult.shortPenalization);
       }
     } else if (shortPenalizationIndex >= 0) {
       result.Penalizations.splice(shortPenalizationIndex, 1);
     }
+
+    this.recalculateResult(result);
 
     return {
       ...oldState,
@@ -304,7 +307,7 @@ class EnterResult extends React.Component {
       const modified = this.state.modified;
 
       return (
-        <form className="enterresults-form" onSubmit={this.onFormSubmit}>
+        <div className="enterresults-form">
           <Toaster>{
               errors.map(
                 (error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)}/>
@@ -313,26 +316,30 @@ class EnterResult extends React.Component {
           <RaceHeader raceId={raceId}/>
           <H1>Enter performance</H1>
           <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} entry={entry}/>
-          <EnterResultComponent
-            announced={entry.Announcement.Performance}
-            realized={result.Performance}
-            rawRealized={this.state.rawRealized}
-            component={this.state.primaryComponent}
-            onChange={this.onPrimaryComponentChanged}/>
-          <EnterResultCard result={result} onCardSelected={this.onCardSelected}/>
+          <form onSubmit={this.onFormSubmit}>
+            <EnterResultComponent
+              announced={entry.Announcement.Performance}
+              realized={result.Performance}
+              rawRealized={this.state.rawRealized}
+              component={this.state.primaryComponent}
+              onChange={this.onPrimaryComponentChanged}/>
+            <EnterResultCard result={result} onCardSelected={this.onCardSelected}/>
+          </form>
           <EnterResultPenalties
             result={result}
             rules={rules}
             onAddPenalty={this.onAddPenalty}
             onRemovePenalty={this.onRemovePenalty}
             onAddError={this.onError}/>
-          <EnterResultFooter
-            result={result}
-            component={this.state.penalizationComponent}
-            modified={modified}
-            previousLink={previousLink}
-            nextLink={nextLink}/>
-        </form>
+          <form onSubmit={this.onFormSubmit}>
+            <EnterResultFooter
+              result={result}
+              component={this.state.penalizationComponent}
+              modified={modified}
+              previousLink={previousLink}
+              nextLink={nextLink}/>
+          </form>
+        </div>
       );
     }
   }

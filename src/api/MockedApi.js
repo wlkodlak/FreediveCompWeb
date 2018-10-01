@@ -300,8 +300,8 @@ class MockedApi {
 
   calculateDurationPoints(performance) {
     const duration = PerformanceComponent.Duration.extractFrom(performance);
-    if (duration) {
-      return duration * 0.2;
+    if (typeof duration === "number") {
+      return duration / 5.0;
     } else {
       throw new Error("Missing duration");
     }
@@ -309,7 +309,7 @@ class MockedApi {
 
   calculateDistancePoints(performance) {
     if (typeof performance.Distance === "number") {
-      return performance.Distance * 0.5;
+      return performance.Distance / 2.0;
     } else {
       throw new Error("Missing distance");
     }
@@ -375,7 +375,7 @@ class MockedApi {
         "Reason": "Early Start",
         "ShortReason": "Early",
         "Performance": {
-          "Points": Math.ceil(request.Input * 0.2)
+          "Points": Math.ceil(request.Input / 5.0)
         }
       });
     } else if (request.PenalizationId === "LateStart") {
@@ -385,7 +385,7 @@ class MockedApi {
         "Reason": "Late Start",
         "ShortReason": "Late",
         "Performance": {
-          "Points": Math.ceil((request.Input - 10) * 0.2)
+          "Points": Math.ceil((request.Input - 10) / 5.0)
         }
       });
     } else {

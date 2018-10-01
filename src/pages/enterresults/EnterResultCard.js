@@ -22,11 +22,11 @@ class EnterResultCard extends React.Component {
 
   cardClasses(cardResult, expected, nameBase) {
     const highlighted = !cardResult || cardResult === expected;
-    const colorClass = "enterresult-" + nameBase + "-card enterresult-card-";
-    const selectionClass = highlighted
+    const colorClass = "enterresults-" + nameBase + "-card enterresults-card-";
+    const selectionClassSuffix = highlighted
       ? "selected"
       : "unselected";
-    return colorClass + " " + selectionClass;
+    return colorClass + selectionClassSuffix;
   }
 
   render() {
@@ -35,7 +35,7 @@ class EnterResultCard extends React.Component {
     const classesYellow = this.cardClasses(selectedCard, "Yellow", "yellow");
     const classesRed = this.cardClasses(selectedCard, "Red", "red");
     return (
-      <div className="enterresult-cards">
+      <div className="enterresults-cards">
         <button type="button" className={classesWhite} onClick={this.onWhiteClick}>White</button>
         <button type="button" className={classesYellow} onClick={this.onYellowClick}>Yellow</button>
         <button type="button" className={classesRed} onClick={this.onRedClick}>Red</button>
