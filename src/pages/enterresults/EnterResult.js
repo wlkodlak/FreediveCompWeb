@@ -31,6 +31,8 @@ class EnterResult extends React.Component {
     this.onCardSelected = this.onCardSelected.bind(this);
     this.onAddPenalty = this.onAddPenalty.bind(this);
     this.onRemovePenalty = this.onRemovePenalty.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onConfirmed = this.onConfirmed.bind(this);
     this.onError = this.onError.bind(this);
   }
 
@@ -144,6 +146,15 @@ class EnterResult extends React.Component {
 
   onFormSubmit(event) {
     event.preventDefault();
+    if (!this.state.modified) return; // nothing to do
+    const raceId = this.props.raceId;
+    const athleteId = this.props.athleteId;
+    const result = this.state.result;
+    Api.postAthleteResult(raceId, athleteId, result).then(this.onConfirmed).catch(this.onError);
+  }
+
+  onConfirmed() {
+    this.setState({modified: false});
   }
 
   onError(error) {
