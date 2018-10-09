@@ -16,7 +16,7 @@ class EnterResultHeader extends React.Component {
     const raceId = this.props.raceId;
     const startingLaneId = this.props.startingLaneId;
     const entry = this.props.entry;
-    const laneName = entry.Start.StartingLaneLongName;
+    const laneName = this.props.startingLaneName;
     const officialTop = this.convertOfficialTop(entry.Start.OfficialTop);
     const athleteId = entry.Athlete.AthleteId;
     const athleteName = `${entry.Athlete.FirstName} ${entry.Athlete.Surname}`;

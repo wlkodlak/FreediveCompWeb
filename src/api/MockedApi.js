@@ -1108,6 +1108,10 @@ class MockedApi {
   getNewRaceId() {
     return GenerateUuid();
   }
+
+  saveExplicitToken(raceId, token) {
+    console.log("saveExplicitToken(" + raceId + ", " + token + ")");
+  }
 }
 
 export default MockedApi;

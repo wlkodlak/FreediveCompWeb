@@ -15,8 +15,9 @@ class EnterResult extends React.Component {
     super(props);
     this.state = {
       entryIndex: -1,
+      startingLaneName: null,
       startList: [],
-      allRules: [],
+      allRules: null,
       modified: false,
       entry: null,
       result: null,
@@ -89,6 +90,7 @@ class EnterResult extends React.Component {
 
   onStartListLoaded(startList) {
     const changes = {
+      startingLaneName: startList.Title,
       startList: startList.Entries,
       entry: null,
       result: null,
@@ -185,6 +187,9 @@ class EnterResult extends React.Component {
     if (!state.result && state.entry) {
       state.result = state.entry.CurrentResult || {};
       state.rawRealized = null;
+    }
+    if (state.entry) {
+      state.result.DisciplineId = state.entry.Discipline.DisciplineId;
     }
     if (state.entry && state.allRules) {
       state.rules = this.findRules(state.allRules, state.entry.Discipline.Rules);
@@ -293,6 +298,7 @@ class EnterResult extends React.Component {
   render() {
     const raceId = this.props.raceId;
     const startingLaneId = this.props.startingLaneId;
+    const startingLaneName = this.state.startingLaneName;
     const entryIndex = this.state.entryIndex;
     const entry = this.state.entry;
     const rules = this.state.rules;
@@ -326,7 +332,11 @@ class EnterResult extends React.Component {
             }</Toaster>
           <RaceHeader raceId={raceId}/>
           <H1>Enter performance</H1>
-          <EnterResultHeader raceId={raceId} startingLaneId={startingLaneId} entry={entry}/>
+          <EnterResultHeader
+            raceId={raceId}
+            startingLaneId={startingLaneId}
+            startingLaneName={startingLaneName}
+            entry={entry}/>
           <form onSubmit={this.onFormSubmit}>
             <EnterResultComponent
               announced={entry.Announcement.Performance}

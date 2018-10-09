@@ -11,11 +11,17 @@ class TokenStorage {
   }
 
   getRaceToken(raceId) {
-    return window.localStorage.getItem("raceToken-" + raceId);
+    const raceToken = window.localStorage.getItem("raceToken-" + raceId);
+    const adminToken = window.localStorage.getItem("adminToken");
+    return raceToken || adminToken;
   }
 
   saveRaceToken(raceId, token) {
     window.localStorage.setItem("raceToken-" + raceId, token);
+  }
+
+  saveGlobalToken(token) {
+    window.localStorage.setItem("adminToken", token);
   }
 }
 

@@ -63,7 +63,7 @@ class NoRace extends React.Component {
             </li>
           )) }
           { this.state.canCreate && (
-            <li>
+            <li key="new">
               <Link to={`/${newRaceId}/create`}>Create new competition</Link>
             </li>
           )}

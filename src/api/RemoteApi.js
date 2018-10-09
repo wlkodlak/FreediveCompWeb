@@ -42,13 +42,16 @@ class RemoteApi {
 
   getRaceCall(raceId, path, forceAuthentication) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
+    const token = forceAuthentication ? this.tokenStorage.getRaceToken(raceId) : null;
     const options = {
       method: "GET",
       url: serviceUrl,
       headers: {
-        "X-Authentication-Token": forceAuthentication ? this.tokenStorage.getRaceToken(raceId) : null
       }
     };
+    if (token) {
+      options.headers["X-Authentication-Token"] = token;
+    }
     const request = new Request(serviceUrl, options);
     return fetch(request)
       .then(response => {
@@ -60,15 +63,18 @@ class RemoteApi {
 
   postRaceCall(raceId, path, postData, skipAuthentication) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
+    var token = skipAuthentication ? null : this.tokenStorage.getRaceToken(raceId);
     const options = {
       method: "POST",
       url: serviceUrl,
       headers: {
-        "Content-Type": "application/json",
-        "X-Authentication-Token": skipAuthentication ? null : this.tokenStorage.getRaceToken(raceId)
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(postData)
     };
+    if (token) {
+      options.headers["X-Authentication-Token"] = token;
+    }
     const request = new Request(serviceUrl, options);
     console.log(request);
     console.log(postData);
@@ -147,12 +153,13 @@ class RemoteApi {
       "DeviceId": this.tokenStorage.getDeviceId(),
       "ConnectCode": connectCode
     };
-    const promise = this.postRaceCall(raceId, "auth/authenticate", body, true);
-    promise.then(response => {
+    let promise = this.postRaceCall(raceId, "auth/authenticate", body, true);
+    promise = promise.then(response => {
       const token = response.AuthenticationToken;
       if (typeof token === "string") {
-        this.tokenStorage.setRaceToken(raceId, token);
+        this.tokenStorage.saveRaceToken(raceId, token);
       }
+      return response;
     });
     return promise;
   }
@@ -191,6 +198,14 @@ class RemoteApi {
 
   getNewRaceId() {
     return GenerateUuid();
+  }
+
+  saveExplicitToken(raceId, token) {
+    if (raceId) {
+      this.tokenStorage.saveRaceToken(raceId, token);
+    } else {
+      this.tokenStorage.saveGlobalToken(token);
+    }
   }
 }
 

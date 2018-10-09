@@ -14,7 +14,7 @@ class AuthenticateJudge extends React.Component {
       errors: []
     };
     this.onRaceLoaded = this.onRaceLoaded.bind(this);
-    this.onAuthenticateSucceeded = this.onError.onAuthenticateSucceeded(this);
+    this.onAuthenticateSucceeded = this.onAuthenticateSucceeded.bind(this);
     this.onError = this.onError.bind(this);
     this.onTimer = this.onTimer.bind(this);
   }
@@ -77,7 +77,7 @@ class AuthenticateJudge extends React.Component {
 
   render() {
     if (this.state.verified) {
-      return (<Redirect to={`/${raceId}/startinglists`} />);
+      return (<Redirect to={`/${this.props.raceId}/startinglists`} />);
     } else {
       return (
         <div className="judges-form">
