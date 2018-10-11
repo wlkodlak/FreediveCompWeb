@@ -14,7 +14,7 @@ class RemoteApi {
     return fetch(serviceUrl)
       .then(response => {
         if (response.status === 200) return response.json();
-        if (response.status === 400) throw Error(response.body);
+        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
         return null;
       });
   }
@@ -35,7 +35,7 @@ class RemoteApi {
     return fetch(request)
       .then(response => {
         if (response.status === 200) return response.json();
-        if (response.status === 400) throw Error(response.body);
+        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
         return null;
       });
   }
@@ -56,7 +56,7 @@ class RemoteApi {
     return fetch(request)
       .then(response => {
         if (response.status === 200) return response.json();
-        if (response.status === 400) throw Error(response.body);
+        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
         return null;
       });
   }
@@ -81,7 +81,7 @@ class RemoteApi {
     return fetch(request)
       .then(response => {
         if (response.status === 200) return response.json();
-        if (response.status === 400) throw Error(response.body);
+        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
         return null;
       });
   }

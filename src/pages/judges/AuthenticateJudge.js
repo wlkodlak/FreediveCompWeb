@@ -25,11 +25,24 @@ class AuthenticateJudge extends React.Component {
       .then(this.onRaceLoaded)
       .catch(this.onError);
     this.onTimer();
-    this.timerId = setInterval(this.onTimer, 5000);
+    this.startTimer();
+  }
+
+  startTimer() {
+    if (!this.timerId) {
+      this.timerId = setInterval(this.onTimer, 5000);
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerId);
+    this.stopTimer();
+  }
+
+  stopTimer() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    }
   }
 
   onRaceLoaded(raceSetup) {
@@ -62,6 +75,7 @@ class AuthenticateJudge extends React.Component {
   onError(error) {
     const errors = this.state.errors.slice(0);
     errors.push(error.message);
+    this.stopTimer();
     this.setState({
       errors: errors
     });
@@ -70,6 +84,7 @@ class AuthenticateJudge extends React.Component {
   onErrorDismissed(index) {
     const errors = this.state.errors.slice(0);
     errors.splice(index, 1);
+    this.startTimer();
     this.setState({
       errors: errors
     });

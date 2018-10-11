@@ -60,7 +60,8 @@ class EnterResultPenalties extends React.Component {
       const ruleName = this.props.rules.Name;
       const request = {
         "PenalizationId": this.state.selectedReason,
-        "Input": this.state.amount
+        "Input": this.state.amount,
+        "Realized": this.props.realized
       };
       Api.postGlobalRulePenalization(ruleName, request).then(this.onPenalizationCalculated).catch(this.onError);
     }

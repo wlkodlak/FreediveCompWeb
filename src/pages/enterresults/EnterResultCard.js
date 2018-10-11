@@ -21,7 +21,7 @@ class EnterResultCard extends React.Component {
   }
 
   cardClasses(cardResult, expected, nameBase) {
-    const highlighted = !cardResult || cardResult === expected;
+    const highlighted = cardResult === expected;
     const colorClass = "enterresults-" + nameBase + "-card enterresults-card-";
     const selectionClassSuffix = highlighted
       ? "selected"

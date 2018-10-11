@@ -187,6 +187,7 @@ class EnterResult extends React.Component {
     if (!state.result && state.entry) {
       state.result = state.entry.CurrentResult || {};
       state.rawRealized = null;
+      if (!state.result.Performance) state.result.Performance = {};
     }
     if (state.entry) {
       state.result.DisciplineId = state.entry.Discipline.DisciplineId;
@@ -226,6 +227,11 @@ class EnterResult extends React.Component {
 
   recalculateResult(result) {
     const rules = this.state.rules;
+    if (!result.Performance) {
+      result.Performance = {};
+      result.FinalPerformance = {};
+      return;
+    }
     if (!result.Performance || !rules) {
       result.FinalPerformance = {};
       return;
@@ -349,6 +355,7 @@ class EnterResult extends React.Component {
           <EnterResultPenalties
             result={result}
             rules={rules}
+            realized={result.Performance}
             onAddPenalty={this.onAddPenalty}
             onRemovePenalty={this.onRemovePenalty}
             onAddError={this.onError}/>
