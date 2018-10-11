@@ -1,7 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
 import { H1, Toaster, Toast, Intent } from '@blueprintjs/core';
-import SingleAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColumn';
+import SingularColumn from '../finalresults/SingularColumn';
 import ResultsReport from '../finalresults/ResultsReport';
 import RaceHeader from '../homepage/RaceHeader';
 
@@ -51,7 +51,7 @@ class DisciplineResults extends React.Component {
   }
 
   convertColumn(column) {
-    return new SingleAidaDisciplineColumn(column, this.state.allRules);
+    return new SingularColumn(column);
   }
 
   render() {
@@ -60,11 +60,13 @@ class DisciplineResults extends React.Component {
       const title = report.Metadata.Title;
       const columns = report.Metadata.Columns.map(this.convertColumn);
       const results = report.Results;
+      const exportHtmlLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "html", "reduced");
+      const exportCsvLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "csv", "reduced");
       return (
         <div className="finalresults-report">
           <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
           <RaceHeader raceId={this.props.raceId} page="disciplines" pageName="Disciplines" />
-          <ResultsReport title={title} results={results} columns={columns} />
+          <ResultsReport title={title} results={results} columns={columns} exportHtmlLink={exportHtmlLink} exportCsvLink={exportCsvLink} />
         </div>
       );
     } else {

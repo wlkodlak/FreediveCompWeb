@@ -1,9 +1,9 @@
 import React from 'react';
 import Api from '../../api/Api';
 import { H1, Toaster, Toast, Intent } from '@blueprintjs/core';
-import SingleAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColumn';
-import ReducedAidaDisciplineColumn from '../finalresults/SingleAidaDisciplineColumn';
-import FinalPointsColumn from '../finalresults/SingleAidaDisciplineColumn';
+import SingularColumn from '../finalresults/SingularColumn';
+import ReducedColumn from '../finalresults/ReducedColumn';
+import FinalPointsColumn from '../finalresults/FinalPointsColumn';
 import ResultsReport from '../finalresults/ResultsReport';
 import RaceHeader from '../homepage/RaceHeader';
 
@@ -23,9 +23,9 @@ class FinalResults extends React.Component {
   }
 
   componentDidMount() {
-    const { raceId, resultListId } = this.props;
+    const { raceId, resultsListId } = this.props;
     Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
-    Api.getReportResultList(raceId, resultListId).then(this.onReportLoaded).catch(this.onError);
+    Api.getReportResultList(raceId, resultsListId).then(this.onReportLoaded).catch(this.onError);
   }
 
   onRulesLoaded(allRules) {
@@ -37,12 +37,12 @@ class FinalResults extends React.Component {
   }
 
   convertSingleColumn(column) {
-    return new SingleAidaDisciplineColumn(column, this.state.allRules);
+    return new SingularColumn(column);
   }
 
   convertColumn(column) {
-    if (column.Discipline) {
-      return new ReducedAidaDisciplineColumn(column, this.state.allRules);
+    if (column.PrimaryComponent != null) {
+      return new ReducedColumn(column);
     } else {
       return new FinalPointsColumn(column);
     }
@@ -71,11 +71,13 @@ class FinalResults extends React.Component {
       const columnMetadata = report.Metadata.Columns;
       const columns = columnMetadata.map(columnMetadata.length === 1 ? this.convertSingleColumn : this.convertColumn);
       const results = report.Results;
+      const exportHtmlLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "html", "reduced");
+      const exportCsvLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "csv", "reduced");
       return (
         <div className="finalresults-report">
           <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
           <RaceHeader raceId={this.props.raceId} page="resultlists" pageName="Result lists" />
-          <ResultsReport title={title} results={results} columns={columns} />
+          <ResultsReport title={title} results={results} columns={columns} exportHtmlLink={exportHtmlLink} exportCsvLink={exportCsvLink} />
         </div>
       );
     } else {

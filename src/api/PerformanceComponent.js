@@ -110,6 +110,7 @@ export function saveDistanceInto(performance, value) {
   } else {
     performance.Distance = null;
   }
+  return performance;
 }
 
 export function formatDistance(value, allowUnit) {
@@ -137,6 +138,7 @@ export function saveDepthInto(performance, value) {
   } else {
     performance.Depth = null;
   }
+  return performance;
 }
 
 export function formatDepth(value, allowUnit) {
@@ -164,6 +166,7 @@ export function savePointsInto(performance, value) {
   } else {
     performance.Points = null;
   }
+  return performance;
 }
 
 export function formatPoints(value, allowUnit) {
@@ -179,7 +182,7 @@ function extractUnknownFrom(performance) {
 }
 
 function saveUnknownInto(performance, value) {
-  // noop
+  return performance || {};
 }
 
 function formatUnknown(value, allowUnit) {

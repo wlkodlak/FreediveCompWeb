@@ -1,4 +1,5 @@
 import React from 'react';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
 export default class FinalPointsColumn {
   constructor(columnMetadata) {
@@ -13,7 +14,15 @@ export default class FinalPointsColumn {
 
   renderData(key, result) {
     return [
-      <td key={key}>{`${result.FinalPoints}`}</td>
+      <td key={key}>{this.formatPoints(result)}</td>
     ];
+  }
+
+  formatPoints(result) {
+    if (typeof result.FinalPoints === "number") {
+      return PerformanceComponent.Points.format(result.FinalPoints, true)
+    } else {
+      return "";
+    }
   }
 }

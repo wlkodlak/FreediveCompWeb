@@ -75,8 +75,8 @@ const App = () => (
           path="/:raceId/disciplines"
           render={({ match }) => (<DisciplinesList raceId={match.params.raceId} />)} />
         <Route
-          path="/:raceId/resultlists/:resultListId"
-          render={({ match }) => (<FinalResults raceId={match.params.raceId} resultListId={match.params.resultListId} />)} />
+          path="/:raceId/resultlists/:resultsListId"
+          render={({ match }) => (<FinalResults raceId={match.params.raceId} resultsListId={match.params.resultsListId} />)} />
         <Route
           path="/:raceId/resultlists"
           render={({ match }) => (<FinalReportsList raceId={match.params.raceId} />)} />

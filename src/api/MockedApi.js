@@ -744,7 +744,7 @@ class MockedApi {
             "Title": "DYN",
             "IsSortingSource": true,
             "HasFinalPoints": true,
-            "HasPerformance": true
+            "PrimaryComponent": "Distance"
           }
         ]
       },
@@ -897,7 +897,7 @@ class MockedApi {
     });
   }
 
-  getReportResultList(raceId, resultListId) {
+  getReportResultList(raceId, resultsListId) {
     return Promise.resolve({
       "Metadata": {
         "ResultsListId": "Men",
