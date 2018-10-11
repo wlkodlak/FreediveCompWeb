@@ -11,6 +11,7 @@ class DisciplineResults extends React.Component {
     this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onReportLoaded = this.onReportLoaded.bind(this);
     this.onError = this.onError.bind(this);
+    this.convertColumn = this.convertColumn.bind(this);
   }
 
   state = {
