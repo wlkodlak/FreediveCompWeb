@@ -3,11 +3,16 @@ import { H1, HTMLTable } from '@blueprintjs/core';
 
 class ResultsReport extends React.Component {
   render() {
-    const { title, columns, results } = this.props;
+    const { title, columns, results, exportHtmlLink, exportCsvLink } = this.props;
 
     return (
       <div>
-        <H1>{title}</H1>
+        <div className="finalresults-title">
+          <H1>{title}</H1>
+          <div className="finalresults-exports">
+            Export to: <a href={exportHtmlLink}>HTML</a> | <a href={exportCsvLink}>CSV</a>
+          </div>
+        </div>
         <HTMLTable>
           <thead>
             <tr>
@@ -27,9 +32,7 @@ class ResultsReport extends React.Component {
                     <td>{`${result.Athlete.FirstName} ${result.Athlete.Surname}`}</td>
                     {
                       columns.map((column, columnIndex) => {
-                        console.log("Rendering cell [" + rowIndex + ", " + columnIndex + "]");
                         const subresult = result.Subresults[columnIndex];
-                        console.log(subresult);
                         return column.renderData(columnIndex, subresult);
                       })
                     }

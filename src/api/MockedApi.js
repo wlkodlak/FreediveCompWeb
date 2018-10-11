@@ -742,7 +742,9 @@ class MockedApi {
               "Rules": "AIDA_DYN"
             },
             "Title": "DYN",
-            "IsSortingSource": true
+            "IsSortingSource": true,
+            "HasFinalPoints": true,
+            "HasPerformance": true
           }
         ]
       },
@@ -1111,6 +1113,18 @@ class MockedApi {
 
   saveExplicitToken(raceId, token) {
     console.log("saveExplicitToken(" + raceId + ", " + token + ")");
+  }
+
+  exportReportStartingList(raceId, startingLaneId, format, preset) {
+    return "#";
+  }
+
+  exportReportDisciplineResults(raceId, disciplineId, format, preset) {
+    return "#";
+  }
+
+  exportReportResultsList(raceId, resultsListId, format, preset) {
+    return "#";
   }
 }
 

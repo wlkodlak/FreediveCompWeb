@@ -56,7 +56,7 @@ class StartingList extends React.Component {
       announced: PerformanceComponent.formatPerformance(entry.Announcement.Performance),
       realized: entry.CurrentResult ? PerformanceComponent.formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
-      note: entry.CurrentResult ? entry.CurrentResult.JudgeNote : "",
+      note: entry.CurrentResult ? entry.CurrentResult.JudgeComment : "",
       link: `/${this.props.raceId}/enterresults/${entry.Start.StartingLaneId}/${entry.Athlete.AthleteId}/${entry.Discipline.DisciplineId}`
     };
   }
@@ -93,16 +93,28 @@ class StartingList extends React.Component {
     });
   }
 
+  buildExportLink(format, preset) {
+    return Api.exportReportStartingList(this.props.raceId, this.props.startingLaneId, format, preset)
+  }
+
   render() {
     return this.state.phone ? this.renderPhone() : this.renderDesktop();
   }
 
   renderDesktop() {
+    const exportHtmlMinLink = this.buildExportLink("html", "minimal");
+    const exportHtmlFullLink = this.buildExportLink("html", "running");
+    const exportCsvLink = this.buildExportLink("csv", "running");
     return (
       <div className="startinglanes-startlist">
         <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
-        <H1>Starting List - {this.state.title}</H1>
+        <div className="startinglanes-listtitle">
+          <H1>Starting List - {this.state.title}</H1>
+          <div className="startinglanes-exports">
+            Export to: <a href={exportHtmlMinLink}>Minimal HTML</a> | <a href={exportHtmlFullLink}>Full HTML</a> | <a href={exportCsvLink}>CSV</a>
+          </div>
+        </div>
         <HTMLTable>
           <thead>
             <tr>

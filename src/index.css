@@ -69,6 +69,32 @@ body {
   flex: 1 auto;
 }
 
+.startinglanes-listtitle {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.startinglanes-listtitle h1 {
+  flex: 1 1 auto;
+}
+
+.startinglanes-listtitle .finalresults-exports {
+  flex: 0 0 auto;
+}
+
+.finalresults-title {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.finalresults-title h1 {
+  flex: 1 1 auto;
+}
+
+.finalresults-title .finalresults-exports {
+  flex: 0 0 auto;
+}
+
 .enterresults-form {
   max-width: 30em;
 }

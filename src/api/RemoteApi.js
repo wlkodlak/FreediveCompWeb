@@ -207,6 +207,22 @@ class RemoteApi {
       this.tokenStorage.saveGlobalToken(token);
     }
   }
+
+  exportReport(raceId, kind, id, format, preset) {
+    return this.baseUrl + "/api-1.0/" + raceId + "/exports/" + kind + "/" + id + "?format=" + format + "&preset=" + preset;
+  }
+
+  exportReportStartingList(raceId, startingLaneId, format, preset) {
+    return this.exportReport(raceId, "start", startingLaneId, format, preset);
+  }
+
+  exportReportDisciplineResults(raceId, disciplineId, format, preset) {
+    return this.exportReport(raceId, "discipline", disciplineId, format, preset);
+  }
+
+  exportReportResultsList(raceId, resultsListId, format, preset) {
+    return this.exportReport(raceId, "results", resultsListId, format, preset);
+  }
 }
 
 export default RemoteApi;
