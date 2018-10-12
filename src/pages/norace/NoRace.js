@@ -13,12 +13,13 @@ class NoRace extends React.Component {
     };
     this.onRacesLoaded = this.onRacesLoaded.bind(this);
     this.onUserVerified = this.onUserVerified.bind(this);
+    this.onUserUnauthenticated = this.onUserUnauthenticated.bind(this);
     this.onError = this.onError.bind(this);
   }
 
   componentDidMount() {
     Api.getGlobalSearch().then(this.onRacesLoaded).catch(this.onError);
-    Api.getAuthVerify("global").then(this.onUserVerified).catch(this.onError);
+    Api.getAuthVerify("global").then(this.onUserVerified).catch(this.onUserUnauthenticated);
   }
 
   onRacesLoaded(races) {
@@ -30,6 +31,12 @@ class NoRace extends React.Component {
   onUserVerified() {
     this.setState({
       canCreate: true
+    });
+  }
+
+  onUserUnauthenticated() {
+    this.setState({
+      canCreate: false
     });
   }
 

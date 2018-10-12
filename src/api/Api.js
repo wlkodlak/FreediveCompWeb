@@ -6,7 +6,7 @@ function createApi() {
   let apiBaseUrl = process.env.REACT_APP_API;
   if (apiBaseUrl === "mocked") return new MockedApi();
   if (apiBaseUrl === "auto" || !apiBaseUrl) {
-    const regex = /^(https?:\/\/[^\/]*)/;
+    const regex = /^(https?:\/\/[^/]*)/;
     const match = regex.exec(window.location.href);
     apiBaseUrl = match[1];
   }

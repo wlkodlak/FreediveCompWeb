@@ -9,14 +9,41 @@ class RemoteApi {
     this.cachedRules = null;
   }
 
+  fetchJson(request) {
+    return fetch(request).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else if (response.status >= 400 && response.status < 500) {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType.startsWith("application/json") || contentType.startsWith("text/json")) {
+          return response.json().then(this.buildErrorPromise);
+        } else {
+          return response.text().then(this.buildErrorPromise);
+        }
+      } else if (response.status >= 500) {
+        return Promise.reject(new Error("Server error " + response.status));
+      } else if (response.status > 200 && response.status < 300) {
+        return Promise.resolve(null);
+      } else {
+        return Promise.reject(new Error("Unexpected response " + response.status));
+      }
+    });
+  }
+
+  buildErrorPromise(message) {
+    if (typeof message === "object") {
+      message = message.Message;  // from WebAPI
+    } else if (typeof message === "string") {
+      // noop - already a string
+    } else {
+      message = "An error occurred";
+    }
+    return Promise.reject(new Error(message));
+  }
+
   getGlobalCall(path) {
     const serviceUrl = this.baseUrl + "/api-1.0/global/" + path;
-    return fetch(serviceUrl)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
-        return null;
-      });
+    return this.fetchJson(serviceUrl);
   }
 
   postGlobalCall(path, postData) {
@@ -32,12 +59,7 @@ class RemoteApi {
     const request = new Request(serviceUrl, options);
     console.log(request);
     console.log(postData);
-    return fetch(request)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
-        return null;
-      });
+    return this.fetchJson(request);
   }
 
   getRaceCall(raceId, path, forceAuthentication) {
@@ -53,12 +75,7 @@ class RemoteApi {
       options.headers["X-Authentication-Token"] = token;
     }
     const request = new Request(serviceUrl, options);
-    return fetch(request)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
-        return null;
-      });
+    return this.fetchJson(request);
   }
 
   postRaceCall(raceId, path, postData, skipAuthentication) {
@@ -78,12 +95,7 @@ class RemoteApi {
     const request = new Request(serviceUrl, options);
     console.log(request);
     console.log(postData);
-    return fetch(request)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        if (response.status === 400) return response.text().then(t => Promise.reject(new Error(t)));
-        return null;
-      });
+    return this.fetchJson(request);
   }
 
   getGlobalSearch() {
