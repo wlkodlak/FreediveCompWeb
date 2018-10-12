@@ -19,6 +19,9 @@ body {
 .judges-form h5 {
   margin-top: 2em;
 }
+.judges-authenticate-code {
+  font-size: 2em;
+}
 
 .athletes-addbutton {
   margin-top: 2em;
@@ -49,6 +52,9 @@ body {
 .startinglanes-startlist-miniitem {
   display: flex;
   flex-flow: column nowrap;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  border: 1px solid #888;
 }
 
 .startinglanes-athlete, .startinglanes-extras  {
@@ -71,7 +77,7 @@ body {
 
 .startinglanes-listtitle {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
 }
 
 .startinglanes-listtitle h1 {
@@ -84,7 +90,7 @@ body {
 
 .finalresults-title {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
 }
 
 .finalresults-title h1 {
@@ -208,13 +214,20 @@ label.bp3-label.enterresults-label-cell {
 
 .enterresults-buttons {
   display: flex;
+  flex-flow: row nowrap;
 }
 
 .enterresults-confirm {
-  flex: 1 1 auto;
+  width: 100%
 }
 
-.enterresults-go-previous, .enterresults-go-next {
-  flex: 0 0 auto;
+.enterresults-go-previous {
+  margin-top: 0.3em;
+  flex: 1 1 40%;
+}
+
+.enterresults-go-next {
+  margin-top: 0.3em;
   margin-left: 0.2em;
+  flex: 1 1 60%;
 }

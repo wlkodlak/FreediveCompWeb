@@ -337,7 +337,7 @@ class EnterResult extends React.Component {
               )
             }</Toaster>
           <RaceHeader raceId={raceId}/>
-          <H1>Enter performance</H1>
+          <H1>Enter result</H1>
           <EnterResultHeader
             raceId={raceId}
             startingLaneId={startingLaneId}

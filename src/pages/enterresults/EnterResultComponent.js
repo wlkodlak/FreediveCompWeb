@@ -27,6 +27,10 @@ class EnterResultComponent extends React.Component {
     }
   }
 
+  getInputType() {
+    return this.props.component.inputType;
+  }
+
   onInputChanged(event) {
     const inputValue = event.target.value;
     if (inputValue === "") {
@@ -48,7 +52,7 @@ class EnterResultComponent extends React.Component {
         </label>
         <div className={Classes.FORM_CONTENT}>
           <div className={Classes.INPUT_GROUP}>
-            <input type="text" className={Classes.INPUT} value={this.getFormattedRealized()} onChange={this.onInputChanged}/>
+            <input type={this.getInputType()} className={Classes.INPUT} value={this.getFormattedRealized()} onChange={this.onInputChanged}/>
           </div>
         </div>
       </div>

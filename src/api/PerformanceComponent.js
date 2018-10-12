@@ -221,30 +221,35 @@ export default class PerformanceComponent {
       this.formatter = formatDuration;
       this.parser = parseDuration;
       this.placeholder = "mm:ss";
+      this.inputType = "time";
     } else if (name === 'Distance') {
       this.extractor = extractDistanceFrom;
       this.setter = saveDistanceInto;
       this.formatter = formatDistance;
       this.parser = parseDistance;
       this.placeholder = "100";
+      this.inputType = "number";
     } else if (name === 'Depth') {
       this.extractor = extractDepthFrom;
       this.setter = saveDepthInto;
       this.formatter = formatDepth;
       this.parser = parseDepth;
       this.placeholder = "50";
+      this.inputType = "number";
     } else if (name === 'Points') {
       this.extractor = extractPointsFrom;
       this.setter = savePointsInto;
       this.formatter = formatPoints;
       this.parser = parsePoints;
       this.placeholder = "10";
+      this.inputType = "number";
     } else {
       this.extractor = extractUnknownFrom;
       this.setter = saveUnknownInto;
       this.formatter = formatUnknown;
       this.parser = parseUnknown;
       this.placeholder = "";
+      this.inputType = "text";
     }
   }
 

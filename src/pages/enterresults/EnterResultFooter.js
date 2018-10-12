@@ -11,14 +11,14 @@ class EnterResultFooter extends React.Component {
           <span className="enterresults-final-label">Final result</span>
           <span className="enterresults-final-value">{finalResult}</span>
         </div>
+        <Button className="enterresults-confirm" type="submit" disabled={!this.props.modified}>
+          {
+            this.props.modified
+              ? "Confirm"
+              : "Confirmed"
+          }
+        </Button>
         <div className="enterresults-buttons">
-          <Button className="enterresults-confirm" type="submit">
-            {
-              this.props.modified
-                ? "Confirm"
-                : "Confirmed"
-            }
-          </Button>
           <RoutedButton
             className="enterresults-go-previous"
             icon="chevron-left"

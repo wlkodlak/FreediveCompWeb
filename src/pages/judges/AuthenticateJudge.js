@@ -98,8 +98,8 @@ class AuthenticateJudge extends React.Component {
         <div className="judges-form">
           <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
           <RaceHeader raceId={this.props.raceId} />
-          <div>You are not paired with {this.state.raceName}. Show this code to the administrator:</div>
-          <div>{this.state.connectCode}</div>
+          <div className="judges-authenticate-message">You are not paired with {this.state.raceName}. Show this code to the administrator:</div>
+          <div className="judges-authenticate-code">{this.state.connectCode}</div>
         </div>
       );
     }
