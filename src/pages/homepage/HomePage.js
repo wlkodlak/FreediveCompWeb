@@ -79,6 +79,7 @@ class HomePage extends React.Component {
           </UL>
           <H2>Competition setup</H2>
           <UL>
+            <li><Link to={`/${raceId}/setup`}>Settings</Link></li>
             <li><Link to={`/${raceId}/judges`}>Judges</Link></li>
             <li><Link to={`/${raceId}/athletes`}>Athletes</Link></li>
           </UL>

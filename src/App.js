@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import CreateRace from './pages/createrace/CreateRace';
+import SetupRace from './pages/setuprace/SetupRace';
 import HomePage from './pages/homepage/HomePage';
 import SetupJudges from './pages/judges/SetupJudges';
 import AuthenticateJudge from './pages/judges/AuthenticateJudge';
@@ -50,6 +51,9 @@ const App = () => (
         <Route
           path="/:raceId/create"
           render={({ match }) => (<CreateRace raceId={match.params.raceId} />)} />
+        <Route
+          path="/:raceId/setup"
+          render={({ match }) => (<SetupRace raceId={match.params.raceId} />)} />
         <Route
           path="/:raceId/homepage"
           render={({ match }) => (<HomePage raceId={match.params.raceId} />)} />
