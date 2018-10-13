@@ -8,6 +8,7 @@ class SetupRaceDisciplines extends React.Component {
       edited: this.buildEmptyDiscipline()
     };
     this.onToggleLock = this.onToggleLock.bind(this);
+    this.onNewDiscipline = this.onNewDiscipline.bind(this);
     this.onEditDiscipline = this.onEditDiscipline.bind(this);
     this.onTrashDiscipline = this.onTrashDiscipline.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -55,6 +56,12 @@ class SetupRaceDisciplines extends React.Component {
       }
     }
     this.props.onChange(disciplines);
+  }
+
+  onNewDiscipline() {
+    this.setState({
+      edited: this.buildEmptyDiscipline()
+    });
   }
 
   onEditDiscipline(discipline) {
@@ -166,7 +173,10 @@ class SetupRaceDisciplines extends React.Component {
       <div className="setuprace-disciplines-container">
         <HTMLTable>
           <thead>{this.renderTableHeader()}</thead>
-          <tbody>{disciplines.map(this.renderDisciplineRow)}</tbody>
+          <tbody>
+            {disciplines.map(this.renderDisciplineRow)}
+            {this.renderNewDisciplineRow()}
+          </tbody>
         </HTMLTable>
         {this.renderEditForm()}
       </div>
@@ -183,7 +193,7 @@ class SetupRaceDisciplines extends React.Component {
     );
   }
 
-  renderDisciplineRow(discipline, index) {
+  renderDisciplineRow(discipline) {
     const lockIcon = discipline.ResultsClosed ? "disable" : discipline.AnnouncementsClosed ? "lock" : "unlock";
     return (
       <tr key={discipline.DisciplineId}>
@@ -193,6 +203,18 @@ class SetupRaceDisciplines extends React.Component {
           <Button type="button" icon={lockIcon} onClick={() => this.onToggleLock(discipline)} />
           <Button type="button" icon="edit" onClick={() => this.onEditDiscipline(discipline)} />
           <Button type="button" icon="trash" onClick={() => this.onTrashDiscipline(discipline)} />
+        </td>
+      </tr>
+    );
+  }
+
+  renderNewDisciplineRow() {
+    return (
+      <tr key={discipline.DisciplineId}>
+        <td>(new)</td>
+        <td>&nbsp;</td>
+        <td>
+          <Button type="button" icon="plus" onClick={this.onNewDiscipline} />
         </td>
       </tr>
     );

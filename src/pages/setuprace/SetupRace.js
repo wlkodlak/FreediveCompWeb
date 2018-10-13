@@ -7,6 +7,7 @@ import SetupRaceTitle from './SetupRaceTitle';
 import SetupRaceSettings from './SetupRaceSettings';
 import SetupRaceStartingLanes from './SetupRaceStartingLanes';
 import SetupRaceDisciplines from './SetupRaceDisciplines';
+import SetupRaceResultsLists from './SetupRaceResultsLists';
 
 class SetupRace extends React.Component {
   constructor(props) {
@@ -149,7 +150,9 @@ class SetupRace extends React.Component {
         <SetupRaceTitle title="Disciplines" summary={this.getDisciplinesSummary()}>
           <SetupRaceDisciplines disciplines={this.state.disciplines} onChange={this.onDisciplinesChanged} />
         </SetupRaceTitle>
-        <SetupRaceTitle title="Results lists" summary={this.getResultsListsSummary()} />
+        <SetupRaceTitle title="Results lists" summary={this.getResultsListsSummary()}>
+          <SetupRaceResultsLists resultsLists={this.state.resultsLists} onChange={this.onResultsListsChanged} />
+        </SetupRaceTitle>
         <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified} />
       </div>
     );
