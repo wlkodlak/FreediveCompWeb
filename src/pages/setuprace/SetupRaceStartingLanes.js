@@ -133,9 +133,17 @@ class SetupRaceStaringLanes extends React.Component {
       }
     }
     this.props.onChange(rootLanes);
+    this.setState({
+      edited: {
+        id: "",
+        parentId: "-",
+        title: ""
+      }
+    });
   }
 
   onReset(event) {
+    event.preventDefault();
     this.setState({
       edited: {
         id: "",
@@ -224,3 +232,5 @@ class SetupRaceStaringLanes extends React.Component {
     );
   }
 }
+
+export default  SetupRaceStaringLanes;

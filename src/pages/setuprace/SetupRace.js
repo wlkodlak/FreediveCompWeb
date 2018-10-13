@@ -6,6 +6,7 @@ import moment from 'moment';
 import SetupRaceTitle from './SetupRaceTitle';
 import SetupRaceSettings from './SetupRaceSettings';
 import SetupRaceStartingLanes from './SetupRaceStartingLanes';
+import SetupRaceDisciplines from './SetupRaceDisciplines';
 
 class SetupRace extends React.Component {
   constructor(props) {
@@ -145,7 +146,9 @@ class SetupRace extends React.Component {
         <SetupRaceTitle title="Starting lanes" summary={this.getStartingLanesSummary()}>
           <SetupRaceStartingLanes startingLanes={this.state.startingLanes} onChange={this.onStartingLanesChanged} />
         </SetupRaceTitle>
-        <SetupRaceTitle title="Disciplines" summary={this.getDisciplinesSummary()} />
+        <SetupRaceTitle title="Disciplines" summary={this.getDisciplinesSummary()}>
+          <SetupRaceDisciplines disciplines={this.state.disciplines} onChange={this.onDisciplinesChanged} />
+        </SetupRaceTitle>
         <SetupRaceTitle title="Results lists" summary={this.getResultsListsSummary()} />
         <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified} />
       </div>
