@@ -5,6 +5,7 @@ import { Toaster, Toast, Intent, Button } from '@blueprintjs/core';
 import moment from 'moment';
 import SetupRaceTitle from './SetupRaceTitle';
 import SetupRaceSettings from './SetupRaceSettings';
+import SetupRaceStartingLanes from './SetupRaceStartingLanes';
 
 class SetupRace extends React.Component {
   constructor(props) {
@@ -141,7 +142,9 @@ class SetupRace extends React.Component {
         <SetupRaceTitle title="General" summary={this.getRaceSettinsSummary()}>
           <SetupRaceSettings raceSettings={this.state.raceSettings} onChange={this.onRaceSettingsChanged} />
         </SetupRaceTitle>
-        <SetupRaceTitle title="Starting lanes" summary={this.getStartingLanesSummary()} />
+        <SetupRaceTitle title="Starting lanes" summary={this.getStartingLanesSummary()}>
+          <SetupRaceStartingLanes startingLanes={this.state.startingLanes} onChange={this.onStartingLanesChanged} />
+        </SetupRaceTitle>
         <SetupRaceTitle title="Disciplines" summary={this.getDisciplinesSummary()} />
         <SetupRaceTitle title="Results lists" summary={this.getResultsListsSummary()} />
         <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified} />
