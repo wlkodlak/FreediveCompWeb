@@ -8,10 +8,17 @@ class SetupRaceStaringLanes extends React.Component {
       flattened: this.flattenLanes(this.props.startingLanes),
       edited: {
         id: "",
-        parentId: null,
+        parentId: "-",
         title: ""
       }
     }
+    this.onEditLane = this.onEditLane.bind(this);
+    this.onTrashLane = this.onTrashLane.bind(this);
+    this.onIdChanged = this.onIdChanged.bind(this);
+    this.onParentIdChanged = this.onParentIdChanged.bind(this);
+    this.onTitleChanged = this.onTitleChanged.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onReset = this.onReset.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,6 +49,102 @@ class SetupRaceStaringLanes extends React.Component {
     }
   }
 
+  onEditLane(lane) {
+    this.setState({
+      edited: {
+        id: lane.id,
+        parentId: lane.parentId,
+        title: lane.title
+      }
+    });
+  }
+
+  onTrashLane(trashedLane) {
+    const lanesMap = {};
+    const rootLanes = [];
+    for (const lane of this.state.flattened) {
+      if (lane.id === trashedLane.id) continue; // skip it to remove it from result
+      const hierarchicalLane = {
+        "StartingLaneId": lane.id,
+        "ShortName": lane.title,
+        "SubLanes": []
+      };
+      lanesMap[lane.id] = hierarchicalLane;;
+      if (lane.parentId === "-") {
+        rootLanes.push(hierarchicalLane);
+      } else {
+        const parentLane = lanesMap[lane.parentId];
+        if (parentLane) {
+          parentLane.SubLanes.push(hierarchicalLane);
+        }
+      }
+    }
+    this.props.onChange(rootLanes);
+  }
+
+  onIdChanged(event) {
+    const value = event.target.value;
+    this.setState({
+      edited: {
+        ...this.state.edited,
+        id: value
+      }
+    });
+  }
+
+  onParentIdChanged(event) {
+    const value = event.target.value;
+    this.setState({
+      edited: {
+        ...this.state.edited,
+        parentId: value
+      }
+    });
+  }
+
+  onTitleChanged(event) {
+    const value = event.target.value;
+    this.setState({
+      edited: {
+        ...this.state.edited,
+        title: value
+      }
+    });
+  }
+
+  onSubmit(event) {
+    const lanesMap = {};
+    const rootLanes = [];
+    for (const lane of this.state.flattened) {
+      const finalLane = lane.id === edited.id ? edited : lane;
+      const hierarchicalLane = {
+        "StartingLaneId": finalLane.id,
+        "ShortName": finalLane.title,
+        "SubLanes": []
+      };
+      lanesMap[finalLane.id] = hierarchicalLane;;
+      if (finalLane.parentId === "-") {
+        rootLanes.push(hierarchicalLane);
+      } else {
+        const parentLane = lanesMap[finalLane.parentId];
+        if (parentLane) {
+          parentLane.SubLanes.push(hierarchicalLane);
+        }
+      }
+    }
+    this.props.onChange(rootLanes);
+  }
+
+  onReset(event) {
+    this.setState({
+      edited: {
+        id: "",
+        parentId: "-",
+        title: ""
+      }
+    });
+  }
+
   render() {
     return (
       <div className="setuprace-startinglanes-container">
@@ -50,28 +153,7 @@ class SetupRaceStaringLanes extends React.Component {
           <tbody>
             {this.state.flattened.map(this.renderFlattenedLane)}
           </tbody>
-          <tfoot>
-            <tr>
-              <td>
-                <InputGroup
-                  type="text"
-                  value={this.state.edited.id}
-                  onChange={this.onIdChanged} />
-              </td>
-              <td>
-                <HTMLSelect
-                  value={this.state.edited.parentId}
-                  options={this.buildParentOptions())}
-                  onChange={this.onParentIdChanged} />
-              </td>
-              <td>
-                <InputGroup
-                  type="text"
-                  value={this.state.edited.title}
-                  onChange={this.onTitleChanged} />
-              </td>
-            </tr>
-          </tfoot>
+          <tfoot>{this.renderEditorRow()}</tfoot>
         </HTMLTable>
       </div>
     );
@@ -109,5 +191,36 @@ class SetupRaceStaringLanes extends React.Component {
       options.push({ label: lane.id, value: lane.id });
     }
     return options;
+  }
+
+  renderEditorRow() {
+    return (
+      <form onSubmit={this.onSubmit} onReset={this.onReset}>
+        <tr>
+          <td>
+            <InputGroup
+              type="text"
+              value={this.state.edited.id}
+              onChange={this.onIdChanged} />
+          </td>
+          <td>
+            <HTMLSelect
+              value={this.state.edited.parentId}
+              options={this.buildParentOptions())}
+              onChange={this.onParentIdChanged} />
+          </td>
+          <td>
+            <InputGroup
+              type="text"
+              value={this.state.edited.title}
+              onChange={this.onTitleChanged} />
+          </td>
+          <td>
+            <Button type="submit" icon="tick" />
+            <Button type="reset" icon="cross" />
+          </td>
+        </tr>
+      </form>
+    );
   }
 }
