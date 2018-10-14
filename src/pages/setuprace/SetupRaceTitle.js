@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, H3 } from '@blueprintjs/core';
 
 class SetupRaceSettings extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class SetupRaceSettings extends React.Component {
     return (
       <div className="setuprace-title">
         <div className="setuprace-title-header">
-          <h1>{this.props.title}</h1>
+          <H3>{this.props.title}</H3>
           <Button
             minimal={true}
             icon={expanded ? "chevron-up" : "chevron-down"}

@@ -193,7 +193,7 @@ class SetupRaceResultsLists extends React.Component {
 
   changeComponentDiscipline(column, componentIndex, disciplineId) {
     column.Components = column.Components.slice(0);
-    if (column.Components.length < componentIndex) {
+    if (column.Components.length > componentIndex) {
       column.Components[componentIndex] = {
         ...column.Components[componentIndex],
         DisciplineId: disciplineId
@@ -208,7 +208,7 @@ class SetupRaceResultsLists extends React.Component {
 
   changeComponentCoeficient(column, componentIndex, coeficient) {
     column.Components = column.Components.slice(0);
-    if (column.Components.length < componentIndex) {
+    if (column.Components.length > componentIndex) {
       column.Components[componentIndex] = {
         ...column.Components[componentIndex],
         FinalPointsCoeficient: coeficient
@@ -256,8 +256,8 @@ class SetupRaceResultsLists extends React.Component {
         <td>{resultsList.Title}</td>
         <td>{columnsSummary}</td>
         <td>
-          <Button type="button" icon="edit" onClick={() => this.onEditResultsList(resultsList)} />
-          <Button type="button" icon="trash" onClick={() => this.onTrashResultsList(resultsList)} />
+          <Button type="button" icon="edit" minimal={true} onClick={() => this.onEditResultsList(resultsList)} />
+          <Button type="button" icon="trash" minimal={true} onClick={() => this.onTrashResultsList(resultsList)} />
         </td>
       </tr>
     );
@@ -270,7 +270,7 @@ class SetupRaceResultsLists extends React.Component {
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>
-          <Button type="button" icon="plus" onClick={this.onNewResultsList} />
+          <Button type="button" icon="plus" minimal={true} onClick={this.onNewResultsList} />
         </td>
       </tr>
     );
@@ -311,8 +311,8 @@ class SetupRaceResultsLists extends React.Component {
     return (
       <div className="setuprace-resultslists-column" key={columnIndex}>
         <div className="setuprace-resultslists-columntitle">
-          <h5>Column #{columnIndex}</h5>
-          <Button icon="trash" onClick={() => this.onColumnTrash(columnIndex)} />
+          <h5>Column #{columnIndex + 1}</h5>
+          <Button icon="trash" minimal={true} onClick={() => this.onColumnTrash(columnIndex)} />
         </div>
         <FormGroup label="Title">
           <InputGroup
@@ -324,33 +324,40 @@ class SetupRaceResultsLists extends React.Component {
           label="Primary sorting"
           onChange={(event) => this.onColumnIsFinalChanged(columnIndex, event)} />
         <table>
-          <tr>
-            <th>Discipline</th>
-            <th>Coeficient</th>
-          </tr>
-          {components.map((component, index) => this.renderEditComponent(columnIndex, component, index))}
+          <thead>
+            <tr>
+              <th>Discipline</th>
+              <th>Coeficient</th>
+            </tr>
+          </thead>
+          <tbody>
+            {components.map((component, index) => this.renderEditComponent(columnIndex, component, index))}
+          </tbody>
         </table>
       </div>
     );
   }
 
   renderEditComponent(columnIndex, component, componentIndex) {
+    const disciplineId = component.DisciplineId;
+    const coeficient = typeof component.FinalPointsCoeficient === "number" ? component.FinalPointsCoeficient : 1;
     return (
       <tr key={componentIndex}>
         <td>
           <HTMLSelect
-            value={component.DisciplineId}
+            value={disciplineId}
             options={this.buildDisciplinesOptions()}
             onChange={(event) => this.onComponentDisciplineChanged(columnIndex, componentIndex, event)} />
         </td>
         <td>
           <NumericInput
-            value={component.FinalPointsCoeficient}
+            value={coeficient}
             min={0}
             max={100}
-            majorStepSize={0.1}
+            majorStepSize={1}
+            stepSize={0.1}
             minorStepSize={0.01}
-            onChange={(n, s) => this.onComponentCoeficientChanged(columnIndex, componentIndex, n, s)} />
+            onValueChange={(n, s) => this.onComponentCoeficientChanged(columnIndex, componentIndex, n, s)} />
         </td>
       </tr>
     );

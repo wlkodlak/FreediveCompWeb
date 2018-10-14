@@ -19,6 +19,7 @@ class SetupRaceStaringLanes extends React.Component {
     this.onTitleChanged = this.onTitleChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onReset = this.onReset.bind(this);
+    this.renderFlattenedLane = this.renderFlattenedLane.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -113,10 +114,23 @@ class SetupRaceStaringLanes extends React.Component {
   }
 
   onSubmit(event) {
+    event.preventDefault();
     const edited = this.state.edited;
+
+    if (!edited.id || !edited.title) return;
+
+    const flattened = this.state.flattened.slice(0);
+    let isNew = true;
+    for (let i = 0; i < flattened.length; i++) {
+      if (flattened[i].id !== edited.id) continue;
+      isNew = false;
+      flattened[i] = edited;
+    }
+    if (isNew) flattened.push(edited);
+
     const lanesMap = {};
     const rootLanes = [];
-    for (const lane of this.state.flattened) {
+    for (const lane of flattened) {
       const finalLane = lane.id === edited.id ? edited : lane;
       const hierarchicalLane = {
         "StartingLaneId": finalLane.id,
@@ -133,6 +147,7 @@ class SetupRaceStaringLanes extends React.Component {
         }
       }
     }
+
     this.props.onChange(rootLanes);
     this.setState({
       edited: {
@@ -156,7 +171,7 @@ class SetupRaceStaringLanes extends React.Component {
 
   render() {
     return (
-      <div className="setuprace-startinglanes-container">
+      <form className="setuprace-startinglanes-container" onSubmit={this.onSubmit} onReset={this.onReset}>
         <HTMLTable>
           <thead>{this.renderTableHeader()}</thead>
           <tbody>
@@ -164,7 +179,7 @@ class SetupRaceStaringLanes extends React.Component {
           </tbody>
           <tfoot>{this.renderEditorRow()}</tfoot>
         </HTMLTable>
-      </div>
+      </form>
     );
   }
 
@@ -186,8 +201,8 @@ class SetupRaceStaringLanes extends React.Component {
         <td>{lane.parentId}</td>
         <td>{lane.title}</td>
         <td>
-          <Button type="button" icon="edit" onClick={() => this.onEditLane(lane)} />
-          <Button type="button" icon="trash" onClick={() => this.onTrashLane(lane)} />
+          <Button type="button" icon="edit" onClick={() => this.onEditLane(lane)} minimal={true} />
+          <Button type="button" icon="trash" onClick={() => this.onTrashLane(lane)} minimal={true} />
         </td>
       </tr>
     );
@@ -204,32 +219,30 @@ class SetupRaceStaringLanes extends React.Component {
 
   renderEditorRow() {
     return (
-      <form onSubmit={this.onSubmit} onReset={this.onReset}>
-        <tr>
-          <td>
-            <InputGroup
-              type="text"
-              value={this.state.edited.id}
-              onChange={this.onIdChanged} />
-          </td>
-          <td>
-            <HTMLSelect
-              value={this.state.edited.parentId}
-              options={this.buildParentOptions()}
-              onChange={this.onParentIdChanged} />
-          </td>
-          <td>
-            <InputGroup
-              type="text"
-              value={this.state.edited.title}
-              onChange={this.onTitleChanged} />
-          </td>
-          <td>
-            <Button type="submit" icon="tick" />
-            <Button type="reset" icon="cross" />
-          </td>
-        </tr>
-      </form>
+      <tr>
+        <td>
+          <InputGroup
+            type="text"
+            value={this.state.edited.id}
+            onChange={this.onIdChanged} />
+        </td>
+        <td>
+          <HTMLSelect
+            value={this.state.edited.parentId}
+            options={this.buildParentOptions()}
+            onChange={this.onParentIdChanged} />
+        </td>
+        <td>
+          <InputGroup
+            type="text"
+            value={this.state.edited.title}
+            onChange={this.onTitleChanged} />
+        </td>
+        <td>
+          <Button type="submit" icon="tick" minimal={true} />
+          <Button type="reset" icon="cross" minimal={true} />
+        </td>
+      </tr>
     );
   }
 }

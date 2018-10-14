@@ -20,6 +20,7 @@ class SetupRaceDisciplines extends React.Component {
     this.onRulesChanged = this.onRulesChanged.bind(this);
     this.onAnnouncementsClosedChanged = this.onAnnouncementsClosedChanged.bind(this);
     this.onResultsClosedChanged = this.onResultsClosedChanged.bind(this);
+    this.renderDisciplineRow = this.renderDisciplineRow.bind(this);
   }
 
   buildEmptyDiscipline() {
@@ -205,9 +206,9 @@ class SetupRaceDisciplines extends React.Component {
         <td>{discipline.DisciplineId}</td>
         <td>{discipline.LongName}</td>
         <td>
-          <Button type="button" icon={lockIcon} onClick={() => this.onToggleLock(discipline)} />
-          <Button type="button" icon="edit" onClick={() => this.onEditDiscipline(discipline)} />
-          <Button type="button" icon="trash" onClick={() => this.onTrashDiscipline(discipline)} />
+          <Button type="button" icon={lockIcon} minimal={true} onClick={() => this.onToggleLock(discipline)} />
+          <Button type="button" icon="edit" minimal={true} onClick={() => this.onEditDiscipline(discipline)} />
+          <Button type="button" icon="trash" minimal={true} onClick={() => this.onTrashDiscipline(discipline)} />
         </td>
       </tr>
     );
@@ -219,7 +220,7 @@ class SetupRaceDisciplines extends React.Component {
         <td>(new)</td>
         <td>&nbsp;</td>
         <td>
-          <Button type="button" icon="plus" onClick={this.onNewDiscipline} />
+          <Button type="button" icon="plus" minimal={true} onClick={this.onNewDiscipline} />
         </td>
       </tr>
     );

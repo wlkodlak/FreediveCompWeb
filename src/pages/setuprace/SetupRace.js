@@ -17,7 +17,8 @@ class SetupRace extends React.Component {
       raceSettings: {},
       startingLanes: [],
       disciplines: [],
-      resultsLists: []
+      resultsLists: [],
+      errors: []
     }
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onRaceSettingsChanged = this.onRaceSettingsChanged.bind(this);
@@ -47,13 +48,13 @@ class SetupRace extends React.Component {
     return this.state.status !== "loading";
   }
 
-  getRaceSettinsSummary() {
+  getRaceSettingsSummary() {
     const raceSettings = this.state.raceSettings;
     if (!this.isLoaded() || !raceSettings) return "";
     const name = raceSettings.Name;
     const startFormatted = raceSettings.Start == null ? "unknown" : moment(raceSettings.Start).format("YYYY-MM-DD");
     const endFormatted = raceSettings.End == null ? "unknown" : moment(raceSettings.End).format("YYYY-MM-DD");
-    return name + " " + startFormatted + " - " + endFormatted;
+    return name + "\r\n" + startFormatted + " - " + endFormatted;
   }
 
   onRaceSettingsChanged(raceSettings) {
@@ -98,7 +99,7 @@ class SetupRace extends React.Component {
   onResultsListsChanged(resultsLists) {
     this.setState({
       status: "modified",
-      raceSettings: resultsLists
+      resultsLists: resultsLists
     });
   }
 
@@ -109,7 +110,7 @@ class SetupRace extends React.Component {
       "Disciplines": this.state.disciplines,
       "ResultsLists": this.state.resultsLists,
     }
-    Api.postRaceSetup(raceSetup).then(this.onChangesConfirmed).catch(this.onError);
+    Api.postRaceSetup(this.props.raceId, raceSetup).then(this.onChangesConfirmed).catch(this.onError);
   }
 
   onChangesConfirmed() {
@@ -141,7 +142,7 @@ class SetupRace extends React.Component {
         <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} />
         <h1>Setup competition</h1>
-        <SetupRaceTitle title="General" summary={this.getRaceSettinsSummary()}>
+        <SetupRaceTitle title="General" summary={this.getRaceSettingsSummary()}>
           <SetupRaceSettings raceSettings={this.state.raceSettings} onChange={this.onRaceSettingsChanged} />
         </SetupRaceTitle>
         <SetupRaceTitle title="Starting lanes" summary={this.getStartingLanesSummary()}>

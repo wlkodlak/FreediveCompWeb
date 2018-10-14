@@ -8,6 +8,7 @@ class SetupRaceSettings extends React.Component {
     super(props);
     const raceSettings = this.props.raceSettings;
     this.state = {
+      modified: false,
       name: this.extractName(raceSettings.Name),
       since: this.extractDate(raceSettings.Start),
       until: this.extractDate(raceSettings.End)
@@ -15,6 +16,17 @@ class SetupRaceSettings extends React.Component {
     this.onNameChanged = this.onNameChanged.bind(this);
     this.onWhenChanged = this.onWhenChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const raceSettings = this.props.raceSettings;
+    if (prevProps.raceSettings === raceSettings) return;
+    this.setState({
+      modified: false,
+      name: this.extractName(raceSettings.Name),
+      since: this.extractDate(raceSettings.Start),
+      until: this.extractDate(raceSettings.End)
+    });
   }
 
   extractName(name) {
@@ -37,12 +49,14 @@ class SetupRaceSettings extends React.Component {
 
   onNameChanged(event) {
     this.setState({
+      modified: true,
       name: event.target.value
-    })
+    });
   }
 
   onWhenChanged(range) {
     this.setState({
+      modified: true,
       since: range[0],
       until: range[1]
     });
@@ -50,6 +64,9 @@ class SetupRaceSettings extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
+    this.setState({
+      modified: false
+    });
     this.props.onChange({
       ...this.props.raceSettings,
       "Name": this.state.name,
@@ -70,6 +87,7 @@ class SetupRaceSettings extends React.Component {
     const name = this.state.name;
     const since = this.state.since == null ? null : this.state.since;
     const until = this.state.until == null ? null : this.state.until;
+    const modified = this.state.modified;
 
     return (
       <form className="setuprace-settings" onSubmit={this.onSubmit}>
@@ -90,7 +108,7 @@ class SetupRaceSettings extends React.Component {
             shortcuts={false}
             />
         </FormGroup>
-        <Button type="submit" text="Continue" />
+        <Button type="submit" text="Continue" disabled={!modified} />
       </form>
     );
   }
