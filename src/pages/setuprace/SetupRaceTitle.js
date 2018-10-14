@@ -1,5 +1,5 @@
 import React from 'react';
-import { Classes } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 class SetupRaceSettings extends React.Component {
   constructor(props) {
@@ -11,12 +11,7 @@ class SetupRaceSettings extends React.Component {
   }
 
   onToggleExpand() {
-    this.setState((state) => { expanded: !state.expanded });
-  }
-
-  buildIconClass(expanded) {
-    const iconName = expanded ? "chevron-up" : "chevron-down";
-    return Classes.ICON_STANDARD + " " + Classes.iconClass(iconName);
+    this.setState((state) => ({ expanded: !state.expanded }));
   }
 
   render() {
@@ -25,7 +20,10 @@ class SetupRaceSettings extends React.Component {
       <div className="setuprace-title">
         <div className="setuprace-title-header">
           <h1>{this.props.title}</h1>
-          <a href="#" className={this.buildIconClass(expanded)} onClick={this.onToggleExpand} />
+          <Button
+            minimal={true}
+            icon={expanded ? "chevron-up" : "chevron-down"}
+            onClick={this.onToggleExpand} />
         </div>
         { !expanded && <div className="setuprace-title-summary">{this.props.summary}</div> }
         { expanded && this.props.children}

@@ -5,6 +5,8 @@ class SetupRaceDisciplines extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      editorEnabled: false,
+      editedId: null,
       edited: this.buildEmptyDiscipline()
     };
     this.onToggleLock = this.onToggleLock.bind(this);
@@ -14,7 +16,6 @@ class SetupRaceDisciplines extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onDisciplineIdChanged = this.onDisciplineIdChanged.bind(this);
     this.onShortNameChanged = this.onShortNameChanged.bind(this);
-    this.onDisciplineIdChanged = this.onDisciplineIdChanged.bind(this);
     this.onLongNameChanged = this.onLongNameChanged.bind(this);
     this.onRulesChanged = this.onRulesChanged.bind(this);
     this.onAnnouncementsClosedChanged = this.onAnnouncementsClosedChanged.bind(this);
@@ -60,12 +61,16 @@ class SetupRaceDisciplines extends React.Component {
 
   onNewDiscipline() {
     this.setState({
+      editorEnabled: true,
+      editedId: null,
       edited: this.buildEmptyDiscipline()
     });
   }
 
   onEditDiscipline(discipline) {
     this.setState({
+      editorEnabled: true,
+      editedId: discipline.DisciplineId,
       edited: {
         ...discipline
       }
@@ -83,16 +88,26 @@ class SetupRaceDisciplines extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
+    let isNew = this.state.editedId == null;
+    const edited = this.state.edited;
+
+    if (!edited.DisciplineId || !edited.ShortName || !edited.LongName) return;
+
     const disciplines = [];
     for (var existing of this.props.disciplines) {
-      if (existing.DisciplineId === discipline.DisciplineId) {
-        disciplines.push(this.state.edited);
+      if (existing.DisciplineId === edited.DisciplineId) {
+        disciplines.push(edited);
+        isNew = false;
       } else {
         disciplines.push(existing);
       }
     }
+    if (isNew) disciplines.push(edited);
+
     this.props.onChange(disciplines);
     this.setState({
+      editorEnabled: false,
+      editedId: null,
       edited: this.buildEmptyDiscipline()
     });
   }
@@ -113,16 +128,6 @@ class SetupRaceDisciplines extends React.Component {
       edited: {
         ...this.state.edited,
         ShortName: value
-      }
-    });
-  }
-
-  onDisciplineIdChanged(event) {
-    const value = event.target.value;
-    this.setState({
-      edited: {
-        ...this.state.edited,
-        DisciplineId: value
       }
     });
   }
@@ -178,7 +183,7 @@ class SetupRaceDisciplines extends React.Component {
             {this.renderNewDisciplineRow()}
           </tbody>
         </HTMLTable>
-        {this.renderEditForm()}
+        {this.state.editorEnabled && this.renderEditForm()}
       </div>
     );
   }
@@ -210,7 +215,7 @@ class SetupRaceDisciplines extends React.Component {
 
   renderNewDisciplineRow() {
     return (
-      <tr key={discipline.DisciplineId}>
+      <tr key="new">
         <td>(new)</td>
         <td>&nbsp;</td>
         <td>
@@ -221,33 +226,47 @@ class SetupRaceDisciplines extends React.Component {
   }
 
   renderEditForm() {
+    const edited = this.state.edited;
+    const isNew = this.state.editedId === null;
     return (
       <form className="setuprace-disciplines-editform" onSubmit={this.onSubmit}>
         <FormGroup label="Id">
-          <InputGroup value={this.edited.DisciplineId} onChange={this.onDisciplineIdChanged} />
+          <InputGroup
+            value={edited.DisciplineId}
+            onChange={this.onDisciplineIdChanged}
+            disabled={!isNew}/>
         </FormGroup>
         <FormGroup label="Short name">
-          <InputGroup value={this.edited.ShortName} onChange={this.onShortNameChanged} />
+          <InputGroup value={edited.ShortName} onChange={this.onShortNameChanged} />
         </FormGroup>
         <FormGroup label="Long name">
-          <InputGroup value={this.edited.LongName} onChange={this.onLongNameChanged} />
+          <InputGroup value={edited.LongName} onChange={this.onLongNameChanged} />
         </FormGroup>
         <FormGroup label="Rules">
-          <HTMLSelect value={this.edited.Rules} options={rulesOptions} onChange={this.onRulesChanged} />
+          <HTMLSelect value={edited.Rules} options={this.buildRulesOptions()} onChange={this.onRulesChanged} />
         </FormGroup>
         <FormGroup label="Locks">
           <Checkbox
-            checked={this.edited.AnnouncementsClosed}
+            checked={edited.AnnouncementsClosed}
             onChange={this.onAnnouncementsClosedChanged}
             label="Announcements closed" />
           <Checkbox
-            checked={this.edited.ResultsClosed}
+            checked={edited.ResultsClosed}
             onChange={this.onResultsClosedChanged}
             label="Results closed" />
         </FormGroup>
         <Button type="submit" text="Apply changes" />
       </form>
     );
+  }
+
+  buildRulesOptions() {
+    // TODO: use rules from backend
+    return [
+      "AIDA_STA",
+      "AIDA_DYN",
+      "AIDA_CWT"
+    ];
   }
 }
 

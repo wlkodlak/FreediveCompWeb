@@ -1,5 +1,5 @@
 import React from 'react';
-import { HTMLTable, Button, Classes, InputGroup, HTMLSelect } from '@blueprintjs/core';
+import { HTMLTable, Button, InputGroup, HTMLSelect } from '@blueprintjs/core';
 
 class SetupRaceStaringLanes extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class SetupRaceStaringLanes extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.startingLanes === this.props.startingLanes) return;
     this.setState({
-      flattened: this.flattenLanes(this.props.startingLanes);
+      flattened: this.flattenLanes(this.props.startingLanes)
     })
   }
 
@@ -37,14 +37,14 @@ class SetupRaceStaringLanes extends React.Component {
   flattenLanesInto(hierarchicalLanes, flattenedLanes, parentId, level) {
     if (!hierarchicalLanes) return;
     for (const hierarchicalLane of hierarchicalLanes) {
-      flattenLanes.push({
+      flattenedLanes.push({
         id: hierarchicalLane.StartingLaneId,
         parentId: parentId,
         level: level,
         title: hierarchicalLane.ShortName,
       });
       this.flattenLanesInto(
-        hierarchicalLane.SubLanes, flattenLanes,
+        hierarchicalLane.SubLanes, flattenedLanes,
         hierarchicalLane.StartingLaneId, level + 1);
     }
   }
@@ -113,6 +113,7 @@ class SetupRaceStaringLanes extends React.Component {
   }
 
   onSubmit(event) {
+    const edited = this.state.edited;
     const lanesMap = {};
     const rootLanes = [];
     for (const lane of this.state.flattened) {
@@ -194,7 +195,7 @@ class SetupRaceStaringLanes extends React.Component {
 
   buildParentOptions() {
     const options = [];
-    options.push({ label: "(none)", value="-"});
+    options.push({ label: "(none)", value: "-"});
     for (const lane of this.state.flattened) {
       options.push({ label: lane.id, value: lane.id });
     }
@@ -214,7 +215,7 @@ class SetupRaceStaringLanes extends React.Component {
           <td>
             <HTMLSelect
               value={this.state.edited.parentId}
-              options={this.buildParentOptions())}
+              options={this.buildParentOptions()}
               onChange={this.onParentIdChanged} />
           </td>
           <td>

@@ -65,11 +65,11 @@ class SetupRace extends React.Component {
 
   getStartingLanesSummary() {
     const startingLanes = this.state.startingLanes;
-    if (!this.isLoaded() || !startingLanes || startingLanes.length == 0) return "";
+    if (!this.isLoaded() || !startingLanes || startingLanes.length === 0) return "";
     return startingLanes.map(l => l.ShortName).join(", ");
   }
 
-  onStartingLanesChanged(raceSettings) {
+  onStartingLanesChanged(startingLanes) {
     this.setState({
       status: "modified",
       startingLanes: startingLanes
@@ -78,7 +78,7 @@ class SetupRace extends React.Component {
 
   getDisciplinesSummary() {
     const disciplines = this.state.disciplines;
-    if (!this.isLoaded() || !disciplines || disciplines.length == 0) return "";
+    if (!this.isLoaded() || !disciplines || disciplines.length === 0) return "";
     return disciplines.map(l => l.DisciplineId).join(", ");
   }
 
@@ -91,7 +91,7 @@ class SetupRace extends React.Component {
 
   getResultsListsSummary() {
     const resultsLists = this.state.resultsLists;
-    if (!this.isLoaded() || !resultsLists || resultsLists.length == 0) return "";
+    if (!this.isLoaded() || !resultsLists || resultsLists.length === 0) return "";
     return resultsLists.map(l => l.ResultsListId).join(", ");
   }
 
@@ -151,7 +151,10 @@ class SetupRace extends React.Component {
           <SetupRaceDisciplines disciplines={this.state.disciplines} onChange={this.onDisciplinesChanged} />
         </SetupRaceTitle>
         <SetupRaceTitle title="Results lists" summary={this.getResultsListsSummary()}>
-          <SetupRaceResultsLists resultsLists={this.state.resultsLists} onChange={this.onResultsListsChanged} />
+          <SetupRaceResultsLists
+            disciplines={this.state.disciplines}
+            resultsLists={this.state.resultsLists}
+            onChange={this.onResultsListsChanged} />
         </SetupRaceTitle>
         <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified} />
       </div>
