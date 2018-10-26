@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.5.0",
-    "@blueprintjs/datetime": "^3.1.0",
-    "@blueprintjs/icons": "^3.1.0",
+    "@blueprintjs/core": "^3.7.0",
+    "@blueprintjs/datetime": "^3.3.1",
+    "@blueprintjs/icons": "^3.2.0",
     "moment": "^2.22.2",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^1.1.5",
     "whatwg-fetch": "^2.0.4"
