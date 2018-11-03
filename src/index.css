@@ -32,6 +32,17 @@ body {
 .athletes-form h5 {
   margin-top: 2em;
 }
+.athletes-title {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.athletes-title h1 {
+  display: inline;
+  flex: 1 1 auto;
+}
+.athletes-title button {
+  flex: 0 0 auto;
+}
 
 .startinglanes-generator-lanes .startinglanes-generator-level1 {
   padding-left: 46px;

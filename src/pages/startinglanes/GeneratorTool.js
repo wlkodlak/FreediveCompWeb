@@ -119,15 +119,15 @@ class GeneratorTool extends React.Component {
     const breakDurationText = this.state.breakDuration;
 
     if (!selectedStartingLane) throw new Error("Missing starting lane");
-    if (selectedDisciplines.length == 0) throw new Error("No discipines selected");
+    if (selectedDisciplines.length === 0) throw new Error("No discipines selected");
     if (!firstStart) throw new Error("Missing time of first start");
     if (!startIntervalText) throw new Error("Missing start interval");
 
-    let startInterval = startIntervalText ? parseInt(startIntervalText) : 15;
-    let breakInterval = breakIntervalText ? parseInt(breakIntervalText) : 0;
-    let breakDuration = breakDurationText ? parseInt(breakDurationText) : 30;
+    let startInterval = startIntervalText ? parseInt(startIntervalText, 10) : 15;
+    let breakInterval = breakIntervalText ? parseInt(breakIntervalText, 10) : 0;
+    let breakDuration = breakDurationText ? parseInt(breakDurationText, 10) : 30;
 
-    if (breakInterval == 0) breakInterval = 999999; // no breaks
+    if (breakInterval === 0) breakInterval = 999999; // no breaks
 
     if (startInterval <= 0 || Number.isNaN(startInterval)) throw new Error("Wrong start interval");
     if (breakInterval <= 0 || Number.isNaN(breakInterval)) throw new Error("Wrong break interval");

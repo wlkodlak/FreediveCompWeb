@@ -5,6 +5,7 @@ import AthleteProfile from './AthleteProfile';
 import AthleteAnnouncements from './AthleteAnnouncements';
 import AthleteResults from './AthleteResults';
 import RaceHeader from '../homepage/RaceHeader';
+import RoutedButton from '../../components/RoutedButton';
 
 class SetupAthlete extends React.Component {
   constructor(props) {
@@ -42,6 +43,31 @@ class SetupAthlete extends React.Component {
           "Sex": "Male"
         }
       });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const previousAthleteId = this.props.athleteId;
+    const newAthleteId = nextProps.athleteId;
+    const raceId = nextProps.raceId;
+
+    if (previousAthleteId !== newAthleteId) {
+      this.setState({
+        athleteId: newAthleteId === "new" ? null : newAthleteId,
+      });
+
+      if (newAthleteId !== "new") {
+        Api.getAthlete(raceId, newAthleteId).then(this.onAthleteLoaded).catch(this.onError);
+      } else {
+        this.setState({
+          profile: {
+            "FirstName": "",
+            "LastName": "",
+            "Sex": "Male"
+          },
+          results: []
+        });
+      }
     }
   }
 
@@ -131,16 +157,12 @@ class SetupAthlete extends React.Component {
   }
 
   render() {
-    const isNewAthlete = this.state.athleteId == null;
-    const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
     const filteredDisciplines = this.state.disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
     return (
       <div className="athletes-form">
         <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
         <RaceHeader raceId={this.props.raceId} page="athletes" pageName="Athletes" />
-        {
-          isNewAthlete ? <H1>New athlete</H1> : <H1>{fullName}</H1>
-        }
+        {this.renderAthleteName()}
         <AthleteProfile
           profile={this.state.profile}
           onChange={this.onAthleteProfileChanged}
@@ -154,6 +176,22 @@ class SetupAthlete extends React.Component {
           results={this.state.results} />
       </div>
     );
+  }
+
+  renderAthleteName() {
+    const isNewAthlete = this.state.athleteId == null;
+    if (isNewAthlete) {
+      return (<H1>New athlete</H1>);
+    } else {
+      const raceId = this.props.raceId;
+      const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
+      return (
+        <div className="athletes-title">
+          <H1>{fullName}</H1>
+          <RoutedButton minimal={true} icon="plus" to={`/${raceId}/athletes/new`} />
+        </div>
+      );
+    }
   }
 }
 
