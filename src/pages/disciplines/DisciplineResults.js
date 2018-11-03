@@ -41,8 +41,8 @@ class DisciplineResults extends React.Component {
       const title = report.Metadata.Title;
       const columns = report.Metadata.Columns.map(this.convertColumn);
       const results = report.Results;
-      const exportHtmlLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "html", "reduced");
-      const exportCsvLink = Api.exportReportResultsList(this.props.raceId, this.props.resultsListId, "csv", "reduced");
+      const exportHtmlLink = Api.exportReportDisciplineResults(this.props.raceId, this.props.disciplineId, "html", "reduced");
+      const exportCsvLink = Api.exportReportDisciplineResults(this.props.raceId, this.props.disciplineId, "csv", "reduced");
       return (
         <div className="finalresults-report">
           <ResultsReport title={title} results={results} columns={columns} exportHtmlLink={exportHtmlLink} exportCsvLink={exportCsvLink} />
