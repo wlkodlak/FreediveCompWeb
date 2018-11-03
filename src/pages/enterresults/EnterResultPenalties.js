@@ -39,28 +39,36 @@ class EnterResultPenalties extends React.Component {
     const penalizationRule = this.getSelectedPenalization();
     const selectedReason = penalizationRule.Id;
     const customReason = this.state.customReason;
-    const amount = this.state.amount;
+    const amountText = this.state.amount;
+    const amount = amountText ? parseFloat(amountText) : null;
 
     if (selectedReason === "Unselected") {
-      return; // don't do anything as user didn't select any penalization
+      this.onError(new Error("No penalty selected"));
 
     } else if (selectedReason === "Custom") {
-      const performance = this.getPenalizationsComponent().buildPerformance(amount);
-      const penalty = {
-        "PenalizationId": "Custom",
-        "Reason": customReason,
-        "ShortReason": customReason,
-        "RuleInput": amount,
-        "Performance": performance
-      };
-      this.resetState();
-      this.props.onAddPenalty(penalty);
+      if (!customReason) {
+        this.onError(new Error("You need to enter why the athlete deserves this penalty"));
+      } else if (amount <= 0) {
+        this.onError(new Error("Penalty must be a positive number"));
+      } else {
+        const performance = this.getPenalizationsComponent().buildPerformance(amount);
+        const penalty = {
+          "IsShortPerformance": false,
+          "PenalizationId": "Custom",
+          "Reason": customReason,
+          "ShortReason": customReason,
+          "RuleInput": amount,
+          "Performance": performance
+        };
+        this.resetState();
+        this.props.onAddPenalty(penalty);
+      }
 
     } else {
       const ruleName = this.props.rules.Name;
       const request = {
-        "PenalizationId": this.state.selectedReason,
-        "Input": this.state.amount,
+        "PenalizationId": selectedReason,
+        "Input": amount,
         "Realized": this.props.realized
       };
       Api.postGlobalRulePenalization(ruleName, request).then(this.onPenalizationCalculated).catch(this.onError);
