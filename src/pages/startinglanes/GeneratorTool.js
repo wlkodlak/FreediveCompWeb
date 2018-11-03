@@ -16,9 +16,9 @@ class GeneratorTool extends React.Component {
       disciplines: [],
       selectedStartingLane: null,
       selectedDisciplines: [],
-      startInterval: 10,
-      breakInterval: 180,
-      breakDuration: 30,
+      startInterval: "10",
+      breakInterval: "180",
+      breakDuration: "30",
       firstStart: null,
       generated: false,
       errors: []
@@ -30,6 +30,7 @@ class GeneratorTool extends React.Component {
     this.onStartingLaneChanged = this.onStartingLaneChanged.bind(this);
     this.onDisciplinesChanged = this.onDisciplinesChanged.bind(this);
     this.onStartIntervalChanged = this.onStartIntervalChanged.bind(this);
+    this.onBreakIntervalChanged = this.onBreakIntervalChanged.bind(this);
     this.onBreakDurationChanged = this.onBreakDurationChanged.bind(this);
     this.onFirstStartChanged = this.onFirstStartChanged.bind(this);
     this.onError = this.onError.bind(this);
@@ -92,16 +93,54 @@ class GeneratorTool extends React.Component {
   }
 
   onAthletesLoaded(athletes) {
-    const raceId = this.props.raceId;
-    const startingLaneId = this.state.selectedStartingLane;
-    const generator = new GeneratorCore(
-      this.state,
-      this.state.startingLanes,
-      athletes);
-    const startingList = generator.buildStartListEntries();
-    Api
-      .postStartingList(raceId, startingLaneId, startingList)
-      .then(this.onStartListCreated);
+    try {
+      const raceId = this.props.raceId;
+      const startingLaneId = this.state.selectedStartingLane;
+      const settings = this.buildSettings();
+      const generator = new GeneratorCore(
+        settings,
+        this.state.startingLanes,
+        athletes);
+      const startingList = generator.buildStartListEntries();
+      Api
+        .postStartingList(raceId, startingLaneId, startingList)
+        .then(this.onStartListCreated);
+    } catch (e) {
+      this.onError(e);
+    }
+  }
+
+  buildSettings() {
+    const selectedStartingLane = this.state.selectedStartingLane;
+    const selectedDisciplines = this.state.selectedDisciplines;
+    const firstStart = this.state.firstStart;
+    const startIntervalText = this.state.startInterval;
+    const breakIntervalText = this.state.breakInterval;
+    const breakDurationText = this.state.breakDuration;
+
+    if (!selectedStartingLane) throw new Error("Missing starting lane");
+    if (selectedDisciplines.length == 0) throw new Error("No discipines selected");
+    if (!firstStart) throw new Error("Missing time of first start");
+    if (!startIntervalText) throw new Error("Missing start interval");
+
+    let startInterval = startIntervalText ? parseInt(startIntervalText) : 15;
+    let breakInterval = breakIntervalText ? parseInt(breakIntervalText) : 0;
+    let breakDuration = breakDurationText ? parseInt(breakDurationText) : 30;
+
+    if (breakInterval == 0) breakInterval = 999999; // no breaks
+
+    if (startInterval <= 0 || Number.isNaN(startInterval)) throw new Error("Wrong start interval");
+    if (breakInterval <= 0 || Number.isNaN(breakInterval)) throw new Error("Wrong break interval");
+    if (breakDuration <= 0 || Number.isNaN(breakDuration)) throw new Error("Wrong break duration");
+
+    return {
+      selectedStartingLane,
+      selectedDisciplines,
+      firstStart,
+      startInterval,
+      breakInterval,
+      breakDuration
+    };
   }
 
   onStartListCreated() {
@@ -121,38 +160,20 @@ class GeneratorTool extends React.Component {
   }
 
   onStartIntervalChanged(event) {
-    let value = event.target.value;
-    if (typeof value === "string") {
-      value = parseInt(value, 10);
-    } else if (typeof value !== "number") {
-      return;
-    }
     this.setState({
-      startInterval: value
+      startInterval: event.target.value
     });
   }
 
   onBreakIntervalChanged(event) {
-    let value = event.target.value;
-    if (typeof value === "string") {
-      value = parseInt(value, 10);
-    } else if (typeof value !== "number") {
-      return;
-    }
     this.setState({
-      breakInterval: value
+      breakInterval: event.target.value
     });
   }
 
   onBreakDurationChanged(event) {
-    let value = event.target.value;
-    if (typeof value === "string") {
-      value = parseInt(value, 10);
-    } else if (typeof value !== "number") {
-      return;
-    }
     this.setState({
-      breakDuration: value
+      breakDuration: event.target.value
     });
   }
 
@@ -231,7 +252,7 @@ class GeneratorTool extends React.Component {
           <FormGroup label="Break duration (minutes)">
             <InputGroup
               value={this.state.breakDuration}
-              placeholder="180"
+              placeholder="30"
               onChange={this.onBreakDurationChanged}
             />
           </FormGroup>
