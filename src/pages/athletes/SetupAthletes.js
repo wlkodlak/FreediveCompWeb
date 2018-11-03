@@ -25,7 +25,7 @@ class SetupAthletes extends React.Component {
     this.setState({athletes});
   }
 
-  renderAthlete(dto) {
+  buildAthleteInfo(dto) {
     const raceId = this.props.raceId;
     return {
       id: dto.Profile.AthleteId,
@@ -35,11 +35,11 @@ class SetupAthletes extends React.Component {
       country: dto.Profile.CountryName,
       sex: dto.Profile.Sex,
       category: dto.Profile.Category,
-      announcements: this.renderAnnouncements(dto.Announcements)
+      announcements: this.buildAnnouncementsString(dto.Announcements)
     };
   }
 
-  renderAnnouncements(announcements) {
+  buildAnnouncementsString(announcements) {
     if (announcements == null) return "";
     return announcements
       .map(a => a.DisciplineId + ": " + PerformanceComponent.formatPerformance(a.Performance))
@@ -47,8 +47,7 @@ class SetupAthletes extends React.Component {
   }
 
   render() {
-    const raceId = this.props.raceId;
-    const athletes = this.state.athletes.map(athlete => this.renderAthlete(athlete));
+    const athletes = this.state.athletes.map(athlete => this.buildAthleteInfo(athlete));
 
     return (<div className="athletes-list">
       <H1>Athletes</H1>
@@ -65,21 +64,34 @@ class SetupAthletes extends React.Component {
         </thead>
         <tbody>
           {
-            athletes.map(athlete => (
-              <tr key={athlete.id}>
-                <td><Link to={athlete.link}>{athlete.fullName}</Link></td>
-                <td>{athlete.club}</td>
-                <td>{athlete.country}</td>
-                <td>{athlete.sex}</td>
-                <td>{athlete.category}</td>
-                <td>{athlete.announcements}</td>
-              </tr>
-            ))
+            athletes.map(athlete => this.renderAthlete(athlete))
           }
         </tbody>
       </HTMLTable>
-      <RoutedButton to={`/${raceId}/athletes/new`} className="athletes-addbutton">Add athlete</RoutedButton>
+      { this.renderAddLink() }
     </div>);
+  }
+
+  renderAthlete(athlete) {
+    return (
+      <tr key={athlete.id}>
+        <td><Link to={athlete.link}>{athlete.fullName}</Link></td>
+        <td>{athlete.club}</td>
+        <td>{athlete.country}</td>
+        <td>{athlete.sex}</td>
+        <td>{athlete.category}</td>
+        <td>{athlete.announcements}</td>
+      </tr>
+    );
+  }
+
+  renderAddLink() {
+    const raceId = this.props.raceId;
+    const isAdmin = this.props.userType === "Admin";
+    if (!isAdmin) return null;
+    return (
+      <RoutedButton to={`/${raceId}/athletes/new`} className="athletes-addbutton">Add athlete</RoutedButton>
+    );
   }
 }
 

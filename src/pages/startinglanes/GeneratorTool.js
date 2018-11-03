@@ -182,8 +182,11 @@ class GeneratorTool extends React.Component {
   }
 
   render() {
+    const raceId = this.props.raceId;
+    if (this.props.userType !== "Admin") {
+      return (<Redirect to={`/${raceId}/homepage`} />);
+    }
     if (this.state.generated) {
-      const raceId = this.props.raceId;
       const startingLaneId = this.state.selectedStartingLane;
       return (<Redirect push to={`/${raceId}/startinglists/${startingLaneId}`} />);
     }

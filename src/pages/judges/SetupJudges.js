@@ -55,17 +55,26 @@ class SetupJudges extends React.Component {
   }
 
   render() {
-    return (
-      <div className="judges-form">
-        <h1>Setup Judges</h1>
-        <JudgesList
-          judges={this.state.judges}
-          onUnauthorizeDevicesRequested={this.onUnauthorizeDevicesRequested} />
-        <ConnectCodeForm
-          judges={this.state.judges}
-          onAuthorizeDeviceRequested={this.onAuthorizeDeviceRequested} />
-      </div>
-    );
+    if (this.props.userType === "Admin") {
+      return (
+        <div className="judges-form">
+          <h1>Setup Judges</h1>
+          <JudgesList
+            judges={this.state.judges}
+            onUnauthorizeDevicesRequested={this.onUnauthorizeDevicesRequested} />
+          <ConnectCodeForm
+            judges={this.state.judges}
+            onAuthorizeDeviceRequested={this.onAuthorizeDeviceRequested} />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h1>Setup Judges</h1>
+          <span>Sorry, this is for admin only</span>
+        </div>
+      );
+    }
   }
 }
 

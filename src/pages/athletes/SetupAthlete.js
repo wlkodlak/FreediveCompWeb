@@ -81,6 +81,10 @@ class SetupAthlete extends React.Component {
     this.setState({profile});
   }
 
+  isAdmin() {
+    return this.props.userType === "Admin";
+  }
+
   onAthleteProfileSubmit() {
     let profile = this.state.profile;
     let athleteId = this.state.athleteId;
@@ -134,10 +138,12 @@ class SetupAthlete extends React.Component {
       <div className="athletes-form">
         {this.renderAthleteName()}
         <AthleteProfile
+          readonly={!this.isAdmin()}
           profile={this.state.profile}
           onChange={this.onAthleteProfileChanged}
           onSubmit={this.onAthleteProfileSubmit} />
         <AthleteAnnouncements
+          readonly={!this.isAdmin()}
           allRules={this.state.allRules}
           announcements={this.state.announcements}
           disciplines={filteredDisciplines}
@@ -155,12 +161,16 @@ class SetupAthlete extends React.Component {
     } else {
       const raceId = this.props.raceId;
       const fullName = `${this.state.profile.FirstName} ${this.state.profile.Surname}`;
-      return (
-        <div className="athletes-title">
-          <H1>{fullName}</H1>
-          <RoutedButton minimal={true} icon="plus" to={`/${raceId}/athletes/new`} />
-        </div>
-      );
+      if (this.isAdmin()) {
+        return (
+          <div className="athletes-title">
+            <H1>{fullName}</H1>
+            <RoutedButton minimal={true} icon="plus" to={`/${raceId}/athletes/new`} />
+          </div>
+        );
+      } else {
+        return (<H1>{fullName}</H1>);
+      }
     }
   }
 }

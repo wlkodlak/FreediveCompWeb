@@ -43,6 +43,9 @@ body {
 .athletes-title button {
   flex: 0 0 auto;
 }
+.athlete-profile dt {
+  font-weight: bold;
+}
 
 .startinglanes-generator-lanes .startinglanes-generator-level1 {
   padding-left: 46px;

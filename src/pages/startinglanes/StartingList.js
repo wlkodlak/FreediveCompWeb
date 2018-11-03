@@ -107,24 +107,49 @@ class StartingList extends React.Component {
           </thead>
           <tbody>
             {
-              this.state.entries.map(entry => {
-                return (
-                  <tr key={entry.number}>
-                    <td><Link to={entry.link}>{entry.fullName}</Link></td>
-                    <td>{entry.country}</td>
-                    <td>{entry.officialTop}</td>
-                    <td>{entry.laneName}</td>
-                    <td>{entry.announced}</td>
-                    <td>{entry.realized}</td>
-                    <td>{entry.card}</td>
-                    <td>{entry.note}</td>
-                  </tr>
-                );
-              })
+              this.state.entries.map(entry => this.renderDesktopRow(entry))
             }
           </tbody>
         </HTMLTable>
       </div>
+    );
+  }
+
+  isJudge() {
+    return this.props.userType === "Judge" || this.props.userType === "Admin";
+  }
+
+  renderDesktopRow(entry) {
+    return this.isJudge() ? this.renderDesktopRowForJudge(entry) : this.renderDesktopRowForAnonym(entry);
+  }
+
+  renderDesktopRowForAnonym(entry) {
+    return (
+      <tr key={entry.number}>
+        <td>{entry.fullName}</td>
+        <td>{entry.country}</td>
+        <td>{entry.officialTop}</td>
+        <td>{entry.laneName}</td>
+        <td>{entry.announced}</td>
+        <td>{entry.realized}</td>
+        <td>{entry.card}</td>
+        <td>{entry.note}</td>
+      </tr>
+    );
+  }
+
+  renderDesktopRowForJudge(entry) {
+    return (
+      <tr key={entry.number}>
+        <td><Link to={entry.link}>{entry.fullName}</Link></td>
+        <td>{entry.country}</td>
+        <td>{entry.officialTop}</td>
+        <td>{entry.laneName}</td>
+        <td>{entry.announced}</td>
+        <td>{entry.realized}</td>
+        <td>{entry.card}</td>
+        <td>{entry.note}</td>
+      </tr>
     );
   }
 
@@ -133,22 +158,43 @@ class StartingList extends React.Component {
       <div className="startinglanes-startlist">
         <H1>Starting List - {this.state.title}</H1>
         {
-          this.state.entries.map(entry => {
-            return (
-              <Link key={entry.number} to={entry.link} className="startinglanes-startlist-miniitem">
-                <div className="startinglanes-athlete">
-                  <span className="startinglanes-athlete-name">{entry.fullName}</span>
-                  <span className="startinglanes-country">{entry.country}</span>
-                </div>
-                <div className="startinglanes-extras">
-                  <span className="startinglanes-officialTop">OT {entry.officialTop}</span>
-                  <span className="startinglanes-announced">AP {entry.announced}</span>
-                </div>
-              </Link>
-            );
-          })
+          this.state.entries.map(entry => this.renderPhoneEntry(entry))
         }
       </div>
+    );
+  }
+
+  renderPhoneEntry(entry) {
+    return this.isJudge() ? this.renderPhoneEntryForJudge(entry) : this.renderPhoneEntryForAnonym(entry);
+  }
+
+  renderPhoneEntryForAnonym(entry) {
+    return (
+      <div key={entry.number} className="startinglanes-startlist-miniitem">
+        <div className="startinglanes-athlete">
+          <span className="startinglanes-athlete-name">{entry.fullName}</span>
+          <span className="startinglanes-country">{entry.country}</span>
+        </div>
+        <div className="startinglanes-extras">
+          <span className="startinglanes-officialTop">OT {entry.officialTop}</span>
+          <span className="startinglanes-announced">AP {entry.announced}</span>
+        </div>
+      </div>
+    );
+  }
+
+  renderPhoneEntryForJudge(entry) {
+    return (
+      <Link key={entry.number} to={entry.link} className="startinglanes-startlist-miniitem">
+        <div className="startinglanes-athlete">
+          <span className="startinglanes-athlete-name">{entry.fullName}</span>
+          <span className="startinglanes-country">{entry.country}</span>
+        </div>
+        <div className="startinglanes-extras">
+          <span className="startinglanes-officialTop">OT {entry.officialTop}</span>
+          <span className="startinglanes-announced">AP {entry.announced}</span>
+        </div>
+      </Link>
     );
   }
 }

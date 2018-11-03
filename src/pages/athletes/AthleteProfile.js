@@ -74,6 +74,37 @@ class AthleteProfile extends React.Component {
   }
 
   render() {
+    if (this.props.readonly) {
+      return this.renderPublic();
+    } else {
+      return this.renderEditable();
+    }
+  }
+
+  renderPublic() {
+    const profile = this.props.profile || {};
+    return (
+      <div className="athlete-profile">
+        <H5>Profile</H5>
+        <dl>
+          <dt>First name</dt>
+          <dd>{profile.FirstName || ""}</dd>
+          <dt>Surname</dt>
+          <dd>{profile.Surname || ""}</dd>
+          <dt>Club</dt>
+          <dd>{profile.Club || ""}</dd>
+          <dt>Country</dt>
+          <dd>{profile.CountryName || ""}</dd>
+          <dt>Sex</dt>
+          <dd>{profile.Sex || ""}</dd>
+          <dt>Category</dt>
+          <dd>{profile.Category || ""}</dd>
+        </dl>
+      </div>
+    );
+  }
+
+  renderEditable() {
     const profile = this.props.profile || {};
     return (
       <form onSubmit={this.onFormSubmit} className="athlete-profile">

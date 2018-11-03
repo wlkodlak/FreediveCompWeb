@@ -51,6 +51,49 @@ class AthleteAnnouncements extends React.Component {
   }
 
   render() {
+    if (this.props.readonly) {
+      return this.renderPublic();
+    } else {
+      return this.renderEditable();
+    }
+  }
+
+  renderPublic() {
+    return (
+      <div className="athlete-announcements">
+        <H5>Announcements</H5>
+        <HTMLTable>
+          <thead>
+            <tr>
+              <th>Discipline</th>
+              <th>Performance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              this.props.disciplines.map(discipline => this.renderPublicAnnouncement(discipline))
+            }
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
+  }
+
+  renderPublicAnnouncement(discipline) {
+    const component = this.getComponentByRules(discipline.Rules);
+    const formattedValue = this.findFormattedAnnouncement(
+      this.props.announcements, discipline.DisciplineId,
+      component, "");
+
+    return (
+      <tr key={discipline.DisciplineId}>
+        <td>{discipline.LongName}</td>
+        <td>{formattedValue}</td>
+      </tr>
+    );
+  }
+
+  renderEditable() {
     return (
       <form onSubmit={this.onFormSubmit} className="athlete-announcements">
         <H5>Announcements</H5>
@@ -63,41 +106,43 @@ class AthleteAnnouncements extends React.Component {
           </thead>
           <tbody>
             {
-              this.props.disciplines.map(discipline => {
-                let formattedValue = "";
-                let isValueValid = false;
-                const disciplineChange = this.state.changes[discipline.DisciplineId];
-                const component = this.getComponentByRules(discipline.Rules);
-                if (disciplineChange) {
-                  formattedValue = disciplineChange.formatted;
-                  isValueValid = disciplineChange.performance != null;
-                } else {
-                  formattedValue = this.findFormattedAnnouncement(
-                    this.props.announcements, discipline.DisciplineId,
-                    component, "");
-                  isValueValid = true;
-                }
-                const onChangeHandler = (event) => this.onDisciplineChanged(discipline, event.target.value);
-
-                return (
-                  <tr key={discipline.DisciplineId}>
-                    <td>{discipline.LongName}</td>
-                    <td>
-                      <InputGroup
-                        type="text"
-                        placeholder={component.placeholder}
-                        value={formattedValue}
-                        intent={isValueValid ? Intent.NONE : Intent.WARNING}
-                        onChange={onChangeHandler} />
-                    </td>
-                  </tr>
-                );
-              })
+              this.props.disciplines.map(discipline => this.renderEditableAnnouncement(discipline))
             }
           </tbody>
         </HTMLTable>
         <Button type="submit" text="Save announcements" />
       </form>
+    );
+  }
+
+  renderEditableAnnouncement(discipline) {
+    let formattedValue = "";
+    let isValueValid = false;
+    const disciplineChange = this.state.changes[discipline.DisciplineId];
+    const component = this.getComponentByRules(discipline.Rules);
+    if (disciplineChange) {
+      formattedValue = disciplineChange.formatted;
+      isValueValid = disciplineChange.performance != null;
+    } else {
+      formattedValue = this.findFormattedAnnouncement(
+        this.props.announcements, discipline.DisciplineId,
+        component, "");
+      isValueValid = true;
+    }
+    const onChangeHandler = (event) => this.onDisciplineChanged(discipline, event.target.value);
+
+    return (
+      <tr key={discipline.DisciplineId}>
+        <td>{discipline.LongName}</td>
+        <td>
+          <InputGroup
+            type="text"
+            placeholder={component.placeholder}
+            value={formattedValue}
+            intent={isValueValid ? Intent.NONE : Intent.WARNING}
+            onChange={onChangeHandler} />
+        </td>
+      </tr>
     );
   }
 }

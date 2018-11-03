@@ -290,8 +290,9 @@ class EnterResult extends React.Component {
     const entry = this.state.entry;
     const rules = this.state.rules;
     const result = this.state.result;
+    const isJudge = this.props.userType === "Admin" || this.props.userType === "Judge";
 
-    if (entry == null || rules == null || result == null) {
+    if (entry == null || rules == null || result == null || isJudge) {
       return (
         <div className="enterresults-form">
           <H1>Enter performance</H1>

@@ -131,6 +131,7 @@ class SetupRace extends React.Component {
 
   render() {
     const modified = this.state.status === "modified";
+    const isAdmin = this.props.userType === "Admin";
     return (
       <div className="racesetup-form">
         <h1>Setup competition</h1>
@@ -149,7 +150,7 @@ class SetupRace extends React.Component {
             resultsLists={this.state.resultsLists}
             onChange={this.onResultsListsChanged} />
         </SetupRaceTitle>
-        <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified} />
+        <Button type="button" text="Confirm changes" onClick={this.onConfirmChanges} disabled={!modified || !isAdmin} />
       </div>
     );
   }
