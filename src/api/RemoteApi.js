@@ -62,9 +62,9 @@ class RemoteApi {
     return this.fetchJson(request);
   }
 
-  getRaceCall(raceId, path, forceAuthentication) {
+  getRaceCall(raceId, path, skipAuthentication) {
     const serviceUrl = this.baseUrl + "/api-1.0/" + raceId + "/" + path;
-    const token = forceAuthentication ? this.tokenStorage.getRaceToken(raceId) : null;
+    const token = skipAuthentication ? null : this.tokenStorage.getRaceToken(raceId);
     const options = {
       method: "GET",
       url: serviceUrl,
@@ -153,7 +153,7 @@ class RemoteApi {
   }
 
   getAuthVerify(raceId) {
-    return this.getRaceCall(raceId, "auth/verify", true);
+    return this.getRaceCall(raceId, "auth/verify", false);
   }
 
   postAuthAuthorize(raceId, authorizeRequest) {
@@ -225,7 +225,14 @@ class RemoteApi {
   }
 
   exportReport(raceId, kind, id, format, preset) {
-    return this.baseUrl + "/api-1.0/" + raceId + "/exports/" + kind + "/" + id + "?format=" + format + "&preset=" + preset;
+    return (
+      this.baseUrl +
+      "/api-1.0/" + raceId +
+      "/exports/" + kind +
+      "/" + id +
+      "?format=" + format +
+      "&preset=" + preset
+    );
   }
 
   exportReportStartingList(raceId, startingLaneId, format, preset) {

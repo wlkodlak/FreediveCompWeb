@@ -1,10 +1,9 @@
 import React from 'react';
-import { H1, Toaster, Toast, Intent } from '@blueprintjs/core';
+import { H1 } from '@blueprintjs/core';
 import Api from '../../api/Api';
 import AthleteProfile from './AthleteProfile';
 import AthleteAnnouncements from './AthleteAnnouncements';
 import AthleteResults from './AthleteResults';
-import RaceHeader from '../homepage/RaceHeader';
 import RoutedButton from '../../components/RoutedButton';
 
 class SetupAthlete extends React.Component {
@@ -15,14 +14,10 @@ class SetupAthlete extends React.Component {
       allRules: [],
       profile: {},
       announcements: [],
-      results: [],
-      disciplines: [],
-      errors: []
+      results: []
     };
     this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onAthleteLoaded = this.onAthleteLoaded.bind(this);
-    this.onRaceLoaded = this.onRaceLoaded.bind(this);
-    this.onError = this.onError.bind(this);
     this.onAthleteProfileChanged = this.onAthleteProfileChanged.bind(this);
     this.onAthleteProfileSubmit = this.onAthleteProfileSubmit.bind(this);
     this.onAthleteAnnouncementsSubmit = this.onAthleteAnnouncementsSubmit.bind(this);
@@ -31,10 +26,9 @@ class SetupAthlete extends React.Component {
 
   componentDidMount() {
     const { raceId, athleteId } = this.props;
-    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
-    Api.getRaceSetup(raceId).then(this.onRaceLoaded).catch(this.onError);
+    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.props.onError);
     if (athleteId !== "new") {
-      Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded).catch(this.onError);
+      Api.getAthlete(raceId, athleteId).then(this.onAthleteLoaded).catch(this.props.onError);
     } else {
       this.setState({
         profile: {
@@ -57,7 +51,7 @@ class SetupAthlete extends React.Component {
       });
 
       if (newAthleteId !== "new") {
-        Api.getAthlete(raceId, newAthleteId).then(this.onAthleteLoaded).catch(this.onError);
+        Api.getAthlete(raceId, newAthleteId).then(this.onAthleteLoaded).catch(this.props.onError);
       } else {
         this.setState({
           profile: {
@@ -75,33 +69,11 @@ class SetupAthlete extends React.Component {
     this.setState({allRules});
   }
 
-  onRaceLoaded(raceSetup) {
-    this.setState({
-      disciplines: raceSetup.Disciplines
-    });
-  }
-
   onAthleteLoaded(athlete) {
     this.setState({
       profile: athlete.Profile,
       announcements: athlete.Announcements,
       results: athlete.Results
-    });
-  }
-
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
     });
   }
 
@@ -123,7 +95,7 @@ class SetupAthlete extends React.Component {
     const athleteData = {
       "Profile": profile
     };
-    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved).catch(this.onError);
+    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved).catch(this.props.onError);
   }
 
   generateAthleteId(firstName, lastName) {
@@ -141,7 +113,7 @@ class SetupAthlete extends React.Component {
     const athleteData = {
       "Announcements": announcements
     };
-    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved).catch(this.onError);
+    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved).catch(this.props.onError);
   }
 
   onAthleteAnnouncementsSaved() {
@@ -157,11 +129,9 @@ class SetupAthlete extends React.Component {
   }
 
   render() {
-    const filteredDisciplines = this.state.disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
+    const filteredDisciplines = this.props.raceSetup.Disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
     return (
       <div className="athletes-form">
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} page="athletes" pageName="Athletes" />
         {this.renderAthleteName()}
         <AthleteProfile
           profile={this.state.profile}

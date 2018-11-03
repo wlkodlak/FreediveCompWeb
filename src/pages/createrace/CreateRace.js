@@ -1,5 +1,5 @@
 import React from 'react';
-import { H1, Button, Toaster, Toast, Intent } from '@blueprintjs/core';
+import { H1, Button } from '@blueprintjs/core';
 import NewRaceSettings from './NewRaceSettings';
 import AthleteCategories from './AthleteCategories';
 import NewRaceStaSettings from './NewRaceStaSettings';
@@ -18,7 +18,6 @@ class CreateRace extends React.Component {
     this.onDynChanged = this.onDynChanged.bind(this);
     this.onCwtChanged = this.onCwtChanged.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
   state = {
@@ -27,8 +26,7 @@ class CreateRace extends React.Component {
     athleteCategories: [],
     staSettings: NewRaceStaSettings.createSettings(),
     dynSettings: NewRaceDynSettings.createSettings(),
-    cwtSettings: NewRaceCwtSettings.createSettings(),
-    errors: []
+    cwtSettings: NewRaceCwtSettings.createSettings()
   }
 
   onSettingsChanged(raceSettings) {
@@ -57,23 +55,7 @@ class CreateRace extends React.Component {
     const raceSetup = new NewRaceSetupGenerator(raceId, this.state).buildRaceSetupDto();
     Api.postRaceSetup(raceId, raceSetup)
       .then(response => this.setState({created: true}))
-      .catch(this.onError);
-  }
-
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
-    });
+      .catch(this.props.onError);
   }
 
   render() {
@@ -82,7 +64,6 @@ class CreateRace extends React.Component {
     } else {
       return (
         <form onSubmit={this.onFormSubmit} className="createrace-form">
-          <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
           <H1>Create competition</H1>
           <NewRaceSettings value={this.state.raceSettings} onChange={this.onSettingsChanged} />
           <AthleteCategories value={this.state.athleteCategories} onChange={this.onCategoriesChanged} />

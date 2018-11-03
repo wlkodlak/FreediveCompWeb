@@ -1,7 +1,6 @@
 import React from 'react';
 import Api from '../../api/Api';
-import RaceHeader from '../homepage/RaceHeader';
-import { Toaster, Toast, Intent, Button } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import moment from 'moment';
 import SetupRaceTitle from './SetupRaceTitle';
 import SetupRaceSettings from './SetupRaceSettings';
@@ -17,8 +16,7 @@ class SetupRace extends React.Component {
       raceSettings: {},
       startingLanes: [],
       disciplines: [],
-      resultsLists: [],
-      errors: []
+      resultsLists: []
     }
     this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onRaceSettingsChanged = this.onRaceSettingsChanged.bind(this);
@@ -27,11 +25,13 @@ class SetupRace extends React.Component {
     this.onResultsListsChanged = this.onResultsListsChanged.bind(this);
     this.onConfirmChanges = this.onConfirmChanges.bind(this);
     this.onChangesConfirmed = this.onChangesConfirmed.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
   componentDidMount() {
-    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+    /* This component needs to be absolutely sure about the race setup,
+       that's why it does not use race setup from props. Plus we are
+       modifying that data. */
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.props.onError);
   }
 
   onRaceSetupLoaded(raceSetup) {
@@ -104,13 +104,17 @@ class SetupRace extends React.Component {
   }
 
   onConfirmChanges() {
-    const raceSetup = {
+    const raceSetup = this.getRaceSetup();
+    Api.postRaceSetup(this.props.raceId, raceSetup).then(this.onChangesConfirmed).catch(this.props.onError);
+  }
+
+  getRaceSetup() {
+    return {
       "Race": this.state.raceSettings,
       "StartingLanes": this.state.startingLanes,
       "Disciplines": this.state.disciplines,
       "ResultsLists": this.state.resultsLists,
-    }
-    Api.postRaceSetup(this.props.raceId, raceSetup).then(this.onChangesConfirmed).catch(this.onError);
+    };
   }
 
   onChangesConfirmed() {
@@ -119,28 +123,16 @@ class SetupRace extends React.Component {
     });
   }
 
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
-    });
+  onRaceInvalidated() {
+    const onRaceInvalidated = this.props.onRaceInvalidated;
+    const raceSetup = this.getRaceSetup();
+    if (onRaceInvalidated) onRaceInvalidated(raceSetup);
   }
 
   render() {
     const modified = this.state.status === "modified";
     return (
       <div className="racesetup-form">
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} />
         <h1>Setup competition</h1>
         <SetupRaceTitle title="General" summary={this.getRaceSettingsSummary()}>
           <SetupRaceSettings raceSettings={this.state.raceSettings} onChange={this.onRaceSettingsChanged} />

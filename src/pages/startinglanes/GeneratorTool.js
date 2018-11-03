@@ -1,29 +1,27 @@
 import React from 'react';
-import { H1, FormGroup, RadioGroup, Button, InputGroup, Toaster, Toast, Intent } from '@blueprintjs/core';
+import { H1, FormGroup, RadioGroup, Button, InputGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { Redirect } from 'react-router-dom';
 import CheckboxGroup from './CheckboxGroup';
 import Api from '../../api/Api';
 import GeneratorCore from './GeneratorCore';
-import RaceHeader from '../homepage/RaceHeader';
 import moment from 'moment';
 
 class GeneratorTool extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startingLanes: [],
-      disciplines: [],
+      startingLanes: this.getFlattenedStartingLanes(props),
+      disciplines: this.getDisciplineInfos(props),
       selectedStartingLane: null,
       selectedDisciplines: [],
       startInterval: "10",
       breakInterval: "180",
       breakDuration: "30",
-      firstStart: null,
-      generated: false,
-      errors: []
-    }
-    this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
+      firstStart: this.getInitialFirstStart(props),
+      generated: false
+    };
+
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onAthletesLoaded = this.onAthletesLoaded.bind(this);
     this.onStartListCreated = this.onStartListCreated.bind(this);
@@ -33,42 +31,12 @@ class GeneratorTool extends React.Component {
     this.onBreakIntervalChanged = this.onBreakIntervalChanged.bind(this);
     this.onBreakDurationChanged = this.onBreakDurationChanged.bind(this);
     this.onFirstStartChanged = this.onFirstStartChanged.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
-  componentDidMount() {
-    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
-  }
-
-  onRaceSetupLoaded(raceSetup) {
+  getFlattenedStartingLanes(props) {
     const startingLanes = [];
-    this.flattenStartingLanes(startingLanes, 0, raceSetup.StartingLanes);
-
-    const disciplines = raceSetup.Disciplines.map(discipline => ({
-        value: discipline.DisciplineId,
-        label: discipline.LongName,
-        rawDiscipline: discipline
-      }));
-
-    const firstStart = new Date(raceSetup.Race.Start);
-
-    this.setState({ startingLanes, disciplines, firstStart });
-  }
-
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
-    });
+    this.flattenStartingLanes(startingLanes, 0, props.raceSetup.StartingLanes);
+    return startingLanes;
   }
 
   flattenStartingLanes(outputLanes, level, inputLanes) {
@@ -87,9 +55,21 @@ class GeneratorTool extends React.Component {
     }
   }
 
+  getDisciplineInfos(props) {
+    return props.raceSetup.Disciplines.map(discipline => ({
+        value: discipline.DisciplineId,
+        label: discipline.LongName,
+        rawDiscipline: discipline
+      }));
+  }
+
+  getInitialFirstStart(props) {
+    return new Date(props.raceSetup.Race.Start);
+  }
+
   onFormSubmit(event) {
     event.preventDefault();
-    Api.getAthletes(this.props.raceId).then(this.onAthletesLoaded).catch(this.onError);
+    Api.getAthletes(this.props.raceId).then(this.onAthletesLoaded).catch(this.props.onError);
   }
 
   onAthletesLoaded(athletes) {
@@ -104,9 +84,10 @@ class GeneratorTool extends React.Component {
       const startingList = generator.buildStartListEntries();
       Api
         .postStartingList(raceId, startingLaneId, startingList)
-        .then(this.onStartListCreated);
+        .then(this.onStartListCreated)
+        .catch(this.props.onError);
     } catch (e) {
-      this.onError(e);
+      this.props.onError(e);
     }
   }
 
@@ -208,8 +189,6 @@ class GeneratorTool extends React.Component {
     }
     return (
       <div>
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} />
         <H1>Generate start list</H1>
         <form onSubmit={this.onFormSubmit}>
           <RadioGroup

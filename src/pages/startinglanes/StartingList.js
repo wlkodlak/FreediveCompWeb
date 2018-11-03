@@ -1,8 +1,7 @@
 import React from 'react';
 import Api from '../../api/Api';
-import { H1, HTMLTable, Toaster, Toast, Intent } from '@blueprintjs/core';
+import { H1, HTMLTable } from '@blueprintjs/core';
 import PerformanceComponent from '../../api/PerformanceComponent';
-import RaceHeader from '../homepage/RaceHeader';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
@@ -11,20 +10,18 @@ class StartingList extends React.Component {
     super(props);
     this.onStartingListReceived = this.onStartingListReceived.bind(this);
     this.convertEntry = this.convertEntry.bind(this);
-    this.onError = this.onError.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
   }
 
   state = {
     title: "",
     entries: [],
-    errors: [],
     phone: false
   }
 
   componentDidMount() {
     const { raceId, startingLaneId } = this.props;
-    Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived).catch(this.onError);
+    Api.getReportStartingList(raceId, startingLaneId).then(this.onStartingListReceived).catch(this.props.onError);
     this.onWindowResize();
     window.addEventListener('resize', this.onWindowResize);
   }
@@ -77,22 +74,6 @@ class StartingList extends React.Component {
     }
   }
 
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
-    });
-  }
-
   buildExportLink(format, preset) {
     return Api.exportReportStartingList(this.props.raceId, this.props.startingLaneId, format, preset)
   }
@@ -107,8 +88,6 @@ class StartingList extends React.Component {
     const exportCsvLink = this.buildExportLink("csv", "running");
     return (
       <div className="startinglanes-startlist">
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
         <div className="startinglanes-listtitle">
           <H1>Starting List - {this.state.title}</H1>
           <div className="startinglanes-exports">
@@ -152,8 +131,6 @@ class StartingList extends React.Component {
   renderPhone() {
     return (
       <div className="startinglanes-startlist">
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} page="startinglists" pageName="Starting lists" />
         <H1>Starting List - {this.state.title}</H1>
         {
           this.state.entries.map(entry => {

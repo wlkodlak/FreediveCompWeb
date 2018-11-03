@@ -1,7 +1,5 @@
 import React from 'react';
 import Api from '../../api/Api';
-import RaceHeader from '../homepage/RaceHeader';
-import { Toaster, Toast, Intent } from '@blueprintjs/core';
 import { Redirect } from 'react-router-dom';
 
 class AuthenticateJudge extends React.Component {
@@ -9,21 +7,13 @@ class AuthenticateJudge extends React.Component {
     super(props);
     this.state = {
       verified: false,
-      raceName: null,
-      connectCode: null,
-      errors: []
+      connectCode: null
     };
-    this.onRaceLoaded = this.onRaceLoaded.bind(this);
     this.onAuthenticateSucceeded = this.onAuthenticateSucceeded.bind(this);
-    this.onError = this.onError.bind(this);
     this.onTimer = this.onTimer.bind(this);
   }
 
   componentDidMount() {
-    Api
-      .getRaceSetup(this.props.raceId)
-      .then(this.onRaceLoaded)
-      .catch(this.onError);
     this.onTimer();
     this.startTimer();
   }
@@ -45,17 +35,11 @@ class AuthenticateJudge extends React.Component {
     }
   }
 
-  onRaceLoaded(raceSetup) {
-    this.setState({
-      raceName: raceSetup.Race.Name
-    });
-  }
-
   onTimer() {
     Api
       .postAuthAuthenticate(this.props.raceId, this.state.connectCode)
       .then(this.onAuthenticateSucceeded)
-      .catch(this.onError);
+      .catch(this.props.onError);
   }
 
   onAuthenticateSucceeded(response) {
@@ -72,33 +56,15 @@ class AuthenticateJudge extends React.Component {
     }
   }
 
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.stopTimer();
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.startTimer();
-    this.setState({
-      errors: errors
-    });
-  }
-
   render() {
     if (this.state.verified) {
-      return (<Redirect to={`/${this.props.raceId}/startinglists`} />);
+      return (<Redirect to={`/${this.props.raceId}/homepage`} />);
     } else {
+      const raceSetup = this.props.raceSetup;
+      const raceName = raceSetup ? raceSetup.Race.Name : "the competition";
       return (
         <div className="judges-form">
-          <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-          <RaceHeader raceId={this.props.raceId} />
-          <div className="judges-authenticate-message">You are not paired with {this.state.raceName}. Show this code to the administrator:</div>
+          <div className="judges-authenticate-message">You are not paired with {raceName}. Show this code to the administrator:</div>
           <div className="judges-authenticate-code">{this.state.connectCode}</div>
         </div>
       );

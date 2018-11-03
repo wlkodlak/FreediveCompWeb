@@ -2,55 +2,27 @@ import React from 'react';
 import Api from '../../api/Api';
 import ConnectCodeForm from './ConnectCodeForm';
 import JudgesList from './JudgesList';
-import RaceHeader from '../homepage/RaceHeader';
-import { Toaster, Toast, Intent } from '@blueprintjs/core';
 
 class SetupJudges extends React.Component {
   constructor(props) {
     super(props);
-    this.onRaceSetupLoaded = this.onRaceSetupLoaded.bind(this);
     this.onJudgesLoaded = this.onJudgesLoaded.bind(this);
     this.onAuthorizeDeviceRequested = this.onAuthorizeDeviceRequested.bind(this);
     this.onAuthorizeDeviceFinished = this.onAuthorizeDeviceFinished.bind(this);
     this.onUnauthorizeDevicesRequested = this.onUnauthorizeDevicesRequested.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
   state = {
-    judges: [],
-    errors: []
+    judges: []
   }
 
   componentDidMount() {
     const raceId = this.props.raceId;
-    Api.getRaceSetup(raceId).then(this.onRaceSetupLoaded).catch(this.onError);
-    Api.getAuthJudges(raceId).then(this.onJudgesLoaded).catch(this.onError);
-  }
-
-  onRaceSetupLoaded(raceSetup) {
-    this.setState({
-      raceName: raceSetup.Race.Name
-    });
+    Api.getAuthJudges(raceId).then(this.onJudgesLoaded).catch(this.props.onError);
   }
 
   onJudgesLoaded(judges) {
     this.setState({judges});
-  }
-
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({
-      errors: errors
-    });
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({
-      errors: errors
-    });
   }
 
   onAuthorizeDeviceRequested(judgeId, judgeName, connectCode) {
@@ -60,7 +32,7 @@ class SetupJudges extends React.Component {
       "JudgeName": judgeName,
       "ConnectCode": connectCode
     };
-    Api.postAuthAuthorize(raceId, authorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.onError);
+    Api.postAuthAuthorize(raceId, authorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.props.onError);
   }
 
   onAuthorizeDeviceFinished(newJudge) {
@@ -79,14 +51,12 @@ class SetupJudges extends React.Component {
     const unauthorizeRequest = {
       "JudgeId": judge.JudgeId
     };
-    Api.postAuthUnauthorize(raceId, unauthorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.onError);
+    Api.postAuthUnauthorize(raceId, unauthorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.props.onError);
   }
 
   render() {
     return (
       <div className="judges-form">
-        <Toaster>{ this.state.errors.map((error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <RaceHeader raceId={this.props.raceId} />
         <h1>Setup Judges</h1>
         <JudgesList
           judges={this.state.judges}

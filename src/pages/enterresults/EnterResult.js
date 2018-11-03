@@ -1,7 +1,6 @@
 import React from 'react';
 import Api from '../../api/Api';
-import RaceHeader from '../homepage/RaceHeader';
-import {H1, Toaster, Toast, Intent} from '@blueprintjs/core';
+import { H1 } from '@blueprintjs/core';
 import EnterResultHeader from './EnterResultHeader.js';
 import EnterResultComponent from './EnterResultComponent.js';
 import EnterResultCard from './EnterResultCard.js';
@@ -23,8 +22,7 @@ class EnterResult extends React.Component {
       result: null,
       rules: null,
       primaryComponent: null,
-      penalizationComponent: null,
-      errors: []
+      penalizationComponent: null
     };
     this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onStartListLoaded = this.onStartListLoaded.bind(this);
@@ -34,17 +32,14 @@ class EnterResult extends React.Component {
     this.onRemovePenalty = this.onRemovePenalty.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onConfirmed = this.onConfirmed.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
   componentDidMount() {
-    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.onError);
-    Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(
-      this.onError
-    );
+    Api.getGlobalRules().then(this.onRulesLoaded).catch(this.props.onError);
+    Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(this.props.onError);
     this.calculator = new EnterResultCalculator(
       (calculationResult) => this.setState((state, props) => this.processCalculationResult(state, props, calculationResult)),
-      (error) => this.onError(error)
+      this.props.onError
     );
   }
 
@@ -55,9 +50,7 @@ class EnterResult extends React.Component {
       if (this.calculator) {
         this.calculator.cancel();
       }
-      Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(
-        this.onError
-      );
+      Api.getReportStartingList(this.props.raceId, this.props.startingLaneId).then(this.onStartListLoaded).catch(this.props.onError);
     } else if (!sameEntry) {
       if (this.calculator) {
         this.calculator.cancel();
@@ -152,23 +145,11 @@ class EnterResult extends React.Component {
     const raceId = this.props.raceId;
     const athleteId = this.props.athleteId;
     const result = this.state.result;
-    Api.postAthleteResult(raceId, athleteId, result).then(this.onConfirmed).catch(this.onError);
+    Api.postAthleteResult(raceId, athleteId, result).then(this.onConfirmed).catch(this.props.onError);
   }
 
   onConfirmed() {
     this.setState({modified: false});
-  }
-
-  onError(error) {
-    const errors = this.state.errors.slice(0);
-    errors.push(error.message);
-    this.setState({errors: errors});
-  }
-
-  onErrorDismissed(index) {
-    const errors = this.state.errors.slice(0);
-    errors.splice(index, 1);
-    this.setState({errors: errors});
   }
 
   changeState(original, props, changes) {
@@ -309,17 +290,10 @@ class EnterResult extends React.Component {
     const entry = this.state.entry;
     const rules = this.state.rules;
     const result = this.state.result;
-    const errors = this.state.errors;
 
     if (entry == null || rules == null || result == null) {
       return (
         <div className="enterresults-form">
-          <Toaster>{
-              errors.map(
-                (error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)}/>
-              )
-            }</Toaster>
-          <RaceHeader raceId={raceId} page="athletes" pageName="Athletes"/>
           <H1>Enter performance</H1>
         </div>
       );
@@ -331,12 +305,6 @@ class EnterResult extends React.Component {
 
       return (
         <div className="enterresults-form">
-          <Toaster>{
-              errors.map(
-                (error, index) => <Toast intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)}/>
-              )
-            }</Toaster>
-          <RaceHeader raceId={raceId}/>
           <H1>Enter result</H1>
           <EnterResultHeader
             raceId={raceId}
@@ -358,7 +326,7 @@ class EnterResult extends React.Component {
             realized={result.Performance}
             onAddPenalty={this.onAddPenalty}
             onRemovePenalty={this.onRemovePenalty}
-            onAddError={this.onError}/>
+            onAddError={this.props.onError}/>
           <form onSubmit={this.onFormSubmit}>
             <EnterResultFooter
               result={result}
