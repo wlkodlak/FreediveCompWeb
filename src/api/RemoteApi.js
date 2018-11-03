@@ -160,6 +160,10 @@ class RemoteApi {
     return this.postRaceCall(raceId, "auth/authorize", authorizeRequest);
   }
 
+  postAuthUnauthorize(raceId, unauthorizeRequest) {
+    return this.postRaceCall(raceId, "auth/unauthorize", unauthorizeRequest);
+  }
+
   postAuthAuthenticate(raceId, connectCode) {
     const body = {
       "DeviceId": this.tokenStorage.getDeviceId(),

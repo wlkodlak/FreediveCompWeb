@@ -581,6 +581,14 @@ class MockedApi {
     );
   }
 
+  postAuthUnauthorize(raceId, unauthorizeRequest) {
+    console.log("postAuthUnauthorize(" + raceId + ")");
+    console.log(unauthorizeRequest);
+    return Promise.resolve(
+      {"JudgeId": unauthorizeRequest["JudgeId"], "JudgeName": "Removed", "DeviceIds": []}
+    );
+  }
+
   postAuthAuthenticate(raceId, connectCode) {
     if (connectCode && connectCode.length > 0) {
       const result = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { H5, HTMLTable } from '@blueprintjs/core';
+import { H5, HTMLTable, Button } from '@blueprintjs/core';
 
 class JudgesList extends React.Component {
   render() {
@@ -15,18 +15,26 @@ class JudgesList extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {
-              judges.map(judge => (
-                <tr key={judge.JudgeId}>
-                  <td>{judge.JudgeName}</td>
-                  <td>{judge.DeviceIds.length}</td>
-                </tr>
-              ))
-            }
+            {judges.map(judge => this.renderJudgeRow(judge))}
           </tbody>
         </HTMLTable>
       </div>
     );
+  }
+
+  renderJudgeRow(judge) {
+    return (
+      <tr key={judge.JudgeId}>
+        <td>{judge.JudgeName}</td>
+        <td>{judge.DeviceIds.length}</td>
+        <td>{this.renderUnauthorizeButton(judge)}</td>
+      </tr>
+    );
+  }
+
+  renderUnauthorizeButton(judge) {
+    const onUnauthorizeClick = () => this.props.onUnauthorizeDevicesRequested(judge);
+    return (<Button type="button" minimal={true} onClick={onUnauthorizeClick} icon="lock" />);
   }
 }
 

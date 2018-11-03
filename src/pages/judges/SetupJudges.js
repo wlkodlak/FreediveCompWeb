@@ -12,6 +12,7 @@ class SetupJudges extends React.Component {
     this.onJudgesLoaded = this.onJudgesLoaded.bind(this);
     this.onAuthorizeDeviceRequested = this.onAuthorizeDeviceRequested.bind(this);
     this.onAuthorizeDeviceFinished = this.onAuthorizeDeviceFinished.bind(this);
+    this.onUnauthorizeDevicesRequested = this.onUnauthorizeDevicesRequested.bind(this);
     this.onError = this.onError.bind(this);
   }
 
@@ -73,6 +74,14 @@ class SetupJudges extends React.Component {
     this.setState({judges});
   }
 
+  onUnauthorizeDevicesRequested(judge) {
+    const raceId = this.props.raceId;
+    const unauthorizeRequest = {
+      "JudgeId": judge.JudgeId
+    };
+    Api.postAuthUnauthorize(raceId, unauthorizeRequest).then(this.onAuthorizeDeviceFinished).catch(this.onError);
+  }
+
   render() {
     return (
       <div className="judges-form">
@@ -80,7 +89,8 @@ class SetupJudges extends React.Component {
         <RaceHeader raceId={this.props.raceId} />
         <h1>Setup Judges</h1>
         <JudgesList
-          judges={this.state.judges} />
+          judges={this.state.judges}
+          onUnauthorizeDevicesRequested={this.onUnauthorizeDevicesRequested} />
         <ConnectCodeForm
           judges={this.state.judges}
           onAuthorizeDeviceRequested={this.onAuthorizeDeviceRequested} />
