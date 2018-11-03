@@ -1,7 +1,7 @@
 import React from 'react';
 import Api from '../api/Api';
 import { Link } from 'react-router-dom';
-import { Classes, Toaster, Toast, Intent } from '@blueprintjs/core';
+import { H2, Toaster, Toast, Intent } from '@blueprintjs/core';
 
 export default class RacePage extends React.Component {
   constructor(props) {
@@ -86,10 +86,42 @@ export default class RacePage extends React.Component {
   render() {
     if (!this.state.raceSetupValid || !this.state.userTypeValid) return null;
 
-    const { raceId, superPath, superName, component, ...params } = this.props;
+    return (
+      <div>
+        {this.renderToaster()}
+        {this.renderHeader()}
+        {this.renderTargetComponent()}
+      </div>
+    );
+  }
+
+  renderToaster() {
+    const toasts = this.state.errors.map((error, index) => this.renderToast(error, index));
+    return (<Toaster>{toasts}</Toaster>);
+  }
+
+  renderToast(error, index) {
+    return (<Toast key={index} intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />);
+  }
+
+  renderHeader() {
+    const { raceId, superPath, superName } = this.props;
     const raceSetup = this.state.raceSetup;
     const raceName = raceSetup.Race.Name;
-    const componentElement = React.createElement(
+    const HX = this.props.headerElement || H2;
+
+    return (
+      <HX>
+        <Link to={`/${raceId}/homepage`} className="headerLink">{raceName}</Link>
+        { superPath && " - "}
+        { superPath && <Link to={`/${raceId}/${superPath}`} className="headerLink">{superName}</Link> }
+      </HX>
+    );
+  }
+
+  renderTargetComponent() {
+    const { raceId, superPath, superName, component, ...params } = this.props;
+    return React.createElement(
       component, {
         raceId: raceId,
         onError: this.onError,
@@ -98,17 +130,5 @@ export default class RacePage extends React.Component {
         userType: this.state.userType,
         ...params
       });
-
-    return (
-      <div>
-        <Toaster>{ this.state.errors.map((error, index) => <Toast key={index} intent={Intent.DANGER} message={error} onDismiss={() => this.onErrorDismissed(index)} />) }</Toaster>
-        <h2 className={Classes.H2}>
-          <Link to={`/${raceId}/homepage`} className="headerLink">{raceName}</Link>
-          { superPath && " - "}
-          { superPath && <Link to={`/${raceId}/${superPath}`} className="headerLink">{superName}</Link> }
-        </h2>
-        {componentElement}
-      </div>
-    );
   }
 }

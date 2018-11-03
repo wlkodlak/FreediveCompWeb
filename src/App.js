@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { H1 } from '@blueprintjs/core';
 import CreateRace from './pages/createrace/CreateRace';
 import SetupRace from './pages/setuprace/SetupRace';
 import HomePage from './pages/homepage/HomePage';
@@ -34,7 +35,7 @@ function extractQueryParameter(location, name) {
   return null;
 }
 
-function buildRacePageRoute(path, component, superPath, superName) {
+function buildRacePageRoute(path, component, extras) {
   return React.createElement(Route, {
     path: "/:raceId/" + path,
     render: (props) => {
@@ -45,9 +46,8 @@ function buildRacePageRoute(path, component, superPath, superName) {
       }
       return React.createElement(RacePage, {
         ...params,
-        component,
-        superPath,
-        superName
+        ...extras,
+        component
       });
     }
   });
@@ -86,17 +86,17 @@ function App() {
   const routes = [
     buildRacePageRoute("create", CreateRace),
     buildRacePageRoute("setup", SetupRace),
-    buildRacePageRoute("homepage", HomePage),
+    buildRacePageRoute("homepage", HomePage, { headerElement: H1 }),
     buildRacePageRoute("judges", SetupJudges),
     buildRacePageRoute("authenticate", AuthenticateJudge),
     buildRacePageRoute("startinglists/generator", GeneratorTool),
-    buildRacePageRoute("startinglists/:startingLaneId", StartingList, "startinglists", "Starting lists"),
+    buildRacePageRoute("startinglists/:startingLaneId", StartingList, { superPath: "startinglists", superName: "Starting lists" }),
     buildRacePageRoute("startinglists", StartingLanes),
-    buildRacePageRoute("disciplines/:disciplineId", DisciplineResults, "disciplines", "Disciplines"),
+    buildRacePageRoute("disciplines/:disciplineId", DisciplineResults, { superPath: "disciplines", superName: "Disciplines" }),
     buildRacePageRoute("disciplines", DisciplinesList),
-    buildRacePageRoute("resultlists/:resultsListId", FinalResults, "resultslists", "Result lists"),
+    buildRacePageRoute("resultlists/:resultsListId", FinalResults, { superPath: "resultslists", superName: "Result lists" }),
     buildRacePageRoute("resultlists", FinalReportsList),
-    buildRacePageRoute("athletes/:athleteId", SetupAthlete, "athletes", "Athletes"),
+    buildRacePageRoute("athletes/:athleteId", SetupAthlete, { superPath: "athletes", superName: "Athletes" }),
     buildRacePageRoute("athletes", SetupAthletes),
     buildRacePageRoute("enterresults/:startingLaneId/:athleteId/:disciplineId", EnterResult),
     homepageRedirectRoute,
@@ -104,7 +104,7 @@ function App() {
     badPathRoute
   ];
 
-  return React.createElement(BrowserRouter, null, React.createElement(Switch, null, routes));
+  return React.createElement(BrowserRouter, null, React.createElement(Switch, null, ...routes));
 }
 
 export default App;
