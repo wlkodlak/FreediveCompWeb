@@ -35,7 +35,7 @@ class GeneratorTool extends React.Component {
 
   getFlattenedStartingLanes(props) {
     const startingLanes = [];
-    this.flattenStartingLanes(startingLanes, 0, props.raceSetup.StartingLanes);
+    this.flattenStartingLanes(startingLanes, 1, props.raceSetup.StartingLanes);
     return startingLanes;
   }
 
