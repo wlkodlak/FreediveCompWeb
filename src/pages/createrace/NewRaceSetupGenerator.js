@@ -173,6 +173,9 @@ class NewRaceSetupGenerator {
             "LongName": longName,
             "Rules": rules,
             "AnnouncementsClosed": false,
+            "ResultsClosed": false,
+            "AnnouncementsPublic": true,
+            "ResultsPublic": true,
             "Category": category,
             "Sex": this.buildSex(sex)
           });

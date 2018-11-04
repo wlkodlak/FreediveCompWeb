@@ -9,7 +9,8 @@ class SetupRaceDisciplines extends React.Component {
       editedId: null,
       edited: this.buildEmptyDiscipline()
     };
-    this.onToggleLock = this.onToggleLock.bind(this);
+    this.onToggleAnnouncements = this.onToggleAnnouncements.bind(this);
+    this.onToggleResults = this.onToggleResults.bind(this);
     this.onNewDiscipline = this.onNewDiscipline.bind(this);
     this.onEditDiscipline = this.onEditDiscipline.bind(this);
     this.onTrashDiscipline = this.onTrashDiscipline.bind(this);
@@ -19,7 +20,9 @@ class SetupRaceDisciplines extends React.Component {
     this.onLongNameChanged = this.onLongNameChanged.bind(this);
     this.onRulesChanged = this.onRulesChanged.bind(this);
     this.onAnnouncementsClosedChanged = this.onAnnouncementsClosedChanged.bind(this);
+    this.onAnnouncementsPublicChanged = this.onAnnouncementsPublicChanged.bind(this);
     this.onResultsClosedChanged = this.onResultsClosedChanged.bind(this);
+    this.onResultsPublicChanged = this.onResultsPublicChanged.bind(this);
     this.renderDisciplineRow = this.renderDisciplineRow.bind(this);
   }
 
@@ -30,23 +33,51 @@ class SetupRaceDisciplines extends React.Component {
       LongName: "",
       Rules: "",
       AnnouncementsClosed: false,
-      ResultsClosed: false
+      ResultsClosed: false,
+      AnnouncementsPublic: true,
+      ResultsPublic: true
     };
   }
 
-  onToggleLock(discipline) {
+  onToggleAnnouncements(discipline) {
     const modified = {
       ...discipline
     };
-    if (modified.ResultsClosed) {
-      modified.ResultsClosed = false;
+    if (!modified.AnnouncementsPublic) {
       modified.AnnouncementsClosed = false;
-    } else if (modified.AnnouncementsClosed) {
-      modified.ResultsClosed = true;
+      modified.AnnouncementsPublic = true;
+    } else if (!modified.AnnouncementsClosed) {
       modified.AnnouncementsClosed = true;
+      modified.AnnouncementsPublic = true;
+    } else {
+      modified.AnnouncementsClosed = false;
+      modified.AnnouncementsPublic = false;
+    }
+
+    const disciplines = [];
+    for (var existing of this.props.disciplines) {
+      if (existing.DisciplineId === discipline.DisciplineId) {
+        disciplines.push(modified);
+      } else {
+        disciplines.push(existing);
+      }
+    }
+    this.props.onChange(disciplines);
+  }
+
+  onToggleResults(discipline) {
+    const modified = {
+      ...discipline
+    };
+    if (!modified.ResultsPublic) {
+      modified.ResultsClosed = false;
+      modified.ResultsPublic = true;
+    } else if (!modified.ResultsClosed) {
+      modified.ResultsClosed = true;
+      modified.ResultsPublic = true;
     } else {
       modified.ResultsClosed = false;
-      modified.AnnouncementsClosed = true;
+      modified.ResultsPublic = false;
     }
 
     const disciplines = [];
@@ -163,12 +194,32 @@ class SetupRaceDisciplines extends React.Component {
     });
   }
 
+  onAnnouncementsPublicChanged(event) {
+    const value = event.target.checked;
+    this.setState({
+      edited: {
+        ...this.state.edited,
+        AnnouncementsPublic: value
+      }
+    });
+  }
+
   onResultsClosedChanged(event) {
     const value = event.target.checked;
     this.setState({
       edited: {
         ...this.state.edited,
         ResultsClosed: value
+      }
+    });
+  }
+
+  onResultsPublicChanged(event) {
+    const value = event.target.checked;
+    this.setState({
+      edited: {
+        ...this.state.edited,
+        ResultsPublic: value
       }
     });
   }
@@ -200,13 +251,15 @@ class SetupRaceDisciplines extends React.Component {
   }
 
   renderDisciplineRow(discipline) {
-    const lockIcon = discipline.ResultsClosed ? "disable" : discipline.AnnouncementsClosed ? "lock" : "unlock";
+    const announcementsIcon = !discipline.AnnouncementsPublic ? "disable" : !discipline.AnnouncementsClosed ? "unlock" : "lock";
+    const resultsIcon = !discipline.ResultsPublic ? "disable" : !discipline.ResultsClosed ? "unlock" : "lock";
     return (
       <tr key={discipline.DisciplineId}>
         <td>{discipline.DisciplineId}</td>
         <td>{discipline.LongName}</td>
         <td>
-          <Button type="button" icon={lockIcon} minimal={true} onClick={() => this.onToggleLock(discipline)} />
+          <Button type="button" icon={announcementsIcon} minimal={true} onClick={() => this.onToggleAnnouncements(discipline)} />
+          <Button type="button" icon={resultsIcon} minimal={true} onClick={() => this.onToggleResults(discipline)} />
           <Button type="button" icon="edit" minimal={true} onClick={() => this.onEditDiscipline(discipline)} />
           <Button type="button" icon="trash" minimal={true} onClick={() => this.onTrashDiscipline(discipline)} />
         </td>
@@ -252,9 +305,17 @@ class SetupRaceDisciplines extends React.Component {
             onChange={this.onAnnouncementsClosedChanged}
             label="Announcements closed" />
           <Checkbox
+            checked={edited.AnnouncementsPublic}
+            onChange={this.onAnnouncementsPublicChanged}
+            label="Announcements visible to public" />
+          <Checkbox
             checked={edited.ResultsClosed}
             onChange={this.onResultsClosedChanged}
             label="Results closed" />
+          <Checkbox
+            checked={edited.ResultsPublic}
+            onChange={this.onResultsPublicChanged}
+            label="Results visible to public" />
         </FormGroup>
         <Button type="submit" text="Apply changes" />
       </form>

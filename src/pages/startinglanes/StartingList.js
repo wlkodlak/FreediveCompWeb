@@ -50,7 +50,7 @@ class StartingList extends React.Component {
       country: entry.Athlete.CountryName,
       officialTop: this.convertOfficialTop(entry.Start.OfficialTop),
       laneName: entry.Start.StartingLaneLongName,
-      announced: PerformanceComponent.formatPerformance(entry.Announcement.Performance),
+      announced: entry.Announcement ? PerformanceComponent.formatPerformance(entry.Announcement.Performance) : null,
       realized: entry.CurrentResult ? PerformanceComponent.formatPerformance(entry.CurrentResult.Performance) : "",
       card: entry.CurrentResult ? this.convertShortCard(entry.CurrentResult.CardResult) : "",
       note: entry.CurrentResult ? entry.CurrentResult.JudgeComment : "",
