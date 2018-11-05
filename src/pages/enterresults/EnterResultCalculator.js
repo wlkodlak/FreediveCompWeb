@@ -79,6 +79,7 @@ export default class EnterResultCalculator {
   onResolved(result) {
     if (this.pending) {
       this.busy = this.pending;
+      this.pending = null;
       this.busy.run();
     } else if (this.cancelled) {
       this.busy = null;
@@ -92,6 +93,7 @@ export default class EnterResultCalculator {
   onRejected(error) {
     if (this.pending) {
       this.busy = this.pending;
+      this.pending = false;
       this.busy.run();
     } else if (this.cancelled) {
       this.busy = null;
