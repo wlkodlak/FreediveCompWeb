@@ -166,7 +166,7 @@ class NewRaceSetupGenerator {
       for (const category of categories) {
         for (const sex of sexes) {
           const disciplineId = this.buildDisciplineName("-", [name, category, sex]);
-          const longName = this.buildDisciplineName("-", [name, category, sex]).replace("-", " ");
+          const longName = this.buildDisciplineName("-", [name, category, sex]).replace(/"-"/g, " ");
           disciplines.push({
             "DisciplineId": disciplineId,
             "ShortName": name,

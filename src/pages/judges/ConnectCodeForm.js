@@ -52,7 +52,7 @@ class ConnectCodeForm extends React.Component {
 
   generateJudgeId(judgeName) {
     return judgeName
-      .toLowerCase().replace(" ", "-")
+      .toLowerCase().replace(/" "/g, "-")
       .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z")).join("");
   }
 

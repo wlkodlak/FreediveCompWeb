@@ -615,7 +615,7 @@ class MockedApi {
         "Entries": this.getReportStartingListEntries()
       });
     } else if (laneId.startsWith("STA-")) {
-      const title = laneId.replace("-", " ");
+      const title = laneId.replace(/"-"/g, " ");
       const entries = this.getReportStartingListEntries().filter(entry => entry.Start.StartingLaneId === laneId);
       return Promise.resolve({
         "Title": title,

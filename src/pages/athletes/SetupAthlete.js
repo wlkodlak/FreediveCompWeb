@@ -105,7 +105,7 @@ class SetupAthlete extends React.Component {
   generateAthleteId(firstName, lastName) {
     const random = Math.floor(1 + Math.random() * 1000);
     return `${firstName}-${lastName}-${random}`
-      .toLowerCase().replace(" ", "-")
+      .toLowerCase().replace(/" "/g, "-")
       .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z") || (c >= "0" && c <= "9")).join("");
   }
 
