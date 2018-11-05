@@ -79,7 +79,7 @@ class SetupRaceResultsLists extends React.Component {
   }
 
   cleanupEdited(edited) {
-    if (!edited.ResultsListId || edited.Title) return null;
+    if (!edited.ResultsListId || !edited.Title) return null;
     const fixed = {
       ...edited
     };
