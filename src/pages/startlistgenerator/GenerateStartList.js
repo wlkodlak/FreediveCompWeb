@@ -7,8 +7,9 @@ import AthleteStartExtractor from './AthleteStartExtractor';
 import SettingsEditor from './SettingsEditor';
 import StartingLanesFlattener from './StartingLanesFlattener';
 import StartSlotGenerator from './StartSlotGenerator';
+import moment from 'moment';
 
-export default class GeneratestartingList {
+export default class GenerateStartList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,6 +18,10 @@ export default class GeneratestartingList {
       confirmed: false
     };
     this.onSettingsConfirmed = this.onSettingsConfirmed.bind(this);
+    this.onReadyForGenerating = this.onReadyForGenerating.bind(this);
+    this.onAssignmentSwap = this.onAssignmentSwap.bind(this);
+    this.onStartingListConfirmed = this.onStartingListConfirmed.bind(this);
+    this.onStartingListCreated = this.onStartingListCreated.bind(this);
   }
 
   getStartingLanes() {
@@ -26,6 +31,11 @@ export default class GeneratestartingList {
 
   getDisciplines() {
     return this.props.raceSetup.Disciplines;
+  }
+
+  getRaceStart() {
+    const rawStart = this.props.raceSetup.Race.Start;
+    return new Date(rawStart);
   }
 
   onSettingsConfirmed(settings) {
@@ -74,10 +84,23 @@ export default class GeneratestartingList {
     const raceId = this.props.raceId;
     const startingLaneId = this.state.settings.selectedStartingLane;
     const startingList = this.state.startingList;
+    const startingListDto = startingList
+      .map(slot => this.buildSlotDto(slot))
+      .filter(dto => !!dto);
     Api
-      .postStartingList(raceId, startingLaneId, startingList)
+      .postStartingList(raceId, startingLaneId, startingListDto)
       .then(this.onStartingListCreated)
       .catch(this.props.onError);
+  }
+
+  buildSlotDto(slot) {
+    if (!slot.AssignedAthleteStart) return null;
+    return {
+      "AthleteId": slot.AssignedAthleteStart.AthleteId,
+      "DisciplineId": slot.AssignedAthleteStart.DisciplineId,
+      "OfficialTop": moment(slot.OfficialTop).format(),
+      "StartingLaneId": slot.StartingLaneId
+    };
   }
 
   onStartingListCreated() {
@@ -87,6 +110,7 @@ export default class GeneratestartingList {
   }
 
   render() {
+    const raceId = this.props.raceId;
     if (this.props.userType !== "Admin") {
       return (<Redirect to={`/${raceId}/homepage`} />);
     } else if (!this.state.settings) {
@@ -106,6 +130,7 @@ export default class GeneratestartingList {
         <SettingsEditor
           startingLanes={this.getStartingLanes()}
           disciplines={this.getDisciplines()}
+          raceStart={this.getRaceStart()}
           onError={this.props.onError}
           onSettingsConfirmed={this.onSettingsConfirmed}
         />

@@ -1,7 +1,7 @@
 export default class StartingLanesFlattener {
   getFlattenedStartingLanes(startingLanes) {
     const flattened = [];
-    this.flattenLanes(flattened, 1, startingLanes);
+    this.flattenLanes(flattened, 0, startingLanes);
     return flattened;
   }
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 import { Button, HTMLTable } from '@blueprintjs/core';
+import PerformanceComponent from '../../api/PerformanceComponent';
 
-export default class AssignmentsEditor {
+export default class AssignmentsEditor extends React.Component {
   render() {
     return (
       <div>
@@ -18,7 +19,7 @@ export default class AssignmentsEditor {
           </thead>
           <tbody>
             {
-              this.props.startlist.map(slot => this.renderRow(slot))
+              this.props.startingList.map(slot => this.renderRow(slot))
             }
           </tbody>
         </HTMLTable>
@@ -40,7 +41,7 @@ export default class AssignmentsEditor {
 
     return (
       <tr key={slot.Position}>
-        <td>{formatedOfficialTop}</td>
+        <td>{formattedOfficialTop}</td>
         <td>{slot.StartingLaneName}</td>
         <td>
           <Button icon="symbol-triangle-up" onClick={moveUp} minimal={true} disabled={!canMoveUp} />

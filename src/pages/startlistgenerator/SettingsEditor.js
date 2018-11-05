@@ -1,5 +1,5 @@
 import React from 'react';
-import { H1, FormGroup, RadioGroup, Button, InputGroup } from '@blueprintjs/core';
+import { FormGroup, RadioGroup, Button, InputGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import CheckboxGroup from './CheckboxGroup';
 import moment from 'moment';

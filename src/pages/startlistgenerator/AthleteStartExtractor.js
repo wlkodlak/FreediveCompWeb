@@ -1,14 +1,19 @@
+import PerformanceComponent from '../../api/PerformanceComponent';
+
 export default class AthleteStartExtractor {
   getStartsForDiscipline(discipline, athletes) {
     const athleteStarts = [];
     for (const athlete of athletes) {
       for (const announcement of athlete.Announcements) {
+        if (announcement.DisciplineId !== discipline.DisciplineId) continue;
+        if (!announcement.Performance) continue;
         athleteStarts.push({
           Athlete: athlete.Profile,
           Discipline: discipline,
           Announcement: announcement.Performance,
           AthleteId: athlete.Profile.AthleteId,
           AthleteFullName: `${athlete.Profile.FirstName} ${athlete.Profile.Surname}`,
+          DisciplineId: discipline.DisciplineId,
           DisciplineName: discipline.ShortName,
           AnnouncedDuration: PerformanceComponent.Duration.extractFrom(announcement.Performance),
           AnnouncedDistance: PerformanceComponent.Distance.extractFrom(announcement.Performance),
