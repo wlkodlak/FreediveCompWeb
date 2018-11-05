@@ -19,6 +19,10 @@ export default class AthleteStartExtractor {
     return athleteStarts;
   }
 
+  mergeStarts(athleteStartsArrays) {
+    return [].concat.apply([], athleteStartsArrays);
+  }
+
   sortStarts(athleteStarts) {
     athleteStarts.sort(this.compareAthleteStarts);
   }

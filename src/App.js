@@ -6,7 +6,7 @@ import SetupRace from './pages/setuprace/SetupRace';
 import HomePage from './pages/homepage/HomePage';
 import SetupJudges from './pages/judges/SetupJudges';
 import AuthenticateJudge from './pages/judges/AuthenticateJudge';
-import GeneratorTool from './pages/startinglanes/GeneratorTool';
+import GenerateStartList from './pages/startlistgenerator/GenerateStartList';
 import StartingList from './pages/startinglanes/StartingList';
 import StartingLanes from './pages/startinglanes/StartingLanes';
 import DisciplineResults from './pages/disciplines/DisciplineResults';
@@ -89,7 +89,7 @@ function App() {
     buildRacePageRoute("homepage", HomePage, { headerElement: H1 }),
     buildRacePageRoute("judges", SetupJudges),
     buildRacePageRoute("authenticate", AuthenticateJudge),
-    buildRacePageRoute("startinglists/generator", GeneratorTool),
+    buildRacePageRoute("startinglists/generator", GenerateStartList),
     buildRacePageRoute("startinglists/:startingLaneId", StartingList, { superPath: "startinglists", superName: "Starting lists" }),
     buildRacePageRoute("startinglists", StartingLanes),
     buildRacePageRoute("disciplines/:disciplineId", DisciplineResults, { superPath: "disciplines", superName: "Disciplines" }),
