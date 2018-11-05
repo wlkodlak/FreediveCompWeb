@@ -1,5 +1,6 @@
 import React from 'react';
 import { H1 } from '@blueprintjs/core';
+import { Redirect } from 'react-router-dom';
 import Api from '../../api/Api';
 import AthleteProfile from './AthleteProfile';
 import AthleteAnnouncements from './AthleteAnnouncements';
@@ -10,7 +11,6 @@ class SetupAthlete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      athleteId: props.athleteId === "new" ? null : props.athleteId,
       allRules: [],
       profile: {},
       announcements: [],
@@ -35,7 +35,9 @@ class SetupAthlete extends React.Component {
           "FirstName": "",
           "LastName": "",
           "Sex": "Male"
-        }
+        },
+        profileDirty: false,
+        redirectToNewId: null
       });
     }
   }
@@ -46,10 +48,6 @@ class SetupAthlete extends React.Component {
     const raceId = nextProps.raceId;
 
     if (previousAthleteId !== newAthleteId) {
-      this.setState({
-        athleteId: newAthleteId === "new" ? null : newAthleteId,
-      });
-
       if (newAthleteId !== "new") {
         Api.getAthlete(raceId, newAthleteId).then(this.onAthleteLoaded).catch(this.props.onError);
       } else {
@@ -59,7 +57,10 @@ class SetupAthlete extends React.Component {
             "LastName": "",
             "Sex": "Male"
           },
-          results: []
+          profileDirty: false,
+          announcements: [],
+          results: [],
+          redirectToNewId: null
         });
       }
     }
@@ -72,56 +73,89 @@ class SetupAthlete extends React.Component {
   onAthleteLoaded(athlete) {
     this.setState({
       profile: athlete.Profile,
+      profileDirty: false,
       announcements: athlete.Announcements,
-      results: athlete.Results
+      results: athlete.Results,
     });
   }
 
   onAthleteProfileChanged(profile) {
-    this.setState({profile});
+    this.setState({profile, profileDirty: true});
   }
 
   isAdmin() {
     return this.props.userType === "Admin";
   }
 
+  isNewAthlete() {
+    return this.props.athleteId === "new";
+  }
+
   onAthleteProfileSubmit() {
-    let profile = this.state.profile;
-    let athleteId = this.state.athleteId;
-    if (athleteId == null) {
-      athleteId = this.generateAthleteId(profile.FirstName, profile.Surname);
-      profile = {
-        ...profile,
-        "AthleteId": athleteId
+    if (this.isNewAthlete()) {
+      const profile = this.state.profile;
+      const newAthleteId = this.generateAthleteId(profile.FirstName, profile.Surname);
+      const athleteData = {
+        "Profile": {
+          ...profile,
+          "AthleteId": newAthleteId
+        }
       };
-      this.setState({ athleteId, profile });
+      Api
+        .postAthlete(this.props.raceId, newAthleteId, athleteData)
+        .then(() => this.onAthleteProfileSaved(true, athleteData))
+        .catch(this.props.onError);
+
+    } else {
+      const profile = this.state.profile;
+      const athleteData = {
+        "Profile": profile
+      };
+      Api
+        .postAthlete(this.props.raceId, this.props.athleteId, athleteData)
+        .then(() => this.onAthleteProfileSaved(false, athleteData))
+        .catch(this.props.onError);
     }
-    const athleteData = {
-      "Profile": profile
-    };
-    Api.postAthlete(this.props.raceId, athleteId, athleteData).then(this.onAthleteProfileSaved).catch(this.props.onError);
   }
 
   generateAthleteId(firstName, lastName) {
     const random = Math.floor(1 + Math.random() * 1000);
     return `${firstName}-${lastName}-${random}`
-      .toLowerCase().replace(/" "/g, "-")
+      .toLowerCase().replace(/ /g, "-")
       .normalize("NFD").split("").filter(c => (c === "-") || (c >= "a" && c <= "z") || (c >= "0" && c <= "9")).join("");
   }
 
-  onAthleteProfileSaved() {
-    // hmm, nothing to do
+  onAthleteProfileSaved(wasNew, athleteData) {
+    if (wasNew) {
+      this.setState({
+        redirectToNewId: athleteData.Profile.AthleteId,
+        profile: athleteData.Profile,
+        profileDirty: false
+      });
+    } else {
+      this.setState({
+        profile: athleteData.Profile,
+        profileDirty: false
+      });
+    }
   }
 
   onAthleteAnnouncementsSubmit(announcements) {
     const athleteData = {
       "Announcements": announcements
     };
-    Api.postAthlete(this.props.raceId, this.state.athleteId, athleteData).then(this.onAthleteAnnouncementsSaved).catch(this.props.onError);
+    Api
+      .postAthlete(this.props.raceId, this.props.athleteId, athleteData)
+      .then(() => this.onAthleteAnnouncementsSaved(announcements))
+      .catch(this.props.onError);
   }
 
-  onAthleteAnnouncementsSaved() {
-    // hmm, nothing to do
+  onAthleteAnnouncementsSaved(changes) {
+    const changedDisciplines = changes.map(a => a.DisciplineId);
+    const finalAnnouncements = changes.concat(this.state.announcements.filter(a => !changedDisciplines.includes(a.DisciplineId)));
+    this.setState({
+      announcements: finalAnnouncements
+    });
   }
 
   filterDiscipline(discipline, profile) {
@@ -133,30 +167,22 @@ class SetupAthlete extends React.Component {
   }
 
   render() {
-    const filteredDisciplines = this.props.raceSetup.Disciplines.filter(discipline => this.filterDiscipline(discipline, this.state.profile));
-    return (
-      <div className="athletes-form">
-        {this.renderAthleteName()}
-        <AthleteProfile
-          readonly={!this.isAdmin()}
-          profile={this.state.profile}
-          onChange={this.onAthleteProfileChanged}
-          onSubmit={this.onAthleteProfileSubmit} />
-        <AthleteAnnouncements
-          readonly={!this.isAdmin()}
-          allRules={this.state.allRules}
-          announcements={this.state.announcements}
-          disciplines={filteredDisciplines}
-          onSubmit={this.onAthleteAnnouncementsSubmit} />
-        <AthleteResults
-          results={this.state.results} />
-      </div>
-    );
+    if (this.isNewAthlete() && this.state.redirectToNewId) {
+      return (<Redirect to={`/${this.props.raceId}/athletes/${this.state.redirectToNewId}`} />);
+    } else {
+      return (
+        <div className="athletes-form">
+          {this.renderAthleteName()}
+          {this.renderProfile()}
+          {this.renderAnnouncements()}
+          {this.renderResults()}
+        </div>
+      );
+    }
   }
 
   renderAthleteName() {
-    const isNewAthlete = this.state.athleteId == null;
-    if (isNewAthlete) {
+    if (this.isNewAthlete()) {
       return (<H1>New athlete</H1>);
     } else {
       const raceId = this.props.raceId;
@@ -172,6 +198,45 @@ class SetupAthlete extends React.Component {
         return (<H1>{fullName}</H1>);
       }
     }
+  }
+
+  renderProfile() {
+    return (
+      <AthleteProfile
+        readonly={!this.isAdmin()}
+        profile={this.state.profile}
+        onChange={this.onAthleteProfileChanged}
+        dirty={this.state.profileDirty}
+        onSubmit={this.onAthleteProfileSubmit} />
+    );
+  }
+
+  renderAnnouncements() {
+    if (this.isNewAthlete()) return;
+    const allDisciplines = this.props.raceSetup.Disciplines;
+    const allowedDisciplines = allDisciplines
+      .filter(discipline => this.filterDiscipline(discipline, this.state.profile))
+      .map(discipline => discipline.DisciplineId);
+    const announcedDisciplines = this.state.announcements.map(announcement => announcement.DisciplineId);
+    const filteredDisciplines = allDisciplines
+      .filter(discipline =>
+        allowedDisciplines.includes(discipline.DisciplineId) ||
+        announcedDisciplines.includes(discipline.DisciplineId));
+    return (
+      <AthleteAnnouncements
+        readonly={!this.isAdmin()}
+        allRules={this.state.allRules}
+        announcements={this.state.announcements}
+        disciplines={filteredDisciplines}
+        onSubmit={this.onAthleteAnnouncementsSubmit} />
+    );
+  }
+
+  renderResults() {
+    return (
+      <AthleteResults
+        results={this.state.results} />
+    );
   }
 }
 

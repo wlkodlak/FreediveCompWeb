@@ -42,8 +42,17 @@ class SetupAthletes extends React.Component {
   buildAnnouncementsString(announcements) {
     if (announcements == null) return "";
     return announcements
-      .map(a => a.DisciplineId + ": " + PerformanceComponent.formatPerformance(a.Performance))
+      .map(a => this.formatDisciplineName(a.DisciplineId) + ": " + PerformanceComponent.formatPerformance(a.Performance))
       .join(", ");
+  }
+
+  formatDisciplineName(disciplineId) {
+    for (const discipline of this.props.raceSetup.Disciplines) {
+      if (discipline.DisciplineId === disciplineId) {
+        return discipline.ShortName;
+      }
+    }
+    return disciplineId;
   }
 
   render() {

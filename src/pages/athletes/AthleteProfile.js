@@ -150,7 +150,7 @@ class AthleteProfile extends React.Component {
             value={profile.Category || ""}
             onChange={this.onCategoryChanged} />
         </FormGroup>
-        <Button type="submit" text="Save changes" />
+        <Button type="submit" text="Save changes" disabled={!this.props.dirty} />
       </form>
     );
   }

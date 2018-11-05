@@ -12,6 +12,14 @@ class AthleteAnnouncements extends React.Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.announcements !== this.props.announcements) {
+      this.setState({
+        changes: {}
+      });
+    }
+  }
+
   getComponentByRules(rules) {
     return PerformanceComponent.findPrimaryForDiscipline(rules, this.props.allRules);
   }
@@ -94,6 +102,7 @@ class AthleteAnnouncements extends React.Component {
   }
 
   renderEditable() {
+    const anyChange = typeof this.state.changes === "object" && Object.keys(this.state.changes).length > 0;
     return (
       <form onSubmit={this.onFormSubmit} className="athlete-announcements">
         <H5>Announcements</H5>
@@ -110,7 +119,7 @@ class AthleteAnnouncements extends React.Component {
             }
           </tbody>
         </HTMLTable>
-        <Button type="submit" text="Save announcements" />
+        <Button type="submit" text="Save announcements" disabled={!anyChange} />
       </form>
     );
   }
@@ -122,7 +131,7 @@ class AthleteAnnouncements extends React.Component {
     const component = this.getComponentByRules(discipline.Rules);
     if (disciplineChange) {
       formattedValue = disciplineChange.formatted;
-      isValueValid = disciplineChange.performance != null;
+      isValueValid = formattedValue === "" || disciplineChange.performance != null;
     } else {
       formattedValue = this.findFormattedAnnouncement(
         this.props.announcements, discipline.DisciplineId,
