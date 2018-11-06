@@ -11,6 +11,7 @@ class AthleteProfile extends React.Component {
     this.onCountryChanged = this.onCountryChanged.bind(this);
     this.onSexChanged = this.onSexChanged.bind(this);
     this.onCategoryChanged = this.onCategoryChanged.bind(this);
+    this.onModeratorNotesChanged = this.onModeratorNotesChanged.bind(this);
 
     this.sexOptions = [
       {
@@ -65,6 +66,12 @@ class AthleteProfile extends React.Component {
     });
   }
 
+  onModeratorNotesChanged(event) {
+    this.changeProfile({
+      ModeratorNotes: event.target.value
+    });
+  }
+
   changeProfile(change) {
     const newProfile = {
       ...this.props.profile,
@@ -99,6 +106,8 @@ class AthleteProfile extends React.Component {
           <dd>{profile.Sex || ""}</dd>
           <dt>Category</dt>
           <dd>{profile.Category || ""}</dd>
+          <dt>Moderator's notes</dt>
+          <dd>{profile.ModeratorNotes || ""}</dd>
         </dl>
       </div>
     );
@@ -149,6 +158,13 @@ class AthleteProfile extends React.Component {
             placeholder="Category"
             value={profile.Category || ""}
             onChange={this.onCategoryChanged} />
+        </FormGroup>
+        <FormGroup label="Moderator's notes">
+          <InputGroup
+            type="text"
+            placeholder="Notes"
+            value={profile.ModeratorNotes || ""}
+            onChange={this.onModeratorNotesChanged} />
         </FormGroup>
         <Button type="submit" text="Save changes" disabled={!this.props.dirty} />
       </form>
