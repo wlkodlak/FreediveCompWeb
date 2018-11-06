@@ -21,6 +21,7 @@ class TokenStorage {
   }
 
   saveGlobalToken(token) {
+    window.localStorage.clear();
     window.localStorage.setItem("adminToken", token);
   }
 }

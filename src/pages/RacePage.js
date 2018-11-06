@@ -15,22 +15,16 @@ export default class RacePage extends React.Component {
   }
 
   componentWillMount() {
-    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+    Api.getAuthVerify(this.props.raceId).then(this.onUserVerified).catch(this.onUserUnauthenticated);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.raceId !== this.props.raceId) {
-      this.setState(this.buildInitialState());
-      Api.getRaceSetup(nextProps.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+      this.setState((state) => {
+        Api.getAuthVerify(this.props.raceId).then(this.onUserVerified).catch(this.onUserUnauthenticated);
+        return this.buildInitialState();
+      });
     }
-  }
-
-  onRaceSetupLoaded(raceSetup) {
-    this.setState({
-      raceSetup: raceSetup,
-      raceSetupValid: true
-    });
-    Api.getAuthVerify(this.props.raceId).then(this.onUserVerified).catch(this.onUserUnauthenticated);
   }
 
   onUserVerified(judge) {
@@ -38,12 +32,23 @@ export default class RacePage extends React.Component {
       userType: judge.IsAdmin ? "Admin" : "Judge",
       userTypeValid: true
     });
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
   }
 
   onUserUnauthenticated() {
     this.setState({
       userType: "Anonymous",
       userTypeValid: true
+    });
+    Api.saveExplicitToken(null, null);
+    Api.saveExplicitToken(this.props.raceId, null);
+    Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+  }
+
+  onRaceSetupLoaded(raceSetup) {
+    this.setState({
+      raceSetup: raceSetup,
+      raceSetupValid: true
     });
   }
 
@@ -75,21 +80,27 @@ export default class RacePage extends React.Component {
 
   onRaceInvalidated() {
     this.setState((state) => {
-      Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+      Api.getAuthVerify(this.props.raceId).then(this.onUserVerified).catch(this.onUserUnauthenticated);
       return this.buildInitialState();
     });
   }
 
   render() {
-    if (!this.state.raceSetupValid || !this.state.userTypeValid) return null;
-
-    return (
-      <div>
-        {this.renderToaster()}
-        {this.renderHeader()}
-        {this.renderTargetComponent()}
-      </div>
-    );
+    if (!this.state.raceSetupValid || !this.state.userTypeValid) {
+      return (
+        <div>
+          {this.renderToaster()}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {this.renderToaster()}
+          {this.renderHeader()}
+          {this.renderTargetComponent()}
+        </div>
+      );
+    }
   }
 
   renderToaster() {
