@@ -11,6 +11,7 @@ export default class RacePage extends React.Component {
     this.onUserVerified = this.onUserVerified.bind(this);
     this.onUserUnauthenticated = this.onUserUnauthenticated.bind(this);
     this.onError = this.onError.bind(this);
+    this.onRaceInvalidated = this.onRaceInvalidated.bind(this);
   }
 
   componentWillMount() {
@@ -72,15 +73,11 @@ export default class RacePage extends React.Component {
     });
   }
 
-  onRaceInvalidated(newRaceSetup) {
-    if (newRaceSetup) {
-      this.setState({
-        raceSetup: newRaceSetup
-      });
-    } else {
-      this.setState(this.buildInitialState());
-      Api.getRaceSetup(this.nextProps.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
-    }
+  onRaceInvalidated() {
+    this.setState((state) => {
+      Api.getRaceSetup(this.props.raceId).then(this.onRaceSetupLoaded).catch(this.onError);
+      return this.buildInitialState();
+    });
   }
 
   render() {

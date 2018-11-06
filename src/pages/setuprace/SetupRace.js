@@ -121,6 +121,7 @@ class SetupRace extends React.Component {
     this.setState({
       status: "ready"
     });
+    this.props.onRaceInvalidated();
   }
 
   onRaceInvalidated() {

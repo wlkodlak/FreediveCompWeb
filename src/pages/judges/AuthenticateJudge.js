@@ -49,6 +49,7 @@ class AuthenticateJudge extends React.Component {
       this.setState({
         verified: true
       });
+      this.props.onRaceInvalidated();
     } else if (connectCode) {
       this.setState({
         connectCode: connectCode
