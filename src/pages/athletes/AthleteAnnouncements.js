@@ -12,8 +12,8 @@ class AthleteAnnouncements extends React.Component {
     };
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.announcements !== this.props.announcements) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.announcements !== this.props.announcements) {
       this.setState({
         changes: {}
       });

@@ -154,6 +154,8 @@ class EnterResultPenalties extends React.Component {
       <div key={index} className="enterresults-existing-penalty">
         <span className="enterresults-penalization-reason">{reason}</span>
         <span className="enterresults-penalization-value">{value}</span>
+        { penalization.CardResult === "Red" && <span className="enterresults-penalization-redcard">&nbsp;</span> }
+        { penalization.CardResult === "Yellow" && <span className="enterresults-penalization-yellowcard">&nbsp;</span> }
         <Button
           onClick={() => this.props.onRemovePenalty(index)}
           icon="remove"

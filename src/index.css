@@ -150,6 +150,7 @@ label.bp3-label.enterresults-label-cell {
   display: flex;
   flex-flow: row nowrap;
   margin-bottom: 0.5em;
+  margin-top: 1em;
 }
 
 .enterresults-white-card, .enterresults-yellow-card, .enterresults-red-card {
@@ -203,6 +204,24 @@ label.bp3-label.enterresults-label-cell {
 
 .enterresults-penalization-value, .enterresults-penalization-remove {
   flex: 0 0 auto;
+  margin-left: 0.5em;
+}
+
+.enterresults-penalization-redcard {
+  flex: 0 0 auto;
+  width: 1em;
+  background: red;
+  border: 1px solid #a44;
+  height: 1em;
+  margin-left: 0.5em;
+}
+
+.enterresults-penalization-yellowcard {
+  flex: 0 0 auto;
+  width: 1em;
+  background: yellow;
+  border: 1px solid #aa4;
+  height: 1em;
   margin-left: 0.5em;
 }
 

@@ -22,7 +22,8 @@ class EnterResult extends React.Component {
       result: null,
       rules: null,
       primaryComponent: null,
-      penalizationComponent: null
+      penalizationComponent: null,
+      pendingRefresh: false
     };
     this.onRulesLoaded = this.onRulesLoaded.bind(this);
     this.onStartListLoaded = this.onStartListLoaded.bind(this);
@@ -43,9 +44,15 @@ class EnterResult extends React.Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
-    const sameStartList = nextProps.raceId === this.props.raceId && nextProps.startingLaneId === this.props.startingLaneId;
-    const sameEntry = nextProps.athleteId === this.props.athleteId && nextProps.disciplineId === this.props.disciplineId;
+  componentDidUpdate(prevProps) {
+    const sameStartList = 
+      prevProps.raceId === this.props.raceId && 
+      prevProps.startingLaneId === this.props.startingLaneId &&
+      !this.state.pendingRefresh;
+    const sameEntry = 
+      prevProps.athleteId === this.props.athleteId && 
+      prevProps.disciplineId === this.props.disciplineId;
+
     if (!sameStartList) {
       if (this.calculator) {
         this.calculator.cancel();
@@ -88,7 +95,8 @@ class EnterResult extends React.Component {
       entry: null,
       result: null,
       modified: false,
-      entryIndex: -1
+      entryIndex: -1,
+      pendingRefresh: false
     };
     this.setState((oldState, props) => this.changeState(oldState, props, changes));
   }
@@ -145,11 +153,17 @@ class EnterResult extends React.Component {
     const raceId = this.props.raceId;
     const athleteId = this.props.athleteId;
     const result = this.state.result;
-    Api.postAthleteResult(raceId, athleteId, result).then(this.onConfirmed).catch(this.props.onError);
+    Api
+      .postAthleteResult(raceId, athleteId, result)
+      .then(this.onConfirmed)
+      .catch(this.props.onError);
   }
 
   onConfirmed() {
-    this.setState({modified: false});
+    this.setState({
+      modified: false, 
+      pendingRefresh: true
+    });
   }
 
   changeState(original, props, changes) {
@@ -319,7 +333,6 @@ class EnterResult extends React.Component {
               rawRealized={this.state.rawRealized}
               component={this.state.primaryComponent}
               onChange={this.onPrimaryComponentChanged}/>
-            <EnterResultCard result={result} onCardSelected={this.onCardSelected}/>
           </form>
           <EnterResultPenalties
             result={result}
@@ -329,6 +342,7 @@ class EnterResult extends React.Component {
             onRemovePenalty={this.onRemovePenalty}
             onAddError={this.props.onError}/>
           <form onSubmit={this.onFormSubmit}>
+            <EnterResultCard result={result} onCardSelected={this.onCardSelected}/>
             <EnterResultFooter
               result={result}
               component={this.state.penalizationComponent}

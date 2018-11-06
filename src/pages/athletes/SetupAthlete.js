@@ -42,10 +42,10 @@ class SetupAthlete extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const previousAthleteId = this.props.athleteId;
-    const newAthleteId = nextProps.athleteId;
-    const raceId = nextProps.raceId;
+  componentDidUpdate(prevProps) {
+    const previousAthleteId = prevProps.athleteId;
+    const newAthleteId = this.props.athleteId;
+    const raceId = this.props.raceId;
 
     if (previousAthleteId !== newAthleteId) {
       if (newAthleteId !== "new") {
