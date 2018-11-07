@@ -161,18 +161,19 @@ label.bp3-label.enterresults-label-cell {
 .enterresults-white-card.enterresults-card-selected {
   background: white;
   border: 2px solid black;
-  font-weight: bold;
 }
 
 .enterresults-yellow-card.enterresults-card-selected {
   background: yellow;
   border: 2px solid black;
-  font-weight: bold;
 }
 
 .enterresults-red-card.enterresults-card-selected {
   background: red;
   border: 2px solid black;
+}
+
+.enterresults-card-suggested {
   font-weight: bold;
 }
 

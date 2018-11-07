@@ -20,20 +20,48 @@ class EnterResultCard extends React.Component {
     this.props.onCardSelected("Red");
   }
 
-  cardClasses(cardResult, expected, nameBase) {
-    const highlighted = cardResult === expected;
-    const colorClass = "enterresults-" + nameBase + "-card enterresults-card-";
-    const selectionClassSuffix = highlighted
-      ? "selected"
-      : "unselected";
-    return colorClass + selectionClassSuffix;
+  cardClasses(cardResult, suggestedResult, expected, nameBase) {
+    const cssClasses = [];
+    cssClasses.push("enterresults-" + nameBase + "-card");
+    if (cardResult === expected) {
+      cssClasses.push("enterresults-card-selected");
+    } else {
+      cssClasses.push("enterresults-card-unselected");
+    }
+    if (suggestedResult === expected) {
+      cssClasses.push("enterresults-card-suggested");
+    } else {
+      cssClasses.push("enterresults-card-unsuggested");
+    }
+    return cssClasses.join(" ");
+  }
+
+  getSelectedCard() {
+    return this.props.result.CardResult;
+  }
+
+  getSuggestedCard() {
+    if (!this.props.result) return null;
+    if (!this.props.result.Penalizations) return null;
+    let level = 0;
+    for (const penalization of this.props.result.Penalizations) {
+      let suggested;
+      if (penalization.CardResult === "Red") {
+        suggested = 2;
+      } else {
+        suggested = 1;
+      }
+      level = Math.max(level, suggested);
+    }
+    return ["White", "Yellow", "Red"][level];
   }
 
   render() {
-    const selectedCard = this.props.result.CardResult;
-    const classesWhite = this.cardClasses(selectedCard, "White", "white");
-    const classesYellow = this.cardClasses(selectedCard, "Yellow", "yellow");
-    const classesRed = this.cardClasses(selectedCard, "Red", "red");
+    const selectedCard = this.getSelectedCard();
+    const suggestedCard = this.getSuggestedCard();
+    const classesWhite = this.cardClasses(selectedCard, suggestedCard, "White", "white");
+    const classesYellow = this.cardClasses(selectedCard, suggestedCard, "Yellow", "yellow");
+    const classesRed = this.cardClasses(selectedCard, suggestedCard, "Red", "red");
     return (
       <div className="enterresults-cards">
         <button type="button" className={classesWhite} onClick={this.onWhiteClick}>White</button>

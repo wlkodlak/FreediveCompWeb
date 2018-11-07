@@ -238,7 +238,7 @@ class EnterResult extends React.Component {
         penalizableValue -= penalizationComponent.extractFrom(penalization.Performance);
       }
     }
-    if (result.CardResult === "Red" || result.CardResult === "DidNotStart") {
+    if (result.CardResult === "Red" || result.CardResult === "DidNotStart" || penalizableValue < 0) {
       penalizableValue = 0;
     }
     const finalPerformance = {
